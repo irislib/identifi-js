@@ -1,0 +1,51 @@
+<section data-ng-controller="MessagesController" data-ng-init="findOne()">
+  <div class="col-md-8 col-md-offset-2">
+    <h4 data-ng-bind="message.data.signedData.timestamp*1000|date:'medium'"></h4>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 data-ng-bind="message.authorName" class="panel-title">
+              <img alt="" src="https://www.gravatar.com/avatar/e30d5696b25f0dcd1bdf609753602977?d=retro&amp;s=30" class="img-rounded mar-bot5 mar-right5"> 
+              <span class="glyphicon glyphicon-play"></span>
+            </h3>
+          </div>
+          <div class="panel-body">
+            <ul class="list list-unstyled">
+              <li data-ng-repeat="id in message.data.signedData.author"><span data-ng-bind="id[0]"></span>: <a data-ng-bind="id[1]" class="id-link" data-ng-href="#!/id/{{id[0]}}/{{id[1]|filter:urlencode}}" data-original-title="" title=""></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 data-ng-bind="message.recipientName" class="panel-title">
+              <img alt="" src="https://www.gravatar.com/avatar/e30d5696b25f0dcd1bdf609753602977?d=retro&amp;s=30" class="img-rounded mar-bot5 mar-right5"> 
+              <span class="glyphicon glyphicon-play"></span>
+            </h3>
+          </div>
+          <div class="panel-body">
+            <ul class="list list-unstyled">
+              <li data-ng-repeat="id in message.data.signedData.recipient"><span data-ng-bind="id[0]"></span>: <a data-ng-bind="id[1]" class="id-link" data-ng-href="#!/id/{{id[0]|filter:urlencode}}/{{id[1]|filter:urlencode}}" data-original-title="" title=""></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default panel-success">
+      <div class="panel-heading">
+        <h3 class="panel-title" data-ng-bind="message.data.signedData.type"></h3>
+      </div>
+      <div class="panel-body">
+        <p data-ng-if="message.data.signedData.rating"><strong>Score:</strong> <span data-ng-bind="message.data.signedData.rating"></span>
+          <small>(<span data-ng-bind="message.data.signedData.minRating"></span>...<span data-ng-bind="message.data.signedData.maxRating"></span>)</small>
+        </p>
+        <p data-ng-if="message.data.signedData.comment"><strong>Comment:</strong> <span data-ng-bind="message.data.signedData.comment"></span></p>
+      </div>
+    </div>
+    <p>Message origin verified by: <a data-ng-bind="message.signerName" data-ng-href="#!/id/keyID/{{message.signatureDetails.signerKeyID}}"></a></p>
+    <p><button class="btn btn-default" data-ng-click="collapseRawData = !collapseRawData">Show raw data</button></p>
+    <pre collapse="!collapseRawData" data-ng-bind="message.strData"></pre>
+  </div>
+</section>

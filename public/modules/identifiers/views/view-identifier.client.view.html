@@ -1,0 +1,200 @@
+<section data-ng-controller="IdentifiersController" data-ng-init="findOne()">
+  <div class="row">
+    <div class="col-md-4">
+      <h4><span data-ng-bind="idValue" id="id-value"></span>
+        <small class="text-muted">
+          <span data-ng-bind="idType" id="id-type"></span>
+        </small>
+      </h4>
+      <div class="panel panel-default">
+    <div class="panel-body">
+      <table class="stats-box table-condensed">
+        <tbody><tr>
+          <td style="width:120px">
+            <a data-ng-href="http://www.gravatar.com/{{gravatar}}" data-toggle="tooltip" data-placement="right" title="Gravatar for {{email}}"><img src="http://www.gravatar.com/avatar/{{gravatar}}?d=retro&amp;s=100" class="img-thumbnail mar-right5" alt="Gravatar for {{overview.email}}"></a>
+          </td>
+          <td>
+            <h4 data-ng-bind="overview.name">{{idValue}}</h4>
+          </td>
+        </tr>
+        <tr>
+          <td>Received</td>
+          <td>
+            <span class="positive"><span class="glyphicon glyphicon-thumbs-up"></span> <span data-ng-bind="overview.receivedPositive">-</span></span>
+            <span class="neutral"><span class="glyphicon glyphicon-question-sign"></span> <span data-ng-bind="overview.receivedNeutral">-</span></span> 
+            <span class="negative"><span class="glyphicon glyphicon-thumbs-down"></span> <span data-ng-bind="overview.receivedNegative">-</span></span>
+          </td>
+        </tr>
+        <tr>
+          <td>Sent</td> 
+          <td>
+            <span class="positive"><span class="glyphicon glyphicon-thumbs-up"></span> <span data-ng-bind="overview.authoredPositive">-</span></span>
+            <span class="neutral"><span class="glyphicon glyphicon-question-sign"></span> <span data-ng-bind="overview.authoredNeutral">-</span></span> 
+            <span class="negative"><span class="glyphicon glyphicon-thumbs-down"></span> <span data-ng-bind="overview.authoredNegative">-</span></span>
+          </td>
+        </tr>
+    <!--    <tr>
+          <td>Recommendation <br>quality <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Recommendations given for identifiers that got good feedback later"></span></td>
+          <td>- %</td>
+        </tr>
+        <tr>
+          <td>Connection <br>quality <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Created connections that were not disputed by others"></span></td>
+          <td>- %</td>
+        </tr> -->
+       <tr>
+          <td>First seen</td>
+          <td><span data-ng-if="overview.firstSeen" data-ng-bind="overview.firstSeen*1000|date:'mediumDate'"></span><span data-ng-if="!overview.firstSeen">-</span></td>
+        </tr>
+  <!--       <tr>
+          <td>Trust map size</td>
+          <td>0</td>
+        </tr> -->
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="panel quick-contact">
+    <a data-ng-repeat="id in connections" data-ng-if="id.quickContact" class="btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span>&nbsp;</a> 
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <ul class="trustpath-list list-unstyled">
+        <li data-ng-repeat-start="id in trustpath">
+          <a data-id-type="{{id.type}}" data-id-value="{{id.value}}" class="id-link" data-ng-href="#!/id/{{id.type|filter:urlencode}}/{{id.value|filter:urlencode}}" data-original-title="" title="">
+            <img alt="" src="https://www.gravatar.com/avatar/{{id.gravatar}}?d=retro&amp;s=30" class="mar-bot5 img-rounded mar-right5"> 
+            {{id.value}}
+          </a>
+        </li>
+        <li class="has-success" data-ng-repeat-end>
+          <span class="mar-left5 mar-bot10 glyphicon glyphicon-thumbs-up form-control-feedback"></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading visible-xs">
+      <h4 class="panel-title"><a data-toggle="collapse" data-target=".filters"><span class="glyphicon glyphicon-chevron-down"></span> Filters</a></h4></div>
+    <div class="panel-body collapse filters">
+      <ul class="nav nav-pills nav-stacked msg-type-filter">
+        <li data-val=""><a href="#"><span class="glyphicon glyphicon-home"></span> All</a></li>
+        <li class="active" data-val="rating"><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Rating</a></li>
+        <ul class="nav nav-pills nav-stacked" style="padding-left: 1em;">
+          <li data-val="rating/positive"><a href="#"><span class="positive"><span class="glyphicon glyphicon-thumbs-up"></span> Positive</span></a></li>
+          <li data-val="rating/neutral"><a href="#"><span class="neutral"><span class="glyphicon glyphicon-question-sign"></span> Neutral</span></a></li>
+          <li data-val="rating/negative"><a href="#"><span class="negative"><span class="glyphicon glyphicon-thumbs-down"></span> Negative</span></a></li>
+        </ul>
+        <li data-val="confirm_connection"><a href="#"><span class="glyphicon glyphicon-ok"></span> Connection</a></li>
+        <!-- <li ><a href="#" data-val="other"><span class="glyphicon glyphicon-question-sign"></span> Other</a></li> -->
+      </ul>
+      <div class="alert alert-info"><p>Viewing as 
+        <a href="#!/id/keyID/1DqrzTcimQp3Ye88oHgxdU7DBTsM2TRYFj" data-id-type="keyID" data-id-value="1DqrzTcimQp3Ye88oHgxdU7DBTsM2TRYFj" class="id-link">Identi.fi</a>
+      </p>
+      <p>Max distance from viewpoint:</p>
+      <div class="btn-group trust-distance-selector">
+        <button type="button" class="btn btn-default" data-val="-1">✕</button>
+        <button type="button" class="btn btn-default" data-val="1">1</button>
+        <button type="button" class="btn btn-default" data-val="2">2</button>
+        <button type="button" class="btn btn-default" data-val="3">3</button>
+        <button type="button" class="btn btn-default active" data-val="0">∞</button>
+      </div>
+      </div>
+    </div>
+  </div>
+
+    </div>
+    <div class="col-md-8">
+      <!-- Nav tabs -->
+      <tabset>
+        <tab>
+          <tab-heading><span class="glyphicon glyphicon-download"></span> <span class="hidden-xs">Received </span>({{0+overview.receivedPositive+overview.receivedNeutral+overview.receivedNegative}})</tab-heading>
+          <br>
+          <div class="alert alert-info login-alert-info">
+            <strong><a href="#">Log in</a></strong> to write messages.
+          </div>
+          <div data-ng-repeat="msg in received" class="panel animated fadeIn panel-success message-panel">
+              <div class="panel-heading" style="background-image:linear-gradient(rgba(223,240,216,0.6000000000000001) 0%, rgba(208,233,198,0.6000000000000001) 100%);background-color: rgba(223,240,216,0.6000000000000001);">
+              <p class="">
+                  <span class="glyphicon glyphicon-thumbs-up mar-left5 pull-right form-control-feedback"></span>
+                <strong>
+                  <a data-ng-href="#!/id/{{msg.data.signedData.author[0][0]|filter:urlencode}}/{{msg.data.signedData.author[0][1]|filter:urlencode}}" data-id-type="" data-id-value="" class="id-link">
+                    <img alt="" src="https://www.gravatar.com/avatar/{{msg.gravatar}}?d=retro&amp;s=30" class="img-rounded mar-right5"> 
+                    <span data-ng-bind="msg.authorName||msg.data.signedData.author[0][1]"></span>
+                  </a>
+                </strong>
+                <small><i class="glyphicon glyphicon-play"></i></small>
+                <a href="#!/id/{{msg.data.signedData.recipient[0][0]|filter:urlencode}}/{{msg.data.signedData.recipient[0][1]|filter:urlencode}}" data-ng-bind="msg.recipientName||msg.data.signedData.recipient[0][1]" data-id-type="" data-id-value="" class="id-link"></a>
+                 - <a href="#!/messages/{{msg.hash}}" data-ng-bind="msg.data.signedData.timestamp*1000|date:'medium'" class="text-muted small" style="display:inline-block;"></a>
+              </p>
+
+              <p data-ng-bind-html="msg.data.signedData.comment|linky"></p>
+            </div>
+          </div>
+          <div class="ladda-button" data-style="zoom-in" data-spinner-color="#000" id="received-spinner"><span class="ladda-label"></span><span class="ladda-spinner"></span></div>
+        </tab>
+        <tab>
+          <tab-heading><span class="glyphicon glyphicon-upload"></span> <span class="hidden-xs">Sent </span>({{0+overview.authoredPositive+overview.authoredNeutral+overview.authoredNegative}})</tab-heading>
+          <br>
+          <div data-ng-repeat="msg in sent" class="panel animated fadeIn panel-success message-panel">
+              <div class="panel-heading" style="background-image:linear-gradient(rgba(223,240,216,0.6000000000000001) 0%, rgba(208,233,198,0.6000000000000001) 100%);background-color: rgba(223,240,216,0.6000000000000001);">
+              <p class="">
+                  <span class="glyphicon glyphicon-thumbs-up mar-left5 pull-right form-control-feedback"></span>
+                <strong>
+                  <a href="#!/id/{{msg.data.signedData.author[0][0]|filter:urlencode}}/{{msg.data.signedData.author[0][1]|filter:urlencode}}" data-id-type="" data-id-value="" class="id-link">
+                    <img alt="" src="https://www.gravatar.com/avatar/{{gravatar}}?d=retro&amp;s=30" class="img-rounded mar-right5"> 
+                    <span data-ng-bind="msg.authorName||msg.data.signedData.author[0][1]"></span>
+                  </a>
+                </strong>
+                <small><i class="glyphicon glyphicon-play"></i></small>
+                <a href="#!/id/{{msg.data.signedData.recipient[0][0]|filter:urlencode}}/{{msg.data.signedData.recipient[0][1]|filter:urlencode}}" data-ng-bind="msg.recipientName||msg.data.signedData.recipient[0][1]" data-id-type="" data-id-value="" class="id-link"></a>
+                 - <a href="#!/messages/{{msg.hash}}" data-ng-bind="msg.data.signedData.timestamp*1000|date:'medium'" class="text-muted small" style="display:inline-block;"></a>
+              </p>
+
+              <p data-ng-bind-html="msg.data.signedData.comment|linky"></p>
+            </div>
+          </div>
+          <div class="ladda-button" data-style="zoom-in" data-spinner-color="#000" id="sent-spinner"><span class="ladda-label"></span><span class="ladda-spinner"></span></div>
+        </tab>
+        <tab>
+          <tab-heading><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>({{0+connections.length}})</tab-heading>
+            <div id="connections">
+              <input id="authenticity_token" name="authenticity_token" type="hidden" value="z1JM7ffnFK7gOv6S3yzG9UFyakukYHikAU94/3TcT2o=">    <table class="table truncated-table table-hover animated fadeIn">
+                <tbody>
+                  <tr data-ng-repeat="id in connections" class="id-row" data-type="id.type" data-value="id.value">
+                    <td>
+                      <a data-ng-if="id.iconStyle&&id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
+                      <span data-ng-if="id.iconStyle&&!id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
+                      <span class="visible-xs pull-right">
+                        <button autocomplete="off" name="confirm" class="ladda-button btn btn-default btn-confirm has-success disabled" data-style="zoom-out"><span class="ladda-label"><span class="form-control-feedback glyphicon glyphicon-ok"></span> {{id.confirmations}}</span><span class="ladda-spinner"></span></button>
+                        <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute has-error disabled" data-style="zoom-out"><span class="ladda-label"><span class="form-control-feedback glyphicon glyphicon-remove"></span> {{id.refutations}}</span><span class="ladda-spinner"></span></button>
+                      </span>
+                    </td>
+                    <td colspan="3">
+                      <a data-ng-href="#!/id/{{id.type|filter:urlencode}}/{{id.value|filter:urlencode}}" data-id-type="{{id.type}}" data-id-value="{{id.value}}" data-ng-bind="id.value" class="id-link"></a><br>
+                      <small data-ng-bind="id.type"></small>
+                    </td>
+                    <!--<td>
+                      <input class="form-control linkedComment" type="text" placeholder="comment" disabled>
+                    </td>-->
+                    <td class="hidden-xs">
+                      <button autocomplete="off" name="confirm" class="ladda-button btn btn-default btn-confirm has-success disabled" data-style="zoom-out"><span class="ladda-label"><span class="form-control-feedback glyphicon glyphicon-ok"></span>{{id.confirmations}}</span><span class="ladda-spinner"></span></button>
+                      <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute has-error disabled" data-style="zoom-out"><span class="ladda-label"><span class="form-control-feedback glyphicon glyphicon-remove"></span>{{id.refutations}}</span><span class="ladda-spinner"></span></button>
+                    </td>
+                  </tr>
+                  <tr style="display:none" class="active connectingmsgs">
+                    <td class="connectingmsgs ladda-button" data-style="zoom-in" data-spinner-color="#000" colspan="5"></td>
+                  </tr>
+                  <tr class="active add-row">
+                    <td colspan="3"><input id="addValue" class="form-control" name="linkedValue" type="text" placeholder="value" disabled=""></td>
+                    <td><input id="addType" class="form-control" name="linkedType" type="text" placeholder="type" disabled=""></td>
+                    <!--<td><input id="addComment" class="form-control" name="linkedComment" type="text" placeholder="comment" disabled></td> -->
+                    <td><button autocomplete="off" id="addButton" class="ladda-button btn btn-default disabled" data-style="zoom-out"><span class="ladda-label"><span class="glyphicon glyphicon-plus"></span> Add</span><span class="ladda-spinner"></span></button></td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+  </div>
+</section>

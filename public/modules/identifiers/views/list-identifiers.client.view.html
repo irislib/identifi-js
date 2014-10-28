@@ -1,0 +1,45 @@
+<section data-ng-controller="IdentifiersController" data-ng-init="search()">
+  <div data-ng-if="!queryTerm" class="jumbotron">
+    <div class="align-center"><h1>Address book with ratings</h1></div>
+
+    <div class="row">
+      <div class="col-sm-4"><div class="align-center"><i class="hidden-xs fa fa-link fa-5x mar-bot20"></i><p><i class="hidden-sm hidden-md hidden-lg fa fa-link"></i> Keep your contacts and trusted online identity up-to-date.</p></div></div>
+      <div class="col-sm-4"><div class="align-center"><i class="hidden-xs fa fa-thumbs-up fa-5x mar-bot20"></i><p><i class="hidden-sm hidden-md hidden-lg fa fa-thumbs-up"></i> Find out who said what about a person or an organization.</p></div></div>
+      <div class="col-sm-4"><div class="align-center"><i class="hidden-xs fa fa-check fa-5x mar-bot20"></i><p><i class="hidden-sm hidden-md hidden-lg fa fa-check"></i> Show content from trusted and real identities only.</p></div></div>
+    </div>
+  </div>
+
+  <table id="search-results" class="table table-hover">
+    <tbody>
+      <tr data-ng-repeat="result in identifiers" class="search-result-row">
+        <td class="gravatar-col"><img alt="" src="https://www.gravatar.com/avatar/{{result.gravatar}}?d=retro&amp;s=45"></td>
+        <td><a data-ng-bind="result.name" data-ng-href="#!/id/{{result[0][0]|filter:urlencode}}/{{result[0][1]|filter:urlencode}}"></a>
+          <small data-ng-if="!result.name" class="list-group-item-text">
+            <span data-ng-bind="result[0][0]"></span>
+          </small><br>
+          <small>
+            <span data-ng-if="result.nickname" data-ng-bind="result.nickname" class="mar-right10"></span>
+            <span data-ng-if="result.email" class="mar-right10">
+              <span class="glyphicon glyphicon-envelope"></span> <span data-ng-bind="result.email"></span> 
+            </span>
+            <span data-ng-if="result.facebook" class="mar-right10">
+              <span class="fa fa-facebook"></span> <span data-ng-bind="result.facebook"></span> 
+            </span>
+            <span data-ng-if="result.twitter" class="mar-right10">
+              <span class="fa fa-twitter"></span> <span data-ng-bind="result.twitter"></span> 
+            </span>
+            <span data-ng-if="result.googlePlus" class="mar-right10">
+              <span class="fa fa-google-plus"></span> <span data-ng-bind="result.googlePlus"></span> 
+            </span>
+            <span data-ng-if="result.bitcoin" class="mar-right10">
+              <span class="fa fa-bitcoin"></span> <span data-ng-bind="result.bitcoin"></span> 
+            </span>
+          </small>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="alert alert-warning text-center" data-ng-hide="!identifiers.$resolved || identifiers.length">
+    No Identifiers yet, why don't you <a href="/#!/identifiers/create">create one</a>?
+  </div>
+</section>

@@ -1,0 +1,53 @@
+<section data-ng-controller="MessagesController" data-ng-init="find()">
+  <div id="messages" class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading visible-xs">
+          <h4 class="panel-title"><a data-toggle="collapse" data-target=".filters"><span class="glyphicon glyphicon-chevron-down"></span> Filters</a></h4></div>
+        <div class="panel-body collapse filters">
+          <ul class="nav nav-pills nav-stacked msg-type-filter">
+            <li data-val=""><a href="#"><span class="glyphicon glyphicon-home"></span> All</a></li>
+            <li class="active" data-val="rating"><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Rating</a></li>
+            <ul class="nav nav-pills nav-stacked" style="padding-left: 1em;">
+              <li data-val="rating/positive"><a href="#"><span class="positive"><span class="glyphicon glyphicon-thumbs-up"></span> Positive</span></a></li>
+              <li data-val="rating/neutral"><a href="#"><span class="neutral"><span class="glyphicon glyphicon-question-sign"></span> Neutral</span></a></li>
+              <li data-val="rating/negative"><a href="#"><span class="negative"><span class="glyphicon glyphicon-thumbs-down"></span> Negative</span></a></li>
+            </ul>
+            <li data-val="confirm_connection"><a href="#"><span class="glyphicon glyphicon-ok"></span> Connection</a></li>
+            <!-- <li ><a href="#" data-val="other"><span class="glyphicon glyphicon-question-sign"></span> Other</a></li> -->
+          </ul>
+          <div class="alert alert-info"><p>Viewing as 
+            <a href="#!/id/keyID/1DqrzTcimQp3Ye88oHgxdU7DBTsM2TRYFj" data-id-type="keyID" data-id-value="1DqrzTcimQp3Ye88oHgxdU7DBTsM2TRYFj" class="id-link" data-original-title="" title="">Identi.fi</a>
+          </p>
+          <p>Max distance from viewpoint:</p>
+          <div class="btn-group trust-distance-selector">
+            <button type="button" class="btn btn-default" data-val="-1">✕</button>
+            <button type="button" class="btn btn-default" data-val="1">1</button>
+            <button type="button" class="btn btn-default" data-val="2">2</button>
+            <button type="button" class="btn btn-default" data-val="3">3</button>
+            <button type="button" class="btn btn-default active" data-val="0">∞</button>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div data-ng-repeat="message in messages" class="panel animated fadeIn panel-success message-panel">
+        <div class="panel-heading">
+          <strong>
+            <a data-ng-href="#!/id/{{message.data.signedData.author[0][0]}}/{{message.data.signedData.author[0][1]}}" class="id-link">
+            <img alt="" src="https://www.gravatar.com/avatar/{{message.gravatar}}?d=retro&amp;s=30" class="img-rounded mar-right5"> <span data-ng-bind="message.authorName||message.data.signedData.author[0][1]"></span></a>
+          </strong>
+          <small><i class="glyphicon glyphicon-play"></i></small>
+          <a data-ng-href="#!/id/{{message.data.signedData.recipient[0][0]}}/{{message.data.signedData.recipient[0][1]}}" data-ng-bind="message.recipientName||message.data.signedData.recipient[0][1]" class="id-link"></a>
+          -
+          <a data-ng-href="#!/messages/{{message.hash}}" class="text-muted small" data-ng-bind="message.data.signedData.timestamp*1000|date:'medium'"></a>
+          <p data-ng-bind-html="message.data.signedData.comment|linky"></p>
+        </div>
+      </div>
+      <div class="alert alert-warning text-center" data-ng-hide="!messages.$resolved || messages.length">
+        No Messages yet, why don't you <a href="/#!/messages/create">create one</a>?
+      </div>
+    </div>
+  </div>
+</section>

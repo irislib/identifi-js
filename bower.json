@@ -1,0 +1,21 @@
+{
+  "name": "identifi",
+  "version": "0.0.1",
+  "description": "Identifi MEAN.JS",
+  "dependencies": {
+    "bootstrap": "~3",
+    "angular": "~1.2",
+    "angular-resource": "~1.2",
+    "angular-mocks": "~1.2",
+    "angular-cookies": "~1.2",
+    "angular-animate": "~1.2",
+    "angular-touch": "~1.2",
+    "angular-sanitize": "~1.2",
+    "angular-bootstrap": "~0.11.0",
+    "angular-ui-utils": "~0.1.1",
+    "angular-ui-router": "~0.2.10",
+    "bootstrap-social": "~4.8.0",
+    "crypto-js": "https://crypto-js.googlecode.com/files/CryptoJS%20v3.1.2.zip",
+    "bootstrap-sass-official": "~3.3.0"
+  }
+}
