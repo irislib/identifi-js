@@ -1,1 +1,4 @@
-MEAN.JS front-end for identifi.
+Identifi-js
+==============
+
+MEAN.JS interface for [Identifi](https://github.com/identifi/identifi)
