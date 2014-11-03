@@ -19,6 +19,11 @@ angular.module('identifiers').factory('Identifiers', ['$resource',
         action: 'GET',
         params: { method: 'received' },
 				isArray: true
+			},
+			trustpath: {
+        action: 'GET',
+        params: { method: 'trustpath' },
+				isArray: true
 			}
 		});
 	}

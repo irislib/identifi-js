@@ -54,7 +54,7 @@ exports.overview = function(req, res) {
  * Connections
  */
 exports.connections = function(req, res) {
-  identifi.cmd('getconnections', req.params.idType, req.params.idValue, '20', '0', 'keyID', '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', function(err, identifiRes, identifiResHeaders) {
+  identifi.cmd('getconnections', req.params.idType, req.params.idValue, req.query.limit || '20', req.query.offset || '0', req.query.viewpointType || 'keyID', req.query.viewpointValue || '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }
@@ -67,7 +67,7 @@ exports.connections = function(req, res) {
  * Trust path
  */
 exports.trustpath = function(req, res) {
-  identifi.cmd('getpaths', req.params.idType, req.params.idValue, req.params.id2Type, req.params.id2Value, '3', function(err, identifiRes, identifiResHeaders) {
+  identifi.cmd('getpaths', req.query.viewpointType || 'keyID', req.query.viewpointValue || '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', req.params.idType, req.params.idValue, function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }

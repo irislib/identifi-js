@@ -53,20 +53,20 @@
     </div>
   </div>
 
-  <div class="panel quick-contact">
+  <div data-ng-if="hasQuickContacts" class="panel quick-contact">
     <a data-ng-repeat="id in connections" data-ng-if="id.quickContact" class="btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span>&nbsp;</a> 
   </div>
-  <div class="panel panel-default">
+  <div data-ng-if="trustpath.length > 0" class="panel panel-default">
     <div class="panel-body">
       <ul class="trustpath-list list-unstyled">
-        <li data-ng-repeat-start="id in trustpath">
-          <a data-id-type="{{id.type}}" data-id-value="{{id.value}}" class="id-link" data-ng-href="#!/id/{{id.type|filter:urlencode}}/{{id.value|filter:urlencode}}" data-original-title="" title="">
+        <li data-ng-repeat-start="id in trustpath[0]">
+          <a data-id-type="{{id[0]}}" data-id-value="{{id[1]}}" class="id-link" data-ng-href="#!/id/{{id[0]|filter:urlencode}}/{{id[1]|filter:urlencode}}" data-original-title="" title="">
             <img alt="" src="https://www.gravatar.com/avatar/{{id.gravatar}}?d=retro&amp;s=30" class="mar-bot5 img-rounded mar-right5"> 
-            {{id.value}}
+            {{id[1]}}
           </a>
         </li>
         <li class="has-success" data-ng-repeat-end>
-          <span class="mar-left5 mar-bot10 glyphicon glyphicon-thumbs-up form-control-feedback"></span>
+          <span class="mar-left5 mar-bot10 glyphicon glyphicon-thumbs-up"></span>
         </li>
       </ul>
     </div>
@@ -112,10 +112,11 @@
           <div class="alert alert-info login-alert-info">
             <strong><a href="#">Log in</a></strong> to write messages.
           </div>
+          <div data-ng-if="received.$resolved && received.length == 0" class="alert alert-info animated fadeIn">No messages to show</div>
           <div data-ng-repeat="msg in received" class="panel animated fadeIn panel-success message-panel">
               <div class="panel-heading" style="background-image:linear-gradient(rgba(223,240,216,0.6000000000000001) 0%, rgba(208,233,198,0.6000000000000001) 100%);background-color: rgba(223,240,216,0.6000000000000001);">
               <p class="">
-                  <span class="glyphicon glyphicon-thumbs-up mar-left5 pull-right form-control-feedback"></span>
+                  <span class="glyphicon glyphicon-thumbs-up mar-left5 pull-right"></span>
                 <strong>
                   <a data-ng-href="#!/id/{{msg.data.signedData.author[0][0]|filter:urlencode}}/{{msg.data.signedData.author[0][1]|filter:urlencode}}" data-id-type="" data-id-value="" class="id-link">
                     <img alt="" src="https://www.gravatar.com/avatar/{{msg.gravatar}}?d=retro&amp;s=30" class="img-rounded mar-right5"> 
@@ -135,10 +136,11 @@
         <tab>
           <tab-heading><span class="glyphicon glyphicon-upload"></span> <span class="hidden-xs">Sent </span>({{0+overview.authoredPositive+overview.authoredNeutral+overview.authoredNegative}})</tab-heading>
           <br>
+          <div data-ng-if="sent.$resolved && sent.length == 0" class="alert alert-info animated fadeIn">No messages to show</div>
           <div data-ng-repeat="msg in sent" class="panel animated fadeIn panel-success message-panel">
               <div class="panel-heading" style="background-image:linear-gradient(rgba(223,240,216,0.6000000000000001) 0%, rgba(208,233,198,0.6000000000000001) 100%);background-color: rgba(223,240,216,0.6000000000000001);">
               <p class="">
-                  <span class="glyphicon glyphicon-thumbs-up mar-left5 pull-right form-control-feedback"></span>
+                  <span class="glyphicon glyphicon-thumbs-up mar-left5 pull-right"></span>
                 <strong>
                   <a href="#!/id/{{msg.data.signedData.author[0][0]|filter:urlencode}}/{{msg.data.signedData.author[0][1]|filter:urlencode}}" data-id-type="" data-id-value="" class="id-link">
                     <img alt="" src="https://www.gravatar.com/avatar/{{gravatar}}?d=retro&amp;s=30" class="img-rounded mar-right5"> 
@@ -165,20 +167,20 @@
                       <a data-ng-if="id.iconStyle&&id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
                       <span data-ng-if="id.iconStyle&&!id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
                       <span class="visible-xs pull-right">
-                        <button autocomplete="off" name="confirm" class="ladda-button btn btn-default btn-confirm has-success disabled" data-style="zoom-out"><span class="ladda-label"><span class="form-control-feedback glyphicon glyphicon-ok"></span> {{id.confirmations}}</span><span class="ladda-spinner"></span></button>
-                        <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute has-error disabled" data-style="zoom-out"><span class="ladda-label"><span class="form-control-feedback glyphicon glyphicon-remove"></span> {{id.refutations}}</span><span class="ladda-spinner"></span></button>
+                        <button autocomplete="off" name="confirm" class="ladda-button btn btn-default btn-confirm has-success disabled" data-style="zoom-out"><span class="ladda-label"><span class="glyphicon glyphicon-ok"></span> {{id.confirmations}}</span><span class="ladda-spinner"></span></button>
+                        <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute has-error disabled" data-style="zoom-out"><span class="ladda-label"><span class="glyphicon glyphicon-remove"></span> {{id.refutations}}</span><span class="ladda-spinner"></span></button>
                       </span>
                     </td>
                     <td colspan="3">
-                      <a data-ng-href="#!/id/{{id.type|filter:urlencode}}/{{id.value|filter:urlencode}}" data-id-type="{{id.type}}" data-id-value="{{id.value}}" data-ng-bind="id.value" class="id-link"></a><br>
+                      <a data-ng-href="#!/id/{{id.type|urlencode}}/{{id.value|urlencode}}" data-id-type="{{id.type}}" data-id-value="{{id.value}}" data-ng-bind="id.value" class="id-link"></a><br>
                       <small data-ng-bind="id.type"></small>
                     </td>
                     <!--<td>
                       <input class="form-control linkedComment" type="text" placeholder="comment" disabled>
                     </td>-->
                     <td class="hidden-xs">
-                      <button autocomplete="off" name="confirm" class="ladda-button btn btn-default btn-confirm has-success disabled" data-style="zoom-out"><span class="ladda-label"><span class="form-control-feedback glyphicon glyphicon-ok"></span>{{id.confirmations}}</span><span class="ladda-spinner"></span></button>
-                      <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute has-error disabled" data-style="zoom-out"><span class="ladda-label"><span class="form-control-feedback glyphicon glyphicon-remove"></span>{{id.refutations}}</span><span class="ladda-spinner"></span></button>
+                      <button autocomplete="off" name="confirm" class="ladda-button btn btn-default btn-confirm has-success disabled" data-style="zoom-out"><span class="ladda-label"><span class="glyphicon glyphicon-ok"></span>{{id.confirmations}}</span><span class="ladda-spinner"></span></button>
+                      <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute has-error disabled" data-style="zoom-out"><span class="ladda-label"><span class="glyphicon glyphicon-remove"></span>{{id.refutations}}</span><span class="ladda-spinner"></span></button>
                     </td>
                   </tr>
                   <tr style="display:none" class="active connectingmsgs">

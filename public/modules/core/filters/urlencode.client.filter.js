@@ -1,12 +1,7 @@
 'use strict';
 
-angular.module('core').filter('urlencode', [
+angular.module('identifi').filter('urlencode', [
 	function() {
-		return function(input) {
-			// Urlencode directive logic
-			// ...
-
-			return 'urlencode filter: ' + input;
-		};
+    return encodeURIComponent;
 	}
 ]);

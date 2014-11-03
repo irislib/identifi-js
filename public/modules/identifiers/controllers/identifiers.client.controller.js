@@ -118,7 +118,19 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
               }
               break;
           }
+          $scope.hasQuickContacts = $scope.hasQuickContacts || conn.quickContact;
         }
+      });
+
+			$scope.overview = Identifiers.get({ 
+				idType: $stateParams.idType,
+        idValue: $stateParams.idValue,
+        method: 'overview'
+			}, function() {
+        $scope.email = $scope.overview.email;
+        if ($scope.email === '')
+          $scope.email = $scope.idValue;
+        $scope.gravatar = CryptoJS.MD5($scope.email).toString();
       });
 
 			$scope.sent = Identifiers.sent({ 
@@ -140,15 +152,16 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
         }
 			});
 
-			$scope.overview = Identifiers.get({ 
+			$scope.trustpath = Identifiers.trustpath({ 
 				idType: $stateParams.idType,
-        idValue: $stateParams.idValue,
-        method: 'overview'
+        idValue: $stateParams.idValue
 			}, function() {
-        $scope.email = $scope.overview.email;
-        if ($scope.email === '')
-          $scope.email = $scope.idValue;
-        $scope.gravatar = CryptoJS.MD5($scope.email).toString();
+        for (var i = 0; i < $scope.trustpath.length; i++) {
+          for (var key in $scope.trustpath[i]) {
+            var id = $scope.trustpath[i][key];
+            id.gravatar = CryptoJS.MD5(id[1]).toString();
+          }
+        }
       });
 		};
 	}
