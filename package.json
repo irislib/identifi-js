@@ -4,10 +4,10 @@
   "version": "0.0.1",
   "repository" : {
     "type" : "git",
-    "url" : "https://github.com/identifi/identifi-rails.git"
+    "url" : "https://github.com/identifi/identifi-js.git"
   },
   "bugs" : {
-    "url" : "https://github.com/identifi/identifi-rails/issues"
+    "url" : "https://github.com/identifi/identifi-js/issues"
   },
   "author": "Identifi Project",
   "engines": {
