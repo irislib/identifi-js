@@ -5,8 +5,9 @@
       <div class="col-sm-6">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3 data-ng-bind="message.authorName" class="panel-title">
-              <img alt="" src="https://www.gravatar.com/avatar/e30d5696b25f0dcd1bdf609753602977?d=retro&amp;s=30" class="img-rounded mar-bot5 mar-right5"> 
+            <h3 class="panel-title">
+              <img alt="" src="https://www.gravatar.com/avatar/{{message.authorGravatar}}?d=retro&amp;s=30" class="img-rounded mar-bot5 mar-right5"> 
+              <span data-ng-bind="message.authorName"></span> 
               <span class="glyphicon glyphicon-play"></span>
             </h3>
           </div>
@@ -20,8 +21,9 @@
       <div class="col-sm-6">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3 data-ng-bind="message.recipientName" class="panel-title">
-              <img alt="" src="https://www.gravatar.com/avatar/e30d5696b25f0dcd1bdf609753602977?d=retro&amp;s=30" class="img-rounded mar-bot5 mar-right5"> 
+            <h3 class="panel-title">
+              <img alt="" src="https://www.gravatar.com/avatar/{{message.recipientGravatar}}?d=retro&amp;s=30" class="img-rounded mar-bot5 mar-right5"> 
+              <span data-ng-bind="message.recipientName"></span> 
               <span class="glyphicon glyphicon-play"></span>
             </h3>
           </div>

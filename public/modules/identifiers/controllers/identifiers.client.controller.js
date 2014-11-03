@@ -127,7 +127,12 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
           $scope.hasQuickContacts = $scope.hasQuickContacts || conn.quickContact;
           $scope.connectionClicked = function(event, id) {
             id.collapse = !id.collapse;
-            id.connectingmsgs = id.connectingmsgs || Identifiers.connectingmsgs({idType: $scope.idType, idValue: $scope.idValue, id2Type: id.type, id2Value: id.value});
+            id.connectingmsgs = id.connectingmsgs || Identifiers.connectingmsgs({idType: $scope.idType, idValue: $scope.idValue, id2Type: id.type, id2Value: id.value}, function() {
+              for (var key in id.connectingmsgs) {
+                var msg = id.connectingmsgs[key];
+                msg.gravatar = CryptoJS.MD5(msg.authorEmail||msg.data.signedData.author[0][1]).toString();
+              }
+            });
           }
         }
       });

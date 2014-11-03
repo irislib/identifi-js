@@ -70,6 +70,8 @@ angular.module('messages').controller('MessagesController', ['$scope', '$statePa
 				messageId: $stateParams.messageId
 			}, function() {
         $scope.message.strData = JSON.stringify($scope.message.data, undefined, 2);
+        $scope.message.authorGravatar = CryptoJS.MD5($scope.message.authorEmail||$scope.message.data.signedData.author[0][1]).toString();
+        $scope.message.recipientGravatar = CryptoJS.MD5($scope.message.recipientEmail||$scope.message.data.signedData.recipient[0][1]).toString();
       });
 		};
 	}
