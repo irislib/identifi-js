@@ -2,12 +2,12 @@
   "name": "identifi",
   "description": "Identifi MEAN.JS",
   "version": "0.0.1",
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/identifi/identifi-js.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/identifi/identifi-js.git"
   },
-  "bugs" : {
-    "url" : "https://github.com/identifi/identifi-js/issues"
+  "bugs": {
+    "url": "https://github.com/identifi/identifi-js/issues"
   },
   "author": "Identifi Project",
   "engines": {
@@ -37,6 +37,7 @@
     "grunt-contrib-sass": "^0.8.1",
     "helmet": "~0.4.0",
     "lodash": "~2.4.1",
+    "memcached": "~2.0.0",
     "method-override": "~2.1.2",
     "mongoose": "~3.8.8",
     "morgan": "~1.2.2",

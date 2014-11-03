@@ -2,9 +2,9 @@
   <div id="messages" class="row">
     <div class="col-md-4">
       <div class="panel panel-default">
-        <div class="panel-heading visible-xs">
-          <h4 class="panel-title"><a data-toggle="collapse" data-target=".filters"><span class="glyphicon glyphicon-chevron-down"></span> Filters</a></h4></div>
-        <div class="panel-body collapse filters">
+        <div class="panel-heading visible-xs" data-ng-click="collapseFilters = !collapseFilters">
+          <h4 class="panel-title"><a><span class="glyphicon glyphicon-chevron-down"></span> Filters</a></h4></div>
+        <div class="panel-body filters" collapse="collapseFilters">
           <ul class="nav nav-pills nav-stacked msg-type-filter">
             <li data-val=""><a href="#"><span class="glyphicon glyphicon-home"></span> All</a></li>
             <li class="active" data-val="rating"><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Rating</a></li>

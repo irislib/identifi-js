@@ -24,6 +24,11 @@ angular.module('identifiers').factory('Identifiers', ['$resource',
         action: 'GET',
         params: { method: 'trustpath' },
 				isArray: true
+			},
+			connectingmsgs: {
+        action: 'GET',
+        params: { method: 'connectingmsgs' },
+				isArray: true
 			}
 		});
 	}

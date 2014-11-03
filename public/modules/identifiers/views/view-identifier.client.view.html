@@ -73,9 +73,9 @@
   </div>
 
   <div class="panel panel-default">
-    <div class="panel-heading visible-xs">
-      <h4 class="panel-title"><a data-toggle="collapse" data-target=".filters"><span class="glyphicon glyphicon-chevron-down"></span> Filters</a></h4></div>
-    <div class="panel-body collapse filters">
+    <div class="panel-heading visible-xs" id="toggleFilters" data-ng-click="collapseFilters = !collapseFilters">
+      <h4 class="panel-title"><a><span class="glyphicon glyphicon-chevron-down"></span> Filters</a></h4></div>
+    <div class="panel-body filters" collapse="collapseFilters">
       <ul class="nav nav-pills nav-stacked msg-type-filter">
         <li data-val=""><a href="#"><span class="glyphicon glyphicon-home"></span> All</a></li>
         <li class="active" data-val="rating"><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Rating</a></li>
@@ -162,7 +162,7 @@
             <div id="connections">
               <input id="authenticity_token" name="authenticity_token" type="hidden" value="z1JM7ffnFK7gOv6S3yzG9UFyakukYHikAU94/3TcT2o=">    <table class="table truncated-table table-hover animated fadeIn">
                 <tbody>
-                  <tr data-ng-repeat="id in connections" class="id-row" data-type="id.type" data-value="id.value">
+                  <tr data-ng-repeat-start="id in connections" data-ng-click="connectionClicked($event, id)" class="id-row" data-type="id.type" data-value="id.value">
                     <td>
                       <a data-ng-if="id.iconStyle&&id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
                       <span data-ng-if="id.iconStyle&&!id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
@@ -183,8 +183,29 @@
                       <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute has-error disabled" data-style="zoom-out"><span class="ladda-label"><span class="glyphicon glyphicon-remove"></span>{{id.refutations}}</span><span class="ladda-spinner"></span></button>
                     </td>
                   </tr>
-                  <tr style="display:none" class="active connectingmsgs">
-                    <td class="connectingmsgs ladda-button" data-style="zoom-in" data-spinner-color="#000" colspan="5"></td>
+                  <tr data-ng-repeat-end collapse="!id.collapse" class="active connectingmsgs">
+                    <td class="connectingmsgs ladda-button" data-style="zoom-in" data-spinner-color="#000" colspan="5">
+                      <div data-ng-repeat="msg in id.connectingmsgs" class="animated fadeIn confirmation-panel">
+                        <span class="has-success">
+                          <span data-ng-if="msg.data.signedData.type === 'confirm_connection'">
+                            <span class="glyphicon glyphicon-ok hidden-xs mar-left5 pull-right"></span>
+                            <span class="glyphicon glyphicon-ok visible-xs mar-right10"></span>
+                          </span>
+                          <span data-ng-if="msg.data.signedData.type === 'refute_connection'">
+                            <span class="glyphicon glyphicon-remove hidden-xs mar-left5 pull-right"></span>
+                            <span class="glyphicon glyphicon-remove visible-xs mar-right10"></span>
+                          </span>
+                          <strong>
+                            <a data-ng-href="/id/{{msg.data.signedData.author[0][0]}}/{{msg.data.signedData.author[0][1]}}" class="id-link">
+                              <img alt="" src="https://www.gravatar.com/avatar/e30d5696b25f0dcd1bdf609753602977?d=retro&amp;s=30" class="img-rounded mar-right5"> 
+                              <span data-ng-bind="msg.authorName||msg.data.signedData.author[0][1]"></span>
+                            </a>
+                          </strong>
+                           - <a data-ng-href="#!/messages/{{msg.hash}}" data-ng-bind="msg.data.signedData.timestamp*1000|date:'mediumDate'" class="text-muted small" style="display:inline-block;"></a>
+                           
+                        </span>
+                      </div>
+                    </td>
                   </tr>
                   <tr class="active add-row">
                     <td colspan="3"><input id="addValue" class="form-control" name="linkedValue" type="text" placeholder="value" disabled=""></td>

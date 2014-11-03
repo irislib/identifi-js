@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus',
-	function($scope, Authentication, Menus) {
+angular.module('core').controller('HeaderController', ['$scope', '$location', 'Authentication', 'Menus',
+	function($scope, $location, Authentication, Menus) {
 		$scope.authentication = Authentication;
 		$scope.isCollapsed = false;
 		$scope.menu = Menus.getMenu('topbar');
@@ -17,6 +17,10 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 
     $scope.searchChanged = function() {
       $scope.$root.$broadcast('StartSearch', { queryTerm: $scope.queryTerm });
+    };
+
+    $scope.isActive = function(viewLocation) {
+        return viewLocation === $location.path();
     };
 	}
 ]);

@@ -45,6 +45,12 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
             else id.name = id[0][1];
           }
         }
+
+        $scope.resultClicked = function(e) {
+          var idType = angular.element(e.currentTarget).attr('data-id-type');
+          var idValue = angular.element(e.currentTarget).attr('data-id-value');
+          $location.path('/id/' + idType + '/' + idValue);
+        }
       });
 		};
 
@@ -119,6 +125,10 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
               break;
           }
           $scope.hasQuickContacts = $scope.hasQuickContacts || conn.quickContact;
+          $scope.connectionClicked = function(event, id) {
+            id.collapse = !id.collapse;
+            id.connectingmsgs = id.connectingmsgs || Identifiers.connectingmsgs({idType: $scope.idType, idValue: $scope.idValue, id2Type: id.type, id2Value: id.value});
+          }
         }
       });
 
@@ -152,6 +162,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 
 
           var signedData = msg.data.signedData;
+          var alpha;
 
           msg.panelStyle = 'panel-default';
           msg.iconStyle = '';
@@ -181,13 +192,13 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
                 msg.panelStyle = 'panel-success';
                 msg.iconStyle = 'glyphicon glyphicon-thumbs-up';
                 msg.iconCount = (maxRatingDiff < 2) ? msg.iconCount : new Array(Math.ceil(3 * rating / maxRatingDiff));
-                var alpha = (rating - neutralRating - 0.5) / maxRatingDiff / 1.25 + 0.2;
+                alpha = (rating - neutralRating - 0.5) / maxRatingDiff / 1.25 + 0.2;
                 msg.bgColor = 'background-image:linear-gradient(rgba(223,240,216,'+alpha+') 0%, rgba(208,233,198,'+alpha+') 100%);background-color: rgba(223,240,216,'+alpha+');';
               } else if (rating < neutralRating) {
                 msg.panelStyle = 'panel-danger';
                 msg.iconStyle = 'glyphicon glyphicon-thumbs-down';
                 msg.iconCount = (minRatingDiff > -2) ? msg.iconCount : new Array(Math.ceil(3 * rating / minRatingDiff));
-                var alpha = (rating - neutralRating + 0.5) / minRatingDiff / 1.25 + 0.2;
+                alpha = (rating - neutralRating + 0.5) / minRatingDiff / 1.25 + 0.2;
                 msg.bgColor = 'background-image:linear-gradient(rgba(242,222,222,'+alpha+') 0%, rgba(235,204,204,'+alpha+') 100%);background-color: rgba(242,222,222,'+alpha+');';
               } else {
                 msg.panelStyle = 'panel-warning';

@@ -26,6 +26,9 @@ module.exports = function(app) {
 	app.route('/id/:idType/:idValue/received')
 		.get(identifiers.received);
 
+	app.route('/id/:idType/:idValue/connectingmsgs')
+		.get(identifiers.connectingmsgs);
+
 	// Finish by binding the Identifier middleware
 	app.param('identifierId', identifiers.identifierByID);
 };
