@@ -80,7 +80,7 @@ exports.trustpath = function(req, res) {
  * Messages by author
  */
 exports.sent = function(req, res) {
-  identifi.cmd('getmsgsbyauthor', req.params.idType, req.params.idValue, '20', '0', '', '', '0', 'rating', function(err, identifiRes, identifiResHeaders) {
+  identifi.cmd('getmsgsbyauthor', req.params.idType, req.params.idValue, req.query.limit || '20', req.query.offset || '0', req.query.viewpointType || 'keyID', req.query.viewpointValue || '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', '0', 'rating', function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }
@@ -93,7 +93,20 @@ exports.sent = function(req, res) {
  * Messages by recipient 
  */
 exports.received = function(req, res) {
-  identifi.cmd('getmsgsbyrecipient', req.params.idType, req.params.idValue, '20', '0', '', '', '0', 'rating', function(err, identifiRes, identifiResHeaders) {
+  identifi.cmd('getmsgsbyrecipient', req.params.idType, req.params.idValue, req.query.limit || '20', req.query.offset || '0', req.query.viewpointType || 'keyID', req.query.viewpointValue || '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', '0', 'rating', function(err, identifiRes, identifiResHeaders) {
+    if (err) {
+      return console.error(err);
+    }
+
+    res.jsonp(identifiRes);
+  });
+};
+
+/**
+ * Connecting messages
+ */
+exports.connectingmsgs = function(req, res) {
+  identifi.cmd('getconnectingmsgs', req.params.idType, req.params.idValue, req.query.id2Type, req.query.id2Value, req.query.limit || '20', req.query.offset || '0', req.query.viewpointType || 'keyID', req.query.viewpointValue || '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', '0', 'rating', function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }

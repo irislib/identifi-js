@@ -149,6 +149,52 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
           if (msg.authorEmail === '')
             gravatarEmail = msg.data.signedData.author[0][0] + msg.data.signedData.author[0][1];
           msg.gravatar = CryptoJS.MD5(gravatarEmail).toString();
+
+
+          var signedData = msg.data.signedData;
+
+          msg.panelStyle = 'panel-default';
+          msg.iconStyle = '';
+          msg.hasSuccess = '';
+          msg.bgColor = '';
+          msg.iconCount = new Array(1);
+
+          switch (signedData.type) {
+            case 'confirm_connection':
+              msg.iconStyle = 'glyphicon glyphicon-ok';
+              msg.hasSuccess = 'has-success';
+              break;
+            case 'connection':
+              msg.iconStyle = 'glyphicon glyphicon-ok';
+              msg.hasSuccess = 'has-success';
+              break;
+            case 'refute_connection':
+              msg.iconStyle = 'glyphicon glyphicon-remove';
+              msg.hasSuccess = 'has-error';
+              break;
+            case 'rating':
+              var rating = signedData.rating;
+              var neutralRating = (signedData.minRating + signedData.maxRating) / 2;
+              var maxRatingDiff = (signedData.maxRating - neutralRating);
+              var minRatingDiff = (signedData.minRating - neutralRating);
+              if (rating > neutralRating) {
+                msg.panelStyle = 'panel-success';
+                msg.iconStyle = 'glyphicon glyphicon-thumbs-up';
+                msg.iconCount = (maxRatingDiff < 2) ? msg.iconCount : new Array(Math.ceil(3 * rating / maxRatingDiff));
+                var alpha = (rating - neutralRating - 0.5) / maxRatingDiff / 1.25 + 0.2;
+                msg.bgColor = 'background-image:linear-gradient(rgba(223,240,216,'+alpha+') 0%, rgba(208,233,198,'+alpha+') 100%);background-color: rgba(223,240,216,'+alpha+');';
+              } else if (rating < neutralRating) {
+                msg.panelStyle = 'panel-danger';
+                msg.iconStyle = 'glyphicon glyphicon-thumbs-down';
+                msg.iconCount = (minRatingDiff > -2) ? msg.iconCount : new Array(Math.ceil(3 * rating / minRatingDiff));
+                var alpha = (rating - neutralRating + 0.5) / minRatingDiff / 1.25 + 0.2;
+                msg.bgColor = 'background-image:linear-gradient(rgba(242,222,222,'+alpha+') 0%, rgba(235,204,204,'+alpha+') 100%);background-color: rgba(242,222,222,'+alpha+');';
+              } else {
+                msg.panelStyle = 'panel-warning';
+                msg.iconStyle = 'glyphicon glyphicon-question-sign';
+              }
+              break;
+          }
         }
 			});
 

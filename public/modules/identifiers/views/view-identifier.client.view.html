@@ -60,12 +60,12 @@
     <div class="panel-body">
       <ul class="trustpath-list list-unstyled">
         <li data-ng-repeat-start="id in trustpath[0]">
-          <a data-id-type="{{id[0]}}" data-id-value="{{id[1]}}" class="id-link" data-ng-href="#!/id/{{id[0]|filter:urlencode}}/{{id[1]|filter:urlencode}}" data-original-title="" title="">
+          <a data-id-type="{{id[0]}}" data-id-value="{{id[1]}}" class="id-link" data-ng-href="#!/id/{{id[0]|urlencode}}/{{id[1]|urlencode}}" data-original-title="" title="">
             <img alt="" src="https://www.gravatar.com/avatar/{{id.gravatar}}?d=retro&amp;s=30" class="mar-bot5 img-rounded mar-right5"> 
             {{id[1]}}
           </a>
         </li>
-        <li class="has-success" data-ng-repeat-end>
+        <li data-ng-if="!$last" class="has-success" data-ng-repeat-end>
           <span class="mar-left5 mar-bot10 glyphicon glyphicon-thumbs-up"></span>
         </li>
       </ul>
@@ -113,18 +113,18 @@
             <strong><a href="#">Log in</a></strong> to write messages.
           </div>
           <div data-ng-if="received.$resolved && received.length == 0" class="alert alert-info animated fadeIn">No messages to show</div>
-          <div data-ng-repeat="msg in received" class="panel animated fadeIn panel-success message-panel">
-              <div class="panel-heading" style="background-image:linear-gradient(rgba(223,240,216,0.6000000000000001) 0%, rgba(208,233,198,0.6000000000000001) 100%);background-color: rgba(223,240,216,0.6000000000000001);">
+          <div data-ng-repeat="msg in received" class="panel animated fadeIn message-panel" data-ng-class="msg.panelStyle">
+              <div class="panel-heading" style="{{msg.bgColor}}">
               <p class="">
-                  <span class="glyphicon glyphicon-thumbs-up mar-left5 pull-right"></span>
+                  <span class="mar-left5 pull-right" data-ng-class="msg.iconStyle" data-ng-repeat="n in msg.iconCount track by $index"></span>
                 <strong>
-                  <a data-ng-href="#!/id/{{msg.data.signedData.author[0][0]|filter:urlencode}}/{{msg.data.signedData.author[0][1]|filter:urlencode}}" data-id-type="" data-id-value="" class="id-link">
+                  <a data-ng-href="#!/id/{{msg.data.signedData.author[0][0]|urlencode}}/{{msg.data.signedData.author[0][1]|urlencode}}" data-id-type="" data-id-value="" class="id-link">
                     <img alt="" src="https://www.gravatar.com/avatar/{{msg.gravatar}}?d=retro&amp;s=30" class="img-rounded mar-right5"> 
                     <span data-ng-bind="msg.authorName||msg.data.signedData.author[0][1]"></span>
                   </a>
                 </strong>
                 <small><i class="glyphicon glyphicon-play"></i></small>
-                <a href="#!/id/{{msg.data.signedData.recipient[0][0]|filter:urlencode}}/{{msg.data.signedData.recipient[0][1]|filter:urlencode}}" data-ng-bind="msg.recipientName||msg.data.signedData.recipient[0][1]" data-id-type="" data-id-value="" class="id-link"></a>
+                <a href="#!/id/{{msg.data.signedData.recipient[0][0]|urlencode}}/{{msg.data.signedData.recipient[0][1]|urlencode}}" data-ng-bind="msg.recipientName||msg.data.signedData.recipient[0][1]" data-id-type="" data-id-value="" class="id-link"></a>
                  - <a href="#!/messages/{{msg.hash}}" data-ng-bind="msg.data.signedData.timestamp*1000|date:'medium'" class="text-muted small" style="display:inline-block;"></a>
               </p>
 
@@ -142,13 +142,13 @@
               <p class="">
                   <span class="glyphicon glyphicon-thumbs-up mar-left5 pull-right"></span>
                 <strong>
-                  <a href="#!/id/{{msg.data.signedData.author[0][0]|filter:urlencode}}/{{msg.data.signedData.author[0][1]|filter:urlencode}}" data-id-type="" data-id-value="" class="id-link">
+                  <a href="#!/id/{{msg.data.signedData.author[0][0]|urlencode}}/{{msg.data.signedData.author[0][1]|urlencode}}" data-id-type="" data-id-value="" class="id-link">
                     <img alt="" src="https://www.gravatar.com/avatar/{{gravatar}}?d=retro&amp;s=30" class="img-rounded mar-right5"> 
                     <span data-ng-bind="msg.authorName||msg.data.signedData.author[0][1]"></span>
                   </a>
                 </strong>
                 <small><i class="glyphicon glyphicon-play"></i></small>
-                <a href="#!/id/{{msg.data.signedData.recipient[0][0]|filter:urlencode}}/{{msg.data.signedData.recipient[0][1]|filter:urlencode}}" data-ng-bind="msg.recipientName||msg.data.signedData.recipient[0][1]" data-id-type="" data-id-value="" class="id-link"></a>
+                <a href="#!/id/{{msg.data.signedData.recipient[0][0]|urlencode}}/{{msg.data.signedData.recipient[0][1]|urlencode}}" data-ng-bind="msg.recipientName||msg.data.signedData.recipient[0][1]" data-id-type="" data-id-value="" class="id-link"></a>
                  - <a href="#!/messages/{{msg.hash}}" data-ng-bind="msg.data.signedData.timestamp*1000|date:'medium'" class="text-muted small" style="display:inline-block;"></a>
               </p>
 
