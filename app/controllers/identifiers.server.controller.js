@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
 	_ = require('lodash');
 
 
+var Memcached = require('memcached');
 var bitcoin = require('bitcoin');
 var identifi = new bitcoin.Client({
     host: 'localhost',
@@ -16,6 +17,10 @@ var identifi = new bitcoin.Client({
       user: 'identifirpc',
       pass: '7FA6FfaoXr6VzCzQa8X2YBrUxR1ANEvnxtdTugvD5mzc'
 });
+identifi.memcached = new Memcached();
+identifi.cachedCmd = function(params) {
+  
+};
 
 /**
  * Show the current Identifier

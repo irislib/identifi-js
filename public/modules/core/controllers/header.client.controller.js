@@ -22,5 +22,9 @@ angular.module('core').controller('HeaderController', ['$scope', '$location', 'A
     $scope.isActive = function(viewLocation) {
         return viewLocation === $location.path();
     };
+
+    $scope.searchKeydown = function(e) {
+      $scope.$root.$broadcast('SearchKeydown', { event: e });
+    };
 	}
 ]);

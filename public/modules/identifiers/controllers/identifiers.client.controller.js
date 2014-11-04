@@ -8,9 +8,21 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
     $scope.idType = $stateParams.idType;
     $scope.idValue = $stateParams.idValue;
 
+    var scrollTo = function(el) {
+      var pos = el.getBoundingClientRect();
+      if (pos.top) {
+        if (pos.top - 60 < window.pageYOffset)
+          window.scrollTo(0, pos.top - 60);
+        else if (pos.bottom > window.pageYOffset + (window.innerHeight || document.documentElement.clientHeight))
+          window.scrollTo(0, pos.bottom - (window.innerHeight || document.documentElement.clientHeight) + 15);
+      }
+    };
+
 		// Search
-		$scope.search = function() {
-			$scope.identifiers = Identifiers.query({idValue: $scope.queryTerm || ''}, function() {
+		$scope.search = function(query) {
+			$scope.identifiers = Identifiers.query({idValue: query || ''}, function() {
+        $scope.identifiers.activeKey = 0;
+        $scope.identifiers[0].active = true;
         for (var i = 0; i < $scope.identifiers.length; i++) {
           var id = $scope.identifiers[i];
           for (var j in id) {
@@ -46,17 +58,50 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
           }
         }
 
-        $scope.resultClicked = function(e) {
-          var idType = angular.element(e.currentTarget).attr('data-id-type');
-          var idValue = angular.element(e.currentTarget).attr('data-id-value');
-          $location.path('/id/' + idType + '/' + idValue);
-        }
       });
 		};
 
-    $scope.$on('StartSearch', function(event, args) {
-      $scope.queryTerm = args.queryTerm;
-      $scope.search();
+    $scope.resultClicked = function(result) {
+      $location.path('/id/' + result[0][0] + '/' + result[0][1]);
+    };
+
+    $scope.$on('SearchKeydown', function(event, args) {
+      switch (args.event.which) {
+        case 38:
+          args.event.preventDefault();
+          if ($scope.identifiers.activeKey > 0) {
+            $scope.identifiers[$scope.identifiers.activeKey].active = false;
+            $scope.identifiers[$scope.identifiers.activeKey - 1].active = true;
+            $scope.identifiers.activeKey--;
+          }
+          scrollTo(document.getElementById('result' + $scope.identifiers.activeKey));
+          break;
+        case 40:
+          args.event.preventDefault();
+          if ($scope.identifiers.activeKey < $scope.identifiers.length - 1) {
+            $scope.identifiers[$scope.identifiers.activeKey].active = false;
+            $scope.identifiers[$scope.identifiers.activeKey + 1].active = true;
+            $scope.identifiers.activeKey++;
+          }
+          scrollTo(document.getElementById('result' + $scope.identifiers.activeKey));
+          break;
+        case 13:
+          args.event.preventDefault();
+          var id = $scope.identifiers[$scope.identifiers.activeKey];
+          $location.path('/id/' + id[0][0] + '/' + id[0][1]);
+          break;
+        case 37:
+        case 39:
+          break; 
+        default:
+          var el = angular.element(args.event.currentTarget);
+          clearTimeout($scope.timer);
+          var wait = setTimeout(function() { 
+            $scope.search(el.val());
+          }, 300);
+          $scope.timer = wait;
+          break;
+      }
     });
 
 		// Find existing Identifier
@@ -125,16 +170,16 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
               break;
           }
           $scope.hasQuickContacts = $scope.hasQuickContacts || conn.quickContact;
-          $scope.connectionClicked = function(event, id) {
-            id.collapse = !id.collapse;
-            id.connectingmsgs = id.connectingmsgs || Identifiers.connectingmsgs({idType: $scope.idType, idValue: $scope.idValue, id2Type: id.type, id2Value: id.value}, function() {
-              for (var key in id.connectingmsgs) {
-                var msg = id.connectingmsgs[key];
-                msg.gravatar = CryptoJS.MD5(msg.authorEmail||msg.data.signedData.author[0][1]).toString();
-              }
-            });
-          }
         }
+        $scope.connectionClicked = function(event, id) {
+          id.collapse = !id.collapse;
+          id.connectingmsgs = id.connectingmsgs || Identifiers.connectingmsgs({idType: $scope.idType, idValue: $scope.idValue, id2Type: id.type, id2Value: id.value}, function() {
+            for (var key in id.connectingmsgs) {
+              var msg = id.connectingmsgs[key];
+              msg.gravatar = CryptoJS.MD5(msg.authorEmail||msg.data.signedData.author[0][1]).toString();
+            }
+          });
+        };
       });
 
 			$scope.overview = Identifiers.get({ 

@@ -110,7 +110,7 @@
           <tab-heading><span class="glyphicon glyphicon-download"></span> <span class="hidden-xs">Received </span>({{0+overview.receivedPositive+overview.receivedNeutral+overview.receivedNegative}})</tab-heading>
           <br>
           <div class="alert alert-info login-alert-info">
-            <strong><a href="#">Log in</a></strong> to write messages.
+            <strong><a href="#!/signin">Log in</a></strong> to write messages.
           </div>
           <div data-ng-if="received.$resolved && received.length == 0" class="alert alert-info animated fadeIn">No messages to show</div>
           <div data-ng-repeat="msg in received" class="panel animated fadeIn message-panel" data-ng-class="msg.panelStyle">
@@ -162,7 +162,7 @@
             <div id="connections">
               <input id="authenticity_token" name="authenticity_token" type="hidden" value="z1JM7ffnFK7gOv6S3yzG9UFyakukYHikAU94/3TcT2o=">    <table class="table truncated-table table-hover animated fadeIn">
                 <tbody>
-                  <tr data-ng-repeat-start="id in connections" data-ng-click="connectionClicked($event, id)" class="id-row" data-type="id.type" data-value="id.value">
+                  <tr data-ng-repeat-start="id in connections" data-ng-click="connectionClicked($event, id)" class="id-row">
                     <td>
                       <a data-ng-if="id.iconStyle&&id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
                       <span data-ng-if="id.iconStyle&&!id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
