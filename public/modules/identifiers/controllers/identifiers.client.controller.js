@@ -90,6 +90,10 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
           var id = $scope.identifiers[$scope.identifiers.activeKey];
           $location.path('/id/' + id[0][0] + '/' + id[0][1]);
           break;
+        case 33:
+        case 34:
+        case 35:
+        case 36:
         case 37:
         case 39:
           break; 

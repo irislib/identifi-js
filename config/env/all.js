@@ -28,7 +28,9 @@ module.exports = {
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
-				'public/lib/crypto-js/rollups/md5.js'
+				'public/lib/crypto-js/rollups/md5.js',
+        'public/lib/angular-spinner/angular-spinner.js',
+        'public/lib/spin.js/spin.js'
 			]
 		},
 		css: [

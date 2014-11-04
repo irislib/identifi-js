@@ -113,6 +113,7 @@
             <strong><a href="#!/signin">Log in</a></strong> to write messages.
           </div>
           <div data-ng-if="received.$resolved && received.length == 0" class="alert alert-info animated fadeIn">No messages to show</div>
+          <div data-ng-if="!received.$resolved" us-spinner></div>
           <div data-ng-repeat="msg in received" class="panel animated fadeIn message-panel" data-ng-class="msg.panelStyle">
               <div class="panel-heading" style="{{msg.bgColor}}">
               <p class="">
@@ -137,6 +138,7 @@
           <tab-heading><span class="glyphicon glyphicon-upload"></span> <span class="hidden-xs">Sent </span>({{0+overview.authoredPositive+overview.authoredNeutral+overview.authoredNegative}})</tab-heading>
           <br>
           <div data-ng-if="sent.$resolved && sent.length == 0" class="alert alert-info animated fadeIn">No messages to show</div>
+          <div data-ng-if="!sent.$resolved" us-spinner></div>
           <div data-ng-repeat="msg in sent" class="panel animated fadeIn panel-success message-panel">
               <div class="panel-heading" style="background-image:linear-gradient(rgba(223,240,216,0.6000000000000001) 0%, rgba(208,233,198,0.6000000000000001) 100%);background-color: rgba(223,240,216,0.6000000000000001);">
               <p class="">
@@ -159,6 +161,7 @@
         </tab>
         <tab>
           <tab-heading><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>({{0+connections.length}})</tab-heading>
+            <div data-ng-if="!connections.$resolved" us-spinner></div>
             <div id="connections">
               <input id="authenticity_token" name="authenticity_token" type="hidden" value="z1JM7ffnFK7gOv6S3yzG9UFyakukYHikAU94/3TcT2o=">    <table class="table truncated-table table-hover animated fadeIn">
                 <tbody>

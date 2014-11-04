@@ -16,6 +16,8 @@
     "angular-ui-router": "~0.2.10",
     "bootstrap-social": "~4.8.0",
     "crypto-js": "https://crypto-js.googlecode.com/files/CryptoJS%20v3.1.2.zip",
-    "bootstrap-sass-official": "~3.3.0"
+    "bootstrap-sass-official": "~3.3.0",
+    "spin.js": "~2.0.1",
+    "angular-spinner": "~0.5.1"
   }
 }
