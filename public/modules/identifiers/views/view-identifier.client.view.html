@@ -114,50 +114,14 @@
           </div>
           <div data-ng-if="received.$resolved && received.length == 0" class="alert alert-info animated fadeIn">No messages to show</div>
           <div data-ng-if="!received.$resolved" us-spinner></div>
-          <div data-ng-repeat="msg in received" class="panel animated fadeIn message-panel" data-ng-class="msg.panelStyle">
-              <div class="panel-heading" style="{{msg.bgColor}}">
-              <p class="">
-                  <span class="mar-left5 pull-right" data-ng-class="msg.iconStyle" data-ng-repeat="n in msg.iconCount track by $index"></span>
-                <strong>
-                  <a data-ng-href="#!/id/{{msg.data.signedData.author[0][0]|urlencode}}/{{msg.data.signedData.author[0][1]|urlencode}}" data-id-type="" data-id-value="" class="id-link">
-                    <img alt="" src="https://www.gravatar.com/avatar/{{msg.gravatar}}?d=retro&amp;s=30" class="img-rounded mar-right5"> 
-                    <span data-ng-bind="msg.authorName||msg.data.signedData.author[0][1]"></span>
-                  </a>
-                </strong>
-                <small><i class="glyphicon glyphicon-play"></i></small>
-                <a href="#!/id/{{msg.data.signedData.recipient[0][0]|urlencode}}/{{msg.data.signedData.recipient[0][1]|urlencode}}" data-ng-bind="msg.recipientName||msg.data.signedData.recipient[0][1]" data-id-type="" data-id-value="" class="id-link"></a>
-                 - <a href="#!/messages/{{msg.hash}}" data-ng-bind="msg.data.signedData.timestamp*1000|date:'medium'" class="text-muted small" style="display:inline-block;"></a>
-              </p>
-
-              <p data-ng-bind-html="msg.data.signedData.comment|linky"></p>
-            </div>
-          </div>
-          <div class="ladda-button" data-style="zoom-in" data-spinner-color="#000" id="received-spinner"><span class="ladda-label"></span><span class="ladda-spinner"></span></div>
+          <div data-ng-repeat="msg in received" data-ng-include="'modules/messages/views/message.partial.html'"></div>
         </tab>
         <tab>
           <tab-heading><span class="glyphicon glyphicon-upload"></span> <span class="hidden-xs">Sent </span>({{0+overview.authoredPositive+overview.authoredNeutral+overview.authoredNegative}})</tab-heading>
           <br>
           <div data-ng-if="sent.$resolved && sent.length == 0" class="alert alert-info animated fadeIn">No messages to show</div>
           <div data-ng-if="!sent.$resolved" us-spinner></div>
-          <div data-ng-repeat="msg in sent" class="panel animated fadeIn panel-success message-panel">
-              <div class="panel-heading" style="background-image:linear-gradient(rgba(223,240,216,0.6000000000000001) 0%, rgba(208,233,198,0.6000000000000001) 100%);background-color: rgba(223,240,216,0.6000000000000001);">
-              <p class="">
-                  <span class="glyphicon glyphicon-thumbs-up mar-left5 pull-right"></span>
-                <strong>
-                  <a href="#!/id/{{msg.data.signedData.author[0][0]|urlencode}}/{{msg.data.signedData.author[0][1]|urlencode}}" data-id-type="" data-id-value="" class="id-link">
-                    <img alt="" src="https://www.gravatar.com/avatar/{{gravatar}}?d=retro&amp;s=30" class="img-rounded mar-right5"> 
-                    <span data-ng-bind="msg.authorName||msg.data.signedData.author[0][1]"></span>
-                  </a>
-                </strong>
-                <small><i class="glyphicon glyphicon-play"></i></small>
-                <a href="#!/id/{{msg.data.signedData.recipient[0][0]|urlencode}}/{{msg.data.signedData.recipient[0][1]|urlencode}}" data-ng-bind="msg.recipientName||msg.data.signedData.recipient[0][1]" data-id-type="" data-id-value="" class="id-link"></a>
-                 - <a href="#!/messages/{{msg.hash}}" data-ng-bind="msg.data.signedData.timestamp*1000|date:'medium'" class="text-muted small" style="display:inline-block;"></a>
-              </p>
-
-              <p data-ng-bind-html="msg.data.signedData.comment|linky"></p>
-            </div>
-          </div>
-          <div class="ladda-button" data-style="zoom-in" data-spinner-color="#000" id="sent-spinner"><span class="ladda-label"></span><span class="ladda-spinner"></span></div>
+          <div data-ng-repeat="msg in sent" data-ng-include="'modules/messages/views/message.partial.html'"></div>
         </tab>
         <tab>
           <tab-heading><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>({{0+connections.length}})</tab-heading>

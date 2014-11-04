@@ -32,20 +32,8 @@
       </div>
     </div>
     <div class="col-md-8">
-      <div data-ng-repeat="message in messages" class="panel animated fadeIn panel-success message-panel">
-        <div class="panel-heading">
-          <span class="glyphicon glyphicon-thumbs-up mar-left5 pull-right"></span>
-          <strong>
-            <a data-ng-href="#!/id/{{message.data.signedData.author[0][0]}}/{{message.data.signedData.author[0][1]}}" class="id-link">
-            <img alt="" src="https://www.gravatar.com/avatar/{{message.gravatar}}?d=retro&amp;s=30" class="img-rounded mar-right5"> <span data-ng-bind="message.authorName||message.data.signedData.author[0][1]"></span></a>
-          </strong>
-          <small><i class="glyphicon glyphicon-play"></i></small>
-          <a data-ng-href="#!/id/{{message.data.signedData.recipient[0][0]}}/{{message.data.signedData.recipient[0][1]}}" data-ng-bind="message.recipientName||message.data.signedData.recipient[0][1]" class="id-link"></a>
-          -
-          <a data-ng-href="#!/messages/{{message.hash}}" class="text-muted small" data-ng-bind="message.data.signedData.timestamp*1000|date:'medium'"></a>
-          <p data-ng-bind-html="message.data.signedData.comment|linky"></p>
-        </div>
-      </div>
+      <div data-ng-repeat="msg in messages" data-ng-include="'modules/messages/views/message.partial.html'"></div>
+      <div us-spinner data-ng-if="!messages.$resolved"></div>
       <div class="alert alert-warning text-center" data-ng-hide="!messages.$resolved || messages.length">
         No Messages yet, why don't you <a href="/#!/messages/create">create one</a>?
       </div>
