@@ -1298,6 +1298,10 @@ a:hover {
   padding: 12px 10px;
 }
 
+.filters li, .nav-tabs li {
+  cursor: pointer;
+}
+
 @media (min-width: 768px) {
   #nav-search-field {
     width: 320px;

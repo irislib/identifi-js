@@ -4,6 +4,7 @@
 angular.module('messages').controller('MessagesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Messages',
 	function($scope, $stateParams, $location, Authentication, Messages ) {
 		$scope.authentication = Authentication;
+    $scope.filters = {maxDistance: 0, msgType: 'rating', viewpointType: 'keyID', viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', viewpointName: 'Identi.fi' };
 
     var processMessages = function(messages) {
       for (var key in messages) {
@@ -110,7 +111,7 @@ angular.module('messages').controller('MessagesController', ['$scope', '$statePa
 
 		// Find a list of Messages
 		$scope.find = function() {
-			$scope.messages = Messages.query(function () {
+			$scope.messages = Messages.query($scope.filters, function () {
         processMessages($scope.messages);
 			});
 		};
@@ -125,5 +126,9 @@ angular.module('messages').controller('MessagesController', ['$scope', '$statePa
         $scope.message.recipientGravatar = CryptoJS.MD5($scope.message.recipientEmail||$scope.message.data.signedData.recipient[0][1]).toString();
       });
 		};
+    $scope.setFilters = function(filters) {
+      angular.extend($scope.filters, filters);
+      $scope.find();
+    };
 	}
 ]);

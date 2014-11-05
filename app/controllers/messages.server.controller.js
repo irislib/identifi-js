@@ -62,7 +62,7 @@ exports.delete = function(req, res) {
  * List of latest Messages
  */
 exports.list = function(req, res) {
-  identifi.cmd('getlatestmsgs', '20', '0', '', '', '0', 'rating', function(err, identifiRes, identifiResHeaders) {
+  identifi.cmd('getlatestmsgs', req.query.limit || '20', req.query.offset || '0', req.query.viewpointType || '', req.query.viewpointValue || '', req.query.maxDistance || '0', req.query.msgType || '', function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }

@@ -7,6 +7,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 
     $scope.idType = $stateParams.idType;
     $scope.idValue = $stateParams.idValue;
+    $scope.filters = {maxDistance: 0, msgType: 'rating', viewpointType: 'keyID', viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', viewpointName: 'Identi.fi'};
 
     var processMessages = function(messages) {
       for (var key in messages) {
@@ -77,8 +78,8 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
     };
 
 		// Search
-		$scope.search = function(query) {
-			$scope.identifiers = Identifiers.query({idValue: query || ''}, function() {
+		$scope.search = function() {
+			$scope.identifiers = Identifiers.query({idValue: $scope.queryTerm || ''}, function() {
         $scope.identifiers.activeKey = 0;
         $scope.identifiers[0].active = true;
         for (var i = 0; i < $scope.identifiers.length; i++) {
@@ -159,21 +160,20 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
           var el = angular.element(args.event.currentTarget);
           clearTimeout($scope.timer);
           var wait = setTimeout(function() { 
-            $scope.search(el.val());
+            $scope.queryTerm = el.val();
+            $scope.search();
           }, 300);
           $scope.timer = wait;
           break;
       }
     });
 
-		// Find existing Identifier
-		$scope.findOne = function() {
+    var getConnections = function() {
       $scope.quickConnections = [];
-
-			$scope.connections = Identifiers.connections({ 
+			$scope.connections = Identifiers.connections(angular.extend({ 
 				idType: $stateParams.idType,
         idValue: $stateParams.idValue,
-			}, function() {
+			}, $scope.filters), function() {
         for (var key in $scope.connections) {
           var conn = $scope.connections[key];
           switch (conn.type) {
@@ -231,43 +231,68 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
               }
               break;
           }
+
+          if (conn.confirmations + conn.refutations > 0) {
+            var percentage = conn.confirmations * 100 / (conn.confirmations + conn.refutations);
+              if (percentage >= 80)
+                conn.rowClass = 'success';
+              else if (percentage >= 60)
+                conn.rowClass = 'warning';
+              else if (percentage < 40)
+                conn.rowClass = 'danger';
+          }
           $scope.hasQuickContacts = $scope.hasQuickContacts || conn.quickContact;
         }
         $scope.connectionClicked = function(event, id) {
           id.collapse = !id.collapse;
-          id.connectingmsgs = id.connectingmsgs || Identifiers.connectingmsgs({idType: $scope.idType, idValue: $scope.idValue, id2Type: id.type, id2Value: id.value}, function() {
+          id.connectingmsgs = id.connectingmsgs || Identifiers.connectingmsgs(angular.extend({idType: $scope.idType, idValue: $scope.idValue, id2Type: id.type, id2Value: id.value}, $scope.filters), function() {
             for (var key in id.connectingmsgs) {
+              if (isNaN(key)) continue;
               var msg = id.connectingmsgs[key];
               msg.gravatar = CryptoJS.MD5(msg.authorEmail||msg.data.signedData.author[0][1]).toString();
             }
           });
         };
       });
+    };
 
-			$scope.overview = Identifiers.get({ 
+    var getOverview = function() {
+			$scope.overview = Identifiers.get(angular.extend({ 
 				idType: $stateParams.idType,
         idValue: $stateParams.idValue,
         method: 'overview'
-			}, function() {
+			}, $scope.filters), function() {
         $scope.email = $scope.overview.email;
         if ($scope.email === '')
           $scope.email = $scope.idValue;
         $scope.gravatar = CryptoJS.MD5($scope.email).toString();
       });
+    };
 
-			$scope.sent = Identifiers.sent({ 
+    var getSentMsgs = function() {
+			$scope.sent = Identifiers.sent({
 				idType: $stateParams.idType,
         idValue: $stateParams.idValue,
 			}, function () {
         processMessages($scope.sent);
       });
+    };
 
-			$scope.received = Identifiers.received({ 
+    var getReceivedMsgs = function() {
+			$scope.received = Identifiers.received(angular.extend({ 
 				idType: $stateParams.idType,
         idValue: $stateParams.idValue,
-      }, function () {
+      }, $scope.filters), function () {
         processMessages($scope.received);
 			});
+    };
+
+		// Find existing Identifier
+		$scope.findOne = function() {
+      getConnections();
+      getOverview();
+      getSentMsgs();
+      getReceivedMsgs();
 
 			$scope.trustpath = Identifiers.trustpath({ 
 				idType: $stateParams.idType,
@@ -281,5 +306,12 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
         }
       });
 		};
+
+    $scope.setFilters = function(filters) {
+      angular.extend($scope.filters, filters);
+      getConnections();
+      getOverview();
+      getReceivedMsgs();
+    };
 	}
 ]);

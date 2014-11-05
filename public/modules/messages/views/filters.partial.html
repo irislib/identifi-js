@@ -1,0 +1,29 @@
+<div class="panel panel-default">
+  <div class="panel-heading visible-xs" data-ng-click="collapseFilters = !collapseFilters">
+    <h4 class="panel-title"><a><span class="glyphicon glyphicon-chevron-down"></span> Filters</a></h4></div>
+  <div class="panel-body filters" collapse="collapseFilters">
+    <ul class="nav nav-pills nav-stacked msg-type-filter">
+      <li data-ng-class="{active: (filters.msgType === '') }" data-ng-click="setFilters({ msgType: '' })"><a><span class="glyphicon glyphicon-home"></span> All</a></li>
+      <li data-ng-class="{active: (filters.msgType === 'rating') }" data-ng-click="setFilters({msgType: 'rating'})"><a><span class="glyphicon glyphicon-thumbs-up"></span> Rating</a></li>
+      <ul class="nav nav-pills nav-stacked" style="padding-left: 1em;">
+        <li data-ng-class="{active: (filters.msgType === 'rating/positive') }" data-ng-click="setFilters({msgType: 'rating/positive'})"><a><span class="positive"><span class="glyphicon glyphicon-thumbs-up"></span> Positive</span></a></li>
+        <li data-ng-class="{active: (filters.msgType === 'rating/neutral') }" data-ng-click="setFilters({msgType: 'rating/neutral'})"><a><span class="neutral"><span class="glyphicon glyphicon-question-sign"></span> Neutral</span></a></li>
+        <li data-ng-class="{active: (filters.msgType === 'rating/negative') }" data-ng-click="setFilters({msgType: 'rating/negative'})"><a><span class="negative"><span class="glyphicon glyphicon-thumbs-down"></span> Negative</span></a></li>
+      </ul>
+      <li data-ng-class="{active: (filters.msgType === 'confirm_connection') }" data-ng-click="setFilters({msgType:'confirm_connection'})"><a><span class="glyphicon glyphicon-ok"></span> Connection</a></li>
+      <!-- <li ><a href="#" data-val="other"><span class="glyphicon glyphicon-question-sign"></span> Other</a></li> -->
+    </ul>
+    <div class="alert alert-info"><p>Viewing as 
+      <a href="#!/id/keyID/1DqrzTcimQp3Ye88oHgxdU7DBTsM2TRYFj" data-id-type="keyID" data-id-value="1DqrzTcimQp3Ye88oHgxdU7DBTsM2TRYFj" class="id-link" data-ng-bind="filters.viewpointName"></a>
+    </p>
+    <p>Max distance from viewpoint:</p>
+    <div class="btn-group trust-distance-selector">
+      <button type="button" class="btn btn-default" data-ng-click="setFilters({maxDistance: -1})" data-ng-class="{active: filters.maxDistance === -1}">✕</button>
+      <button type="button" class="btn btn-default" data-ng-click="setFilters({maxDistance: 1})" data-ng-class="{active: filters.maxDistance === 1}">1</button>
+      <button type="button" class="btn btn-default" data-ng-click="setFilters({maxDistance: 2})" data-ng-class="{active: filters.maxDistance === 2}">2</button>
+      <button type="button" class="btn btn-default" data-ng-click="setFilters({maxDistance: 3})" data-ng-class="{active: filters.maxDistance === 3}">3</button>
+      <button type="button" class="btn btn-default" data-ng-click="setFilters({maxDistance: 0})" data-ng-class="{active: filters.maxDistance === 0}">∞</button>
+    </div>
+    </div>
+  </div>
+</div>

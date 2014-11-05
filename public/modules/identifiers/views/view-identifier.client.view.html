@@ -14,7 +14,7 @@
             <a data-ng-href="http://www.gravatar.com/{{gravatar}}" data-toggle="tooltip" data-placement="right" title="Gravatar for {{email}}"><img src="http://www.gravatar.com/avatar/{{gravatar}}?d=retro&amp;s=100" class="img-thumbnail mar-right5" alt="Gravatar for {{overview.email}}"></a>
           </td>
           <td>
-            <h4 data-ng-bind="overview.name">{{idValue}}</h4>
+            <h4 data-ng-bind="overview.name||idValue"></h4>
           </td>
         </tr>
         <tr>
@@ -72,35 +72,7 @@
     </div>
   </div>
 
-  <div class="panel panel-default">
-    <div class="panel-heading visible-xs" id="toggleFilters" data-ng-click="collapseFilters = !collapseFilters">
-      <h4 class="panel-title"><a><span class="glyphicon glyphicon-chevron-down"></span> Filters</a></h4></div>
-    <div class="panel-body filters" collapse="collapseFilters">
-      <ul class="nav nav-pills nav-stacked msg-type-filter">
-        <li data-val=""><a href="#"><span class="glyphicon glyphicon-home"></span> All</a></li>
-        <li class="active" data-val="rating"><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Rating</a></li>
-        <ul class="nav nav-pills nav-stacked" style="padding-left: 1em;">
-          <li data-val="rating/positive"><a href="#"><span class="positive"><span class="glyphicon glyphicon-thumbs-up"></span> Positive</span></a></li>
-          <li data-val="rating/neutral"><a href="#"><span class="neutral"><span class="glyphicon glyphicon-question-sign"></span> Neutral</span></a></li>
-          <li data-val="rating/negative"><a href="#"><span class="negative"><span class="glyphicon glyphicon-thumbs-down"></span> Negative</span></a></li>
-        </ul>
-        <li data-val="confirm_connection"><a href="#"><span class="glyphicon glyphicon-ok"></span> Connection</a></li>
-        <!-- <li ><a href="#" data-val="other"><span class="glyphicon glyphicon-question-sign"></span> Other</a></li> -->
-      </ul>
-      <div class="alert alert-info"><p>Viewing as 
-        <a href="#!/id/keyID/1DqrzTcimQp3Ye88oHgxdU7DBTsM2TRYFj" data-id-type="keyID" data-id-value="1DqrzTcimQp3Ye88oHgxdU7DBTsM2TRYFj" class="id-link">Identi.fi</a>
-      </p>
-      <p>Max distance from viewpoint:</p>
-      <div class="btn-group trust-distance-selector">
-        <button type="button" class="btn btn-default" data-val="-1">✕</button>
-        <button type="button" class="btn btn-default" data-val="1">1</button>
-        <button type="button" class="btn btn-default" data-val="2">2</button>
-        <button type="button" class="btn btn-default" data-val="3">3</button>
-        <button type="button" class="btn btn-default active" data-val="0">∞</button>
-      </div>
-      </div>
-    </div>
-  </div>
+    <div data-ng-include="'modules/messages/views/filters.partial.html'"></div>
 
     </div>
     <div class="col-md-8">
@@ -109,17 +81,17 @@
         <tab>
           <tab-heading><span class="glyphicon glyphicon-download"></span> <span class="hidden-xs">Received </span>({{0+overview.receivedPositive+overview.receivedNeutral+overview.receivedNegative}})</tab-heading>
           <br>
-          <div class="alert alert-info login-alert-info">
+          <div class="alert alert-info text-center login-alert-info">
             <strong><a href="#!/signin">Log in</a></strong> to write messages.
           </div>
-          <div data-ng-if="received.$resolved && received.length == 0" class="alert alert-info animated fadeIn">No messages to show</div>
+          <div data-ng-if="received.$resolved && received.length == 0" class="alert alert-info text-center animated fadeIn">No messages to show</div>
           <div data-ng-if="!received.$resolved" us-spinner></div>
           <div data-ng-repeat="msg in received" data-ng-include="'modules/messages/views/message.partial.html'"></div>
         </tab>
         <tab>
           <tab-heading><span class="glyphicon glyphicon-upload"></span> <span class="hidden-xs">Sent </span>({{0+overview.authoredPositive+overview.authoredNeutral+overview.authoredNegative}})</tab-heading>
           <br>
-          <div data-ng-if="sent.$resolved && sent.length == 0" class="alert alert-info animated fadeIn">No messages to show</div>
+          <div data-ng-if="sent.$resolved && sent.length == 0" class="alert alert-info text-center animated fadeIn">No messages to show</div>
           <div data-ng-if="!sent.$resolved" us-spinner></div>
           <div data-ng-repeat="msg in sent" data-ng-include="'modules/messages/views/message.partial.html'"></div>
         </tab>
@@ -129,7 +101,7 @@
             <div id="connections">
               <input id="authenticity_token" name="authenticity_token" type="hidden" value="z1JM7ffnFK7gOv6S3yzG9UFyakukYHikAU94/3TcT2o=">    <table class="table truncated-table table-hover animated fadeIn">
                 <tbody>
-                  <tr data-ng-repeat-start="id in connections" data-ng-click="connectionClicked($event, id)" class="id-row">
+                  <tr data-ng-repeat-start="id in connections" data-ng-class="id.rowClass" data-ng-click="connectionClicked($event, id)" class="id-row">
                     <td>
                       <a data-ng-if="id.iconStyle&&id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
                       <span data-ng-if="id.iconStyle&&!id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>

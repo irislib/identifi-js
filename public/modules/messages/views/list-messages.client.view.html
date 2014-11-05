@@ -1,41 +1,13 @@
 <section data-ng-controller="MessagesController" data-ng-init="find()">
   <div id="messages" class="row">
     <div class="col-md-4">
-      <div class="panel panel-default">
-        <div class="panel-heading visible-xs" data-ng-click="collapseFilters = !collapseFilters">
-          <h4 class="panel-title"><a><span class="glyphicon glyphicon-chevron-down"></span> Filters</a></h4></div>
-        <div class="panel-body filters" collapse="collapseFilters">
-          <ul class="nav nav-pills nav-stacked msg-type-filter">
-            <li data-val=""><a href="#"><span class="glyphicon glyphicon-home"></span> All</a></li>
-            <li class="active" data-val="rating"><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Rating</a></li>
-            <ul class="nav nav-pills nav-stacked" style="padding-left: 1em;">
-              <li data-val="rating/positive"><a href="#"><span class="positive"><span class="glyphicon glyphicon-thumbs-up"></span> Positive</span></a></li>
-              <li data-val="rating/neutral"><a href="#"><span class="neutral"><span class="glyphicon glyphicon-question-sign"></span> Neutral</span></a></li>
-              <li data-val="rating/negative"><a href="#"><span class="negative"><span class="glyphicon glyphicon-thumbs-down"></span> Negative</span></a></li>
-            </ul>
-            <li data-val="confirm_connection"><a href="#"><span class="glyphicon glyphicon-ok"></span> Connection</a></li>
-            <!-- <li ><a href="#" data-val="other"><span class="glyphicon glyphicon-question-sign"></span> Other</a></li> -->
-          </ul>
-          <div class="alert alert-info"><p>Viewing as 
-            <a href="#!/id/keyID/1DqrzTcimQp3Ye88oHgxdU7DBTsM2TRYFj" data-id-type="keyID" data-id-value="1DqrzTcimQp3Ye88oHgxdU7DBTsM2TRYFj" class="id-link" data-original-title="" title="">Identi.fi</a>
-          </p>
-          <p>Max distance from viewpoint:</p>
-          <div class="btn-group trust-distance-selector">
-            <button type="button" class="btn btn-default" data-val="-1">✕</button>
-            <button type="button" class="btn btn-default" data-val="1">1</button>
-            <button type="button" class="btn btn-default" data-val="2">2</button>
-            <button type="button" class="btn btn-default" data-val="3">3</button>
-            <button type="button" class="btn btn-default active" data-val="0">∞</button>
-          </div>
-          </div>
-        </div>
-      </div>
+      <div data-ng-include="'modules/messages/views/filters.partial.html'"></div>
     </div>
     <div class="col-md-8">
       <div data-ng-repeat="msg in messages" data-ng-include="'modules/messages/views/message.partial.html'"></div>
       <div us-spinner data-ng-if="!messages.$resolved"></div>
-      <div class="alert alert-warning text-center" data-ng-hide="!messages.$resolved || messages.length">
-        No Messages yet, why don't you <a href="/#!/messages/create">create one</a>?
+      <div class="alert alert-info text-center" data-ng-hide="!messages.$resolved || messages.length">
+        No messages to show
       </div>
     </div>
   </div>
