@@ -14,7 +14,7 @@
     <tbody>
       <tr data-ng-repeat="result in identifiers" id="result{{$index}}" data-ng-click="resultClicked(result)" class="search-result-row" data-ng-class="{active: result.active}">
         <td class="gravatar-col"><img alt="" src="https://www.gravatar.com/avatar/{{result.gravatar}}?d=retro&amp;s=45"></td>
-        <td><a data-ng-bind="result.name" data-ng-href="#!/id/{{result[0][0]|urlencode}}/{{result[0][1]|urlencode}}"></a>
+        <td><a data-ng-bind="result.name" data-ng-href="#!/id/{{result[0][0]|escape}}/{{result[0][1]|escape}}"></a>
           <small data-ng-if="!result.name" class="list-group-item-text">
             <span data-ng-bind="result[0][0]"></span>
           </small><br>

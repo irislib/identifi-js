@@ -5,9 +5,21 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 	function($scope, $stateParams, $location, Authentication, Identifiers ) {
 		$scope.authentication = Authentication;
 
-    $scope.idType = $stateParams.idType;
-    $scope.idValue = $stateParams.idValue;
-    $scope.filters = {maxDistance: 0, msgType: 'rating', viewpointType: 'keyID', viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', viewpointName: 'Identi.fi'};
+    $scope.idType = decodeURIComponent($stateParams.idType);
+    $scope.idValue = decodeURIComponent($stateParams.idValue);
+    $scope.sent = [];
+    $scope.received = [];
+    $scope.filters = {
+      maxDistance: 0,
+      msgType: 'rating',
+      receivedOffset: 0,
+      sentOffset: 0,
+      limit: 20,
+      viewpointType: 'keyID',
+      viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT',
+      viewpointName: 'Identi.fi'
+    };
+    $scope.activeTab = 'received';
 
     var processMessages = function(messages) {
       for (var key in messages) {
@@ -121,7 +133,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 		};
 
     $scope.resultClicked = function(result) {
-      $location.path('/id/' + result[0][0] + '/' + result[0][1]);
+      $location.path('/id/' + encodeURIComponent(result[0][0]) + '/' + encodeURIComponent(result[0][1]));
     };
 
     $scope.$on('SearchKeydown', function(event, args) {
@@ -171,8 +183,8 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
     var getConnections = function() {
       $scope.quickConnections = [];
 			$scope.connections = Identifiers.connections(angular.extend({ 
-				idType: $stateParams.idType,
-        idValue: $stateParams.idValue,
+				idType: $scope.idType,
+        idValue: $scope.idValue,
 			}, $scope.filters), function() {
         for (var key in $scope.connections) {
           var conn = $scope.connections[key];
@@ -234,11 +246,13 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 
           if (conn.confirmations + conn.refutations > 0) {
             var percentage = conn.confirmations * 100 / (conn.confirmations + conn.refutations);
-              if (percentage >= 80)
-                conn.rowClass = 'success';
+              if (percentage >= 80) {
+                var alpha = Math.min(conn.confirmations / Math.max(1,$scope.connections[0].confirmations), 0.7) + 0.3;
+                conn.rowStyle = 'background-color: rgba(223,240,216,'+alpha+')';
+              }
               else if (percentage >= 60)
                 conn.rowClass = 'warning';
-              else if (percentage < 40)
+              else 
                 conn.rowClass = 'danger';
           }
           $scope.hasQuickContacts = $scope.hasQuickContacts || conn.quickContact;
@@ -258,8 +272,8 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 
     var getOverview = function() {
 			$scope.overview = Identifiers.get(angular.extend({ 
-				idType: $stateParams.idType,
-        idValue: $stateParams.idValue,
+				idType: $scope.idType,
+        idValue: $scope.idValue,
         method: 'overview'
 			}, $scope.filters), function() {
         $scope.email = $scope.overview.email;
@@ -269,34 +283,70 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
       });
     };
 
-    var getSentMsgs = function() {
-			$scope.sent = Identifiers.sent({
-				idType: $stateParams.idType,
-        idValue: $stateParams.idValue,
-			}, function () {
-        processMessages($scope.sent);
-      });
+    $scope.getSentMsgs = function(offset) {
+      if (!isNaN(offset))
+        $scope.filters.sentOffset = offset;
+			var sent = Identifiers.sent(angular.extend({ 
+				idType: $scope.idType,
+        idValue: $scope.idValue,
+        msgType: $scope.filters.msgType,
+        offset: $scope.filters.sentOffset,
+        limit: $scope.filters.limit
+      }, $scope.filters), function () {
+        processMessages(sent);
+        if ($scope.filters.sentOffset === 0)
+          $scope.sent = sent;
+        else {
+          for (var key in sent) {
+            if (isNaN(key)) continue;
+            $scope.sent.push(sent[key]);
+          }
+        }
+        $scope.sent.$resolved = sent.$resolved;
+        $scope.filters.sentOffset = $scope.filters.sentOffset + sent.length;
+        if (sent.length < $scope.filters.limit)
+          $scope.sent.finished = true;
+			});
+      $scope.sent.$resolved = sent.$resolved;
     };
 
-    var getReceivedMsgs = function() {
-			$scope.received = Identifiers.received(angular.extend({ 
-				idType: $stateParams.idType,
-        idValue: $stateParams.idValue,
+    $scope.getReceivedMsgs = function(offset) {
+      if (!isNaN(offset))
+        $scope.filters.receivedOffset = offset;
+			var received = Identifiers.received(angular.extend({ 
+				idType: $scope.idType,
+        idValue: $scope.idValue,
+        msgType: $scope.filters.msgType,
+        offset: $scope.filters.receivedOffset,
+        limit: $scope.filters.limit
       }, $scope.filters), function () {
-        processMessages($scope.received);
+        processMessages(received);
+        if ($scope.filters.receivedOffset === 0)
+          $scope.received = received;
+        else {
+          for (var key in received) {
+            if (isNaN(key)) continue;
+            $scope.received.push(received[key]);
+          }
+        }
+        $scope.received.$resolved = received.$resolved;
+        $scope.filters.receivedOffset = $scope.filters.receivedOffset + received.length;
+        if (received.length < $scope.filters.limit)
+          $scope.received.finished = true;
 			});
+      $scope.received.$resolved = received.$resolved;
     };
 
 		// Find existing Identifier
 		$scope.findOne = function() {
       getConnections();
       getOverview();
-      getSentMsgs();
-      getReceivedMsgs();
+      $scope.getSentMsgs();
+      $scope.getReceivedMsgs();
 
 			$scope.trustpath = Identifiers.trustpath({ 
-				idType: $stateParams.idType,
-        idValue: $stateParams.idValue
+				idType: $scope.idType,
+        idValue: $scope.idValue
 			}, function() {
         for (var i = 0; i < $scope.trustpath.length; i++) {
           for (var key in $scope.trustpath[i]) {
@@ -311,7 +361,8 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
       angular.extend($scope.filters, filters);
       getConnections();
       getOverview();
-      getReceivedMsgs();
+      $scope.getReceivedMsgs(0);
+      $scope.getSentMsgs(0);
     };
 	}
 ]);

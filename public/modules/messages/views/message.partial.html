@@ -3,13 +3,13 @@
     <p class="">
         <span class="mar-left5 pull-right" data-ng-class="msg.iconStyle" data-ng-repeat="n in msg.iconCount track by $index"></span>
       <strong>
-        <a data-ng-href="#!/id/{{msg.data.signedData.author[0][0]|urlencode}}/{{msg.data.signedData.author[0][1]|urlencode}}" data-id-type="" data-id-value="" class="id-link">
+        <a data-ng-href="#!/id/{{msg.data.signedData.author[0][0]|escape}}/{{msg.data.signedData.author[0][1]|escape}}" data-id-type="" data-id-value="" class="id-link">
           <img alt="" src="https://www.gravatar.com/avatar/{{msg.gravatar}}?d=retro&amp;s=30" class="img-rounded mar-right5"> 
           <span data-ng-bind="msg.authorName||msg.data.signedData.author[0][1]"></span>
         </a>
       </strong>
       <small><i class="glyphicon glyphicon-play"></i></small>
-      <a href="#!/id/{{msg.data.signedData.recipient[0][0]|urlencode}}/{{msg.data.signedData.recipient[0][1]|urlencode}}" data-ng-bind="msg.recipientName||msg.data.signedData.recipient[0][1]" data-id-type="" data-id-value="" class="id-link"></a>
+      <a href="#!/id/{{msg.data.signedData.recipient[0][0]|escape}}/{{msg.data.signedData.recipient[0][1]|escape}}" data-ng-bind="msg.recipientName||msg.data.signedData.recipient[0][1]" data-id-type="" data-id-value="" class="id-link"></a>
        - <a href="#!/messages/{{msg.hash}}" data-ng-bind="msg.data.signedData.timestamp*1000|date:'medium'" class="text-muted small" style="display:inline-block;"></a>
     </p>
 

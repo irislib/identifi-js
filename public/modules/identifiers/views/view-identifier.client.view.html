@@ -17,12 +17,14 @@
             <h4 data-ng-bind="overview.name||idValue"></h4>
           </td>
         </tr>
-        <tr>
-          <td>Received</td>
+        <tr class="received-stats">
+          <td><strong>Received</strong></td>
           <td>
-            <span class="positive"><span class="glyphicon glyphicon-thumbs-up"></span> <span data-ng-bind="overview.receivedPositive">-</span></span>
-            <span class="neutral"><span class="glyphicon glyphicon-question-sign"></span> <span data-ng-bind="overview.receivedNeutral">-</span></span> 
-            <span class="negative"><span class="glyphicon glyphicon-thumbs-down"></span> <span data-ng-bind="overview.receivedNegative">-</span></span>
+            <strong>
+              <span class="positive"><span class="glyphicon glyphicon-thumbs-up"></span> <span data-ng-bind="overview.receivedPositive">-</span></span>
+              <span class="neutral"><span class="glyphicon glyphicon-question-sign"></span> <span data-ng-bind="overview.receivedNeutral">-</span></span> 
+              <span class="negative"><span class="glyphicon glyphicon-thumbs-down"></span> <span data-ng-bind="overview.receivedNegative">-</span></span>
+            </strong>
           </td>
         </tr>
         <tr>
@@ -60,13 +62,13 @@
     <div class="panel-body">
       <ul class="trustpath-list list-unstyled">
         <li data-ng-repeat-start="id in trustpath[0]">
-          <a data-id-type="{{id[0]}}" data-id-value="{{id[1]}}" class="id-link" data-ng-href="#!/id/{{id[0]|urlencode}}/{{id[1]|urlencode}}" data-original-title="" title="">
+          <a data-id-type="{{id[0]}}" data-id-value="{{id[1]}}" class="id-link" data-ng-href="#!/id/{{id[0]|escape}}/{{id[1]|escape}}" data-original-title="" title="">
             <img alt="" src="https://www.gravatar.com/avatar/{{id.gravatar}}?d=retro&amp;s=30" class="mar-bot5 img-rounded mar-right5"> 
             {{id[1]}}
           </a>
         </li>
         <li data-ng-if="!$last" class="has-success" data-ng-repeat-end>
-          <span class="mar-left5 mar-bot10 glyphicon glyphicon-thumbs-up"></span>
+          <span class="positive mar-left5 mar-bot10 glyphicon glyphicon-thumbs-up"></span>
         </li>
       </ul>
     </div>
@@ -78,48 +80,52 @@
     <div class="col-md-8">
       <!-- Nav tabs -->
       <tabset>
-        <tab>
+        <tab data-ng-click="activeTab = 'received'">
           <tab-heading><span class="glyphicon glyphicon-download"></span> <span class="hidden-xs">Received </span>({{0+overview.receivedPositive+overview.receivedNeutral+overview.receivedNegative}})</tab-heading>
           <br>
           <div class="alert alert-info text-center login-alert-info">
             <strong><a href="#!/signin">Log in</a></strong> to write messages.
           </div>
           <div data-ng-if="received.$resolved && received.length == 0" class="alert alert-info text-center animated fadeIn">No messages to show</div>
-          <div data-ng-if="!received.$resolved" us-spinner></div>
-          <div data-ng-repeat="msg in received" data-ng-include="'modules/messages/views/message.partial.html'"></div>
+          <div infinite-scroll="getReceivedMsgs()" infinite-scroll-distance="2" infinite-scroll-disabled="!received.$resolved || received.finished || activeTab !== 'received'">
+            <div data-ng-repeat="msg in received" data-ng-include="'modules/messages/views/message.partial.html'"></div>
+          </div>
+          <div data-ng-if="!received.$resolved" style="position:relative" us-spinner></div>
         </tab>
-        <tab>
+        <tab data-ng-click="activeTab = 'sent'">
           <tab-heading><span class="glyphicon glyphicon-upload"></span> <span class="hidden-xs">Sent </span>({{0+overview.authoredPositive+overview.authoredNeutral+overview.authoredNegative}})</tab-heading>
           <br>
           <div data-ng-if="sent.$resolved && sent.length == 0" class="alert alert-info text-center animated fadeIn">No messages to show</div>
-          <div data-ng-if="!sent.$resolved" us-spinner></div>
-          <div data-ng-repeat="msg in sent" data-ng-include="'modules/messages/views/message.partial.html'"></div>
+          <div infinite-scroll="getSentMsgs()" infinite-scroll-distance="2" infinite-scroll-disabled="!sent.$resolved || sent.finished || activeTab !== 'sent'">
+            <div data-ng-repeat="msg in sent" data-ng-include="'modules/messages/views/message.partial.html'"></div>
+          </div>
+          <div data-ng-if="!sent.$resolved" style="position:relative" us-spinner></div>
         </tab>
-        <tab>
+        <tab data-ng-click="activeTab = 'connections'">
           <tab-heading><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>({{0+connections.length}})</tab-heading>
             <div data-ng-if="!connections.$resolved" us-spinner></div>
             <div id="connections">
               <input id="authenticity_token" name="authenticity_token" type="hidden" value="z1JM7ffnFK7gOv6S3yzG9UFyakukYHikAU94/3TcT2o=">    <table class="table truncated-table table-hover animated fadeIn">
                 <tbody>
-                  <tr data-ng-repeat-start="id in connections" data-ng-class="id.rowClass" data-ng-click="connectionClicked($event, id)" class="id-row">
+                  <tr data-ng-repeat-start="id in connections" style="{{id.rowStyle}}" data-ng-class="id.rowClass" data-ng-click="connectionClicked($event, id)" class="id-row">
                     <td>
                       <a data-ng-if="id.iconStyle&&id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
                       <span data-ng-if="id.iconStyle&&!id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
                       <span class="visible-xs pull-right">
-                        <button autocomplete="off" name="confirm" class="ladda-button btn btn-default btn-confirm has-success disabled" data-style="zoom-out"><span class="ladda-label"><span class="glyphicon glyphicon-ok"></span> {{id.confirmations}}</span><span class="ladda-spinner"></span></button>
-                        <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute has-error disabled" data-style="zoom-out"><span class="ladda-label"><span class="glyphicon glyphicon-remove"></span> {{id.refutations}}</span><span class="ladda-spinner"></span></button>
+                        <button autocomplete="off" name="confirm" class="ladda-button btn btn-default btn-confirm disabled" data-style="zoom-out"><span class="ladda-label"><span class="positive glyphicon glyphicon-ok"></span> {{id.confirmations}}</span><span class="ladda-spinner"></span></button>
+                        <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute disabled" data-style="zoom-out"><span class="ladda-label"><span class="negative glyphicon glyphicon-remove"></span> {{id.refutations}}</span><span class="ladda-spinner"></span></button>
                       </span>
                     </td>
                     <td colspan="3">
-                      <a data-ng-href="#!/id/{{id.type|urlencode}}/{{id.value|urlencode}}" data-id-type="{{id.type}}" data-id-value="{{id.value}}" data-ng-bind="id.value" class="id-link"></a><br>
+                      <a data-ng-href="#!/id/{{id.type|escape}}/{{id.value|escape}}" data-id-type="{{id.type}}" data-id-value="{{id.value}}" data-ng-bind="id.value" class="id-link"></a><br>
                       <small data-ng-bind="id.type"></small>
                     </td>
                     <!--<td>
                       <input class="form-control linkedComment" type="text" placeholder="comment" disabled>
                     </td>-->
                     <td class="hidden-xs">
-                      <button autocomplete="off" name="confirm" class="ladda-button btn btn-default btn-confirm has-success disabled" data-style="zoom-out"><span class="ladda-label"><span class="glyphicon glyphicon-ok"></span>{{id.confirmations}}</span><span class="ladda-spinner"></span></button>
-                      <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute has-error disabled" data-style="zoom-out"><span class="ladda-label"><span class="glyphicon glyphicon-remove"></span>{{id.refutations}}</span><span class="ladda-spinner"></span></button>
+                      <button autocomplete="off" name="confirm" class="ladda-button btn btn-default btn-confirm disabled" data-style="zoom-out"><span class="ladda-label"><span class="positive glyphicon glyphicon-ok"></span> {{id.confirmations}}</span><span class="ladda-spinner"></span></button>
+                      <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute disabled" data-style="zoom-out"><span class="ladda-label"><span class="negative glyphicon glyphicon-remove"></span> {{id.refutations}}</span><span class="ladda-spinner"></span></button>
                     </td>
                   </tr>
                   <tr data-ng-repeat-end collapse="!id.collapse" class="active connectingmsgs">
@@ -127,12 +133,12 @@
                       <div data-ng-repeat="msg in id.connectingmsgs" class="animated fadeIn confirmation-panel">
                         <span class="has-success">
                           <span data-ng-if="msg.data.signedData.type === 'confirm_connection'">
-                            <span class="glyphicon glyphicon-ok hidden-xs mar-left5 pull-right"></span>
-                            <span class="glyphicon glyphicon-ok visible-xs mar-right10"></span>
+                            <span class="positive glyphicon glyphicon-ok hidden-xs mar-left5 pull-right"></span>
+                            <span class="positive glyphicon glyphicon-ok visible-xs mar-right10"></span>
                           </span>
                           <span data-ng-if="msg.data.signedData.type === 'refute_connection'">
-                            <span class="glyphicon glyphicon-remove hidden-xs mar-left5 pull-right"></span>
-                            <span class="glyphicon glyphicon-remove visible-xs mar-right10"></span>
+                            <span class="negative glyphicon glyphicon-remove hidden-xs mar-left5 pull-right"></span>
+                            <span class="negative glyphicon glyphicon-remove visible-xs mar-right10"></span>
                           </span>
                           <strong>
                             <a data-ng-href="#!/id/{{msg.data.signedData.author[0][0]}}/{{msg.data.signedData.author[0][1]}}" class="id-link">

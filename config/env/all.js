@@ -3,8 +3,8 @@
 module.exports = {
 	app: {
 		title: 'Identifi',
-		description: 'Identifi MEAN.JS',
-		keywords: 'MongoDB, Express, AngularJS, Node.js'
+		description: 'Address book with trust ratings. Link all your identifiers and profiles, get verified and use the same trusted identity on any site or situation.',
+		keywords: 'identity, trust, reputation, WoT, web of trust'
 	},
 	port: process.env.PORT || 3000,
 	templateEngine: 'swig',
@@ -20,6 +20,7 @@ module.exports = {
 				'public/lib/animate.css/animate.css'
 			],
 			js: [
+				'public/lib/jquery/dist/jquery.js',
 				'public/lib/angular/angular.js',
 				'public/lib/angular-resource/angular-resource.js', 
 				'public/lib/angular-cookies/angular-cookies.js', 
@@ -30,6 +31,7 @@ module.exports = {
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
 				'public/lib/crypto-js/rollups/md5.js',
+				'public/lib/ngInfiniteScroll/build/ng-infinite-scroll.js',
         'public/lib/angular-spinner/angular-spinner.js',
         'public/lib/spin.js/spin.js'
 			]

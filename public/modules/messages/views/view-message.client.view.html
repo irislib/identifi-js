@@ -13,7 +13,7 @@
           </div>
           <div class="panel-body">
             <ul class="list list-unstyled">
-              <li data-ng-repeat="id in message.data.signedData.author"><span data-ng-bind="id[0]"></span>: <a data-ng-bind="id[1]" class="id-link" data-ng-href="#!/id/{{id[0]}}/{{id[1]|urlencode}}" data-original-title="" title=""></a></li>
+              <li data-ng-repeat="id in message.data.signedData.author"><span data-ng-bind="id[0]"></span>: <a data-ng-bind="id[1]" class="id-link" data-ng-href="#!/id/{{id[0]}}/{{id[1]|escape}}" data-original-title="" title=""></a></li>
             </ul>
           </div>
         </div>
@@ -29,7 +29,7 @@
           </div>
           <div class="panel-body">
             <ul class="list list-unstyled">
-              <li data-ng-repeat="id in message.data.signedData.recipient"><span data-ng-bind="id[0]"></span>: <a data-ng-bind="id[1]" class="id-link" data-ng-href="#!/id/{{id[0]|urlencode}}/{{id[1]|urlencode}}" data-original-title="" title=""></a></li>
+              <li data-ng-repeat="id in message.data.signedData.recipient"><span data-ng-bind="id[0]"></span>: <a data-ng-bind="id[1]" class="id-link" data-ng-href="#!/id/{{id[0]|escape}}/{{id[1]|escape}}" data-original-title="" title=""></a></li>
             </ul>
           </div>
         </div>
