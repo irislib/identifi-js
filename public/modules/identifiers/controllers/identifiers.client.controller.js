@@ -9,15 +9,18 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
     $scope.idValue = decodeURIComponent($stateParams.idValue);
     $scope.sent = [];
     $scope.received = [];
+    $scope.trustpaths = [];
     $scope.filters = {
       maxDistance: 0,
       msgType: 'rating',
       receivedOffset: 0,
       sentOffset: 0,
       limit: 20,
+    };
+    $scope.defaultViewpoint = {
+      viewpointName: 'Identi.fi',
       viewpointType: 'keyID',
-      viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT',
-      viewpointName: 'Identi.fi'
+      viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
     };
     $scope.activeTab = 'received';
 
@@ -181,11 +184,12 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
     });
 
     var getConnections = function() {
-      $scope.quickConnections = [];
 			$scope.connections = Identifiers.connections(angular.extend({ 
 				idType: $scope.idType,
         idValue: $scope.idValue,
-			}, $scope.filters), function() {
+			}, $scope.filters, $scope.filters.maxDistance > -1 ? $scope.defaultViewpoint : {}), function() {
+        var mostConfirmations = $scope.connections.length > 0 ? $scope.connections[0].confirmations : 1;
+        $scope.connections.unshift({type: $scope.idType, value: $scope.idValue, confirmations: 1, refutations: 0, isCurrent: true });
         for (var key in $scope.connections) {
           var conn = $scope.connections[key];
           switch (conn.type) {
@@ -218,7 +222,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
               conn.iconStyle = 'glyphicon glyphicon-font';
               break;
             case 'tel', 'phone':
-              conn.iconStyle = 'glyphicon-earphone';
+              conn.iconStyle = 'glyphicon glyphicon-earphone';
               conn.btnStyle = 'btn-success';
               conn.link = 'tel:' + conn.value;
               conn.quickContact = true;
@@ -237,6 +241,12 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
                 conn.iconStyle = 'fa fa-google-plus';
                 conn.btnStyle = 'btn-google-plus';
                 conn.quickContact = true;
+              } else if (conn.value.indexOf('linkedin.com/') > -1) {
+                conn.iconStyle = 'fa fa-linkedin';
+                conn.btnStyle = 'btn-linkedin';
+              } else if (conn.value.indexOf('github.com/') > -1) {
+                conn.iconStyle = 'fa fa-github';
+                conn.btnStyle = 'btn-github';
               } else {
                 conn.iconStyle = 'glyphicon glyphicon-link';
                 conn.btnStyle = 'btn-default';
@@ -247,7 +257,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
           if (conn.confirmations + conn.refutations > 0) {
             var percentage = conn.confirmations * 100 / (conn.confirmations + conn.refutations);
               if (percentage >= 80) {
-                var alpha = Math.min(conn.confirmations / Math.max(1,$scope.connections[0].confirmations), 0.7) + 0.3;
+                var alpha = conn.confirmations / mostConfirmations * 0.7 + 0.3;
                 conn.rowStyle = 'background-color: rgba(223,240,216,'+alpha+')';
               }
               else if (percentage >= 60)
@@ -275,7 +285,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 				idType: $scope.idType,
         idValue: $scope.idValue,
         method: 'overview'
-			}, $scope.filters), function() {
+			}, $scope.filters, $scope.filters.maxDistance > -1 ? $scope.defaultViewpoint : 0), function() {
         $scope.email = $scope.overview.email;
         if ($scope.email === '')
           $scope.email = $scope.idValue;
@@ -292,7 +302,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
         msgType: $scope.filters.msgType,
         offset: $scope.filters.sentOffset,
         limit: $scope.filters.limit
-      }, $scope.filters), function () {
+      }, $scope.filters, $scope.filters.maxDistance > -1 ? $scope.defaultViewpoint : 0), function () {
         processMessages(sent);
         if ($scope.filters.sentOffset === 0)
           $scope.sent = sent;
@@ -307,6 +317,9 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
         if (sent.length < $scope.filters.limit)
           $scope.sent.finished = true;
 			});
+      if (offset === 0) {
+        $scope.sent = {};
+      }
       $scope.sent.$resolved = sent.$resolved;
     };
 
@@ -319,7 +332,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
         msgType: $scope.filters.msgType,
         offset: $scope.filters.receivedOffset,
         limit: $scope.filters.limit
-      }, $scope.filters), function () {
+      }, $scope.filters, $scope.filters.maxDistance > -1 ? $scope.defaultViewpoint : 0), function () {
         processMessages(received);
         if ($scope.filters.receivedOffset === 0)
           $scope.received = received;
@@ -334,6 +347,9 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
         if (received.length < $scope.filters.limit)
           $scope.received.finished = true;
 			});
+      if (offset === 0) {
+        $scope.received = {};
+      }
       $scope.received.$resolved = received.$resolved;
     };
 
@@ -344,16 +360,26 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
       $scope.getSentMsgs();
       $scope.getReceivedMsgs();
 
-			$scope.trustpath = Identifiers.trustpath({ 
+			var allPaths = Identifiers.trustpaths({ 
 				idType: $scope.idType,
         idValue: $scope.idValue
 			}, function() {
-        for (var i = 0; i < $scope.trustpath.length; i++) {
-          for (var key in $scope.trustpath[i]) {
-            var id = $scope.trustpath[i][key];
+        if (allPaths.length === 0) return;
+        var shortestPath = Object.keys(allPaths[0]).length;
+        angular.forEach (allPaths[0], function(value, i) {
+          var set = {};
+          var row = [];
+          for (var j = 0; j < allPaths.length; j++) {
+            if (Object.keys(allPaths[j]).length > shortestPath) break;
+            var id = allPaths[j][i];
             id.gravatar = CryptoJS.MD5(id[1]).toString();
+            set[id[0] + id[1]] = id;
           }
-        }
+          for (var key in set) {
+            row.push(set[key]);
+          }
+          $scope.trustpaths.push(row);
+        });
       });
 		};
 

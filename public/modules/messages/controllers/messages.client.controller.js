@@ -10,9 +10,11 @@ angular.module('messages').controller('MessagesController', ['$scope', '$statePa
       msgType: 'rating',
       offset: 0,
       limit: 20,
+    };
+    $scope.defaultViewpoint = {
+      viewpointName: 'Identi.fi',
       viewpointType: 'keyID',
-      viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT',
-      viewpointName: 'Identi.fi'
+      viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
     };
 
     var processMessages = function(messages) {
@@ -123,10 +125,7 @@ angular.module('messages').controller('MessagesController', ['$scope', '$statePa
 			var messages = Messages.query(angular.extend({ 
 				idType: $scope.idType,
         idValue: $scope.idValue,
-        msgType: $scope.filters.msgType,
-        offset: $scope.filters.offset,
-        limit: $scope.filters.limit
-      }, $scope.filters), function () {
+      }, $scope.filters, $scope.filters.maxDistance > -1 ? $scope.defaultViewpoint : {}), function () {
         processMessages(messages);
         if ($scope.filters.offset === 0)
           $scope.messages = messages;
@@ -141,6 +140,9 @@ angular.module('messages').controller('MessagesController', ['$scope', '$statePa
         if (messages.length < $scope.filters.limit)
           $scope.messages.finished = true;
 			});
+      if (offset === 0) {
+        $scope.messages = {};
+      }
       $scope.messages.$resolved = messages.$resolved;
     };
 

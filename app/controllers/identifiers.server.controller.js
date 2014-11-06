@@ -71,7 +71,7 @@ exports.connections = function(req, res) {
 /**
  * Trust path
  */
-exports.trustpath = function(req, res) {
+exports.trustpaths = function(req, res) {
   identifi.cmd('getpaths', req.query.viewpointType || 'keyID', req.query.viewpointValue || '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', req.params.idType, req.params.idValue, function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);

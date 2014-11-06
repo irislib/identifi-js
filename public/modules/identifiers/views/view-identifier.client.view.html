@@ -58,16 +58,16 @@
   <div data-ng-if="hasQuickContacts" class="panel quick-contact">
     <a data-ng-repeat="id in connections" data-ng-if="id.quickContact" class="btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span>&nbsp;</a> 
   </div>
-  <div data-ng-if="trustpath.length > 0" class="panel panel-default">
+  <div data-ng-if="trustpaths.length > 0" class="panel panel-default">
     <div class="panel-body">
-      <ul class="trustpath-list list-unstyled">
-        <li data-ng-repeat-start="id in trustpath[0]">
+      <ul data-ng-repeat="level in trustpaths" class="trustpath-list list-unstyled">
+        <li data-ng-repeat-start="id in level">
           <a data-id-type="{{id[0]}}" data-id-value="{{id[1]}}" class="id-link" data-ng-href="#!/id/{{id[0]|escape}}/{{id[1]|escape}}" data-original-title="" title="">
             <img alt="" src="https://www.gravatar.com/avatar/{{id.gravatar}}?d=retro&amp;s=30" class="mar-bot5 img-rounded mar-right5"> 
             {{id[1]}}
           </a>
         </li>
-        <li data-ng-if="!$last" class="has-success" data-ng-repeat-end>
+        <li data-ng-if="$last && !$parent.$last" class="has-success" data-ng-repeat-end>
           <span class="positive mar-left5 mar-bot10 glyphicon glyphicon-thumbs-up"></span>
         </li>
       </ul>
@@ -103,11 +103,10 @@
         </tab>
         <tab data-ng-click="activeTab = 'connections'">
           <tab-heading><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>({{0+connections.length}})</tab-heading>
-            <div data-ng-if="!connections.$resolved" us-spinner></div>
             <div id="connections">
               <input id="authenticity_token" name="authenticity_token" type="hidden" value="z1JM7ffnFK7gOv6S3yzG9UFyakukYHikAU94/3TcT2o=">    <table class="table truncated-table table-hover animated fadeIn">
                 <tbody>
-                  <tr data-ng-repeat-start="id in connections" style="{{id.rowStyle}}" data-ng-class="id.rowClass" data-ng-click="connectionClicked($event, id)" class="id-row">
+                  <tr data-ng-repeat-start="id in connections" data-ng-if="!id.isCurrent" style="{{id.rowStyle}}" data-ng-class="id.rowClass" data-ng-click="connectionClicked($event, id)" class="id-row">
                     <td>
                       <a data-ng-if="id.iconStyle&&id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
                       <span data-ng-if="id.iconStyle&&!id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
@@ -128,7 +127,7 @@
                       <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute disabled" data-style="zoom-out"><span class="ladda-label"><span class="negative glyphicon glyphicon-remove"></span> {{id.refutations}}</span><span class="ladda-spinner"></span></button>
                     </td>
                   </tr>
-                  <tr data-ng-repeat-end collapse="!id.collapse" class="active connectingmsgs">
+                  <tr data-ng-repeat-end collapse="!id.collapse" data-ng-if="!id.isCurrent" class="active connectingmsgs">
                     <td class="connectingmsgs ladda-button" data-style="zoom-in" data-spinner-color="#000" colspan="5">
                       <div data-ng-repeat="msg in id.connectingmsgs" class="animated fadeIn confirmation-panel">
                         <span class="has-success">
@@ -161,6 +160,7 @@
               </tbody>
             </table>
           </div>
+          <div data-ng-if="!connections.$resolved" style="position:relative;padding:20px" us-spinner></div>
         </tab>
       </tabset>
     </div>

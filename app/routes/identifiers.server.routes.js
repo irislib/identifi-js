@@ -17,8 +17,8 @@ module.exports = function(app) {
 	app.route('/id/:idType/:idValue/connections')
 		.get(identifiers.connections);
 
-	app.route('/id/:idType/:idValue/trustpath')
-		.get(identifiers.trustpath);
+	app.route('/id/:idType/:idValue/trustpaths')
+		.get(identifiers.trustpaths);
 
 	app.route('/id/:idType/:idValue/sent')
 		.get(identifiers.sent);
