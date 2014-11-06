@@ -90,7 +90,7 @@
           <div infinite-scroll="getReceivedMsgs()" infinite-scroll-distance="2" infinite-scroll-disabled="!received.$resolved || received.finished || activeTab !== 'received'">
             <div data-ng-repeat="msg in received" data-ng-include="'modules/messages/views/message.partial.html'"></div>
           </div>
-          <div data-ng-if="!received.$resolved" style="position:relative" us-spinner></div>
+          <div data-ng-if="!received.$resolved" style="position:relative;padding:20px" us-spinner></div>
         </tab>
         <tab data-ng-click="activeTab = 'sent'">
           <tab-heading><span class="glyphicon glyphicon-upload"></span> <span class="hidden-xs">Sent </span>({{0+overview.authoredPositive+overview.authoredNeutral+overview.authoredNegative}})</tab-heading>
@@ -99,7 +99,7 @@
           <div infinite-scroll="getSentMsgs()" infinite-scroll-distance="2" infinite-scroll-disabled="!sent.$resolved || sent.finished || activeTab !== 'sent'">
             <div data-ng-repeat="msg in sent" data-ng-include="'modules/messages/views/message.partial.html'"></div>
           </div>
-          <div data-ng-if="!sent.$resolved" style="position:relative" us-spinner></div>
+          <div data-ng-if="!sent.$resolved" style="position:relative;padding:20px" us-spinner></div>
         </tab>
         <tab data-ng-click="activeTab = 'connections'">
           <tab-heading><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>({{0+connections.length}})</tab-heading>

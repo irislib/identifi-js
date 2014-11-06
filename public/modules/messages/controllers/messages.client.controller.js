@@ -4,7 +4,16 @@
 angular.module('messages').controller('MessagesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Messages',
 	function($scope, $stateParams, $location, Authentication, Messages ) {
 		$scope.authentication = Authentication;
-    $scope.filters = {maxDistance: 0, msgType: 'rating', viewpointType: 'keyID', viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', viewpointName: 'Identi.fi' };
+    $scope.messages = [];
+    $scope.filters = {
+      maxDistance: 0,
+      msgType: 'rating',
+      offset: 0,
+      limit: 20,
+      viewpointType: 'keyID',
+      viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT',
+      viewpointName: 'Identi.fi'
+    };
 
     var processMessages = function(messages) {
       for (var key in messages) {
@@ -14,7 +23,6 @@ angular.module('messages').controller('MessagesController', ['$scope', '$statePa
         if (msg.authorEmail === '')
           gravatarEmail = msg.data.signedData.author[0][0] + msg.data.signedData.author[0][1];
         msg.gravatar = CryptoJS.MD5(gravatarEmail).toString();
-
 
         var signedData = msg.data.signedData;
         var alpha;
@@ -109,12 +117,33 @@ angular.module('messages').controller('MessagesController', ['$scope', '$statePa
 			});
 		};
 
-		// Find a list of Messages
-		$scope.find = function() {
-			$scope.messages = Messages.query($scope.filters, function () {
-        processMessages($scope.messages);
+    $scope.find = function(offset) {
+      if (!isNaN(offset))
+        $scope.filters.offset = offset;
+			var messages = Messages.query(angular.extend({ 
+				idType: $scope.idType,
+        idValue: $scope.idValue,
+        msgType: $scope.filters.msgType,
+        offset: $scope.filters.offset,
+        limit: $scope.filters.limit
+      }, $scope.filters), function () {
+        processMessages(messages);
+        if ($scope.filters.offset === 0)
+          $scope.messages = messages;
+        else {
+          for (var key in messages) {
+            if (isNaN(key)) continue;
+            $scope.messages.push(messages[key]);
+          }
+        }
+        $scope.messages.$resolved = messages.$resolved;
+        $scope.filters.offset = $scope.filters.offset + messages.length;
+        if (messages.length < $scope.filters.limit)
+          $scope.messages.finished = true;
 			});
-		};
+      $scope.messages.$resolved = messages.$resolved;
+    };
+
 
 		// Find existing Message
 		$scope.findOne = function() {
@@ -128,7 +157,7 @@ angular.module('messages').controller('MessagesController', ['$scope', '$statePa
 		};
     $scope.setFilters = function(filters) {
       angular.extend($scope.filters, filters);
-      $scope.find();
+      $scope.find(0);
     };
 	}
 ]);
