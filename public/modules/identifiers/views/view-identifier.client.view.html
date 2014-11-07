@@ -101,7 +101,7 @@
           </div>
           <div data-ng-if="!sent.$resolved" style="position:relative;padding:20px" us-spinner></div>
         </tab>
-        <tab data-ng-click="activeTab = 'connections'">
+        <tab data-ng-if="true" data-ng-click="activeTab = 'connections'">
           <tab-heading><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>({{0+connections.length}})</tab-heading>
             <div id="connections">
               <input id="authenticity_token" name="authenticity_token" type="hidden" value="z1JM7ffnFK7gOv6S3yzG9UFyakukYHikAU94/3TcT2o=">    <table class="table truncated-table table-hover animated fadeIn">

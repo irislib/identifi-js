@@ -154,6 +154,20 @@ module.exports = function(grunt) {
           'public/modules/core/css/core.css':'public/modules/core/css/core.scss'
         }
       }
+    },
+    copy: {
+      all: {
+        expand: true,
+        cwd: 'config/env',
+        src: ['*.example'],
+        dest: 'config/env/',
+        rename: function(dest, src) {
+          return dest + src.replace('.example', '');
+        },
+        filter: function(filepath) {
+          return !(grunt.file.exists(filepath.replace('.example', '')));
+        }
+      }
     }
 	});
 
@@ -173,7 +187,7 @@ module.exports = function(grunt) {
 	});
 
 	// Default task(s).
-	grunt.registerTask('default', ['lint', 'concurrent:default']);
+	grunt.registerTask('default', ['copy', 'lint', 'concurrent:default']);
 
 	// Debug task.
 	grunt.registerTask('debug', ['lint', 'concurrent:debug']);
@@ -182,7 +196,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('lint', ['jshint', 'csslint']);
 
 	// Build task(s).
-	grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin']);
+	grunt.registerTask('build', ['copy', 'lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin']);
 
 	// Test task.
 	grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
