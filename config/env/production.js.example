@@ -48,6 +48,12 @@ module.exports = {
 		clientSecret: process.env.GITHUB_SECRET || 'APP_SECRET',
 		callbackURL: 'http://localhost:3000/auth/github/callback'
 	},
+	persona: {
+    audience: 'http://www.example.com',
+		clientID: process.env.PERSONA_ID || 'APP_ID',
+		clientSecret: process.env.PERSONA_SECRET || 'APP_SECRET',
+		callbackURL: 'http://www.example.com/auth/persona/callback'
+	},
 	mailer: {
 		from: process.env.MAILER_FROM || 'MAILER_FROM',
 		options: {

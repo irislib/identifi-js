@@ -61,11 +61,14 @@
   <div data-ng-if="isUniqueType && trustpaths.length > 0" class="panel panel-default">
     <div class="panel-body">
       <ul data-ng-repeat="level in trustpaths" class="trustpath-list list-unstyled">
-        <li data-ng-repeat-start="id in level">
+        <li data-ng-repeat-start="id in level" data-ng-if="$index < 3 || collapseLevel[$parent.$index]">
           <a data-id-type="{{id[0]}}" data-id-value="{{id[1]}}" class="id-link" data-ng-href="#!/id/{{id[0]|escape}}/{{id[1]|escape}}" data-original-title="" title="">
             <img alt="" src="https://www.gravatar.com/avatar/{{id.gravatar}}?d=retro&amp;s=30" class="mar-bot5 img-rounded mar-right5"> 
             {{id[1]}}
           </a>
+        </li>
+        <li class="mar-bot5" data-ng-if="level.length > 3 && $index === 2">
+          <a href="" data-ng-click="collapseLevel[$parent.$index] = !collapseLevel[$parent.$index]">{{level.length - 3}} more</a>
         </li>
         <li data-ng-if="$last && !$parent.$last" class="has-success" data-ng-repeat-end>
           <span class="positive mar-left5 mar-bot10 glyphicon glyphicon-thumbs-up"></span>

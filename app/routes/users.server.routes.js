@@ -52,6 +52,10 @@ module.exports = function(app) {
 	app.route('/auth/github').get(passport.authenticate('github'));
 	app.route('/auth/github/callback').get(users.oauthCallback('github'));
 
+	// Setting the persona oauth routes
+	app.route('/auth/persona').get(passport.authenticate('persona'));
+	app.route('/auth/persona/callback').get(users.oauthCallback('persona'));
+
 	// Finish by binding the user middleware
 	app.param('userId', users.userByID);
 };

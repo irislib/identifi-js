@@ -23,6 +23,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
       viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
     };
     $scope.activeTab = 'received';
+    $scope.collapseLevel = {};
     $scope.uniqueIdentifierTypes = [
       'url',
       'account',

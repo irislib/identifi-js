@@ -18,8 +18,33 @@ var identifi = new bitcoin.Client({
       pass: '7FA6FfaoXr6VzCzQa8X2YBrUxR1ANEvnxtdTugvD5mzc'
 });
 identifi.memcached = new Memcached();
-identifi.cachedCmd = function(params) {
-  
+identifi.cachedCmd = function() {
+  var cmdSignature = Array.prototype.slice.call(arguments, 0, -1).join();
+  var params = arguments;
+  var _this = this;
+  this.memcached.get(cmdSignature, function(err, data) {
+    if (err || !data) {
+      if (!err) {
+        console.log('Cache miss ' + cmdSignature);
+        params = Array.prototype.slice.call(params);
+        var originalCallback = params.pop();
+        params.push(function(identifiErr, identifiRes) {
+          if (!identifiErr)
+            _this.memcached.set(cmdSignature, identifiRes, 100, function(err) {});
+          else 
+            console.log('Identifi error: ' + identifiErr);
+          originalCallback.call(_this, identifiErr, identifiRes);
+        });
+        _this.cmd.apply(_this, params);
+      } else {
+        console.log('Memcached error: ' + err);
+        _this.cmd.apply(_this, params);
+      }
+    } else {
+      console.log('Cache hit ' + cmdSignature);
+      params[params.length - 1].call(_this, undefined, data);
+    }
+  });
 };
 
 /**
@@ -33,7 +58,7 @@ exports.read = function(req, res) {
  * Search for Identifiers
  */
 exports.search = function(req, res) {
-  identifi.cmd('search', req.params.idValue || '', req.params.idType || '', '20', '0', 'keyID', '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', function(err, identifiRes, identifiResHeaders) {
+  identifi.cachedCmd('search', req.params.idValue || '', req.params.idType || '', '20', '0', 'keyID', '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }
@@ -46,7 +71,7 @@ exports.search = function(req, res) {
  * Overview
  */
 exports.overview = function(req, res) {
-  identifi.cmd('overview', req.params.idType, req.params.idValue, req.query.viewpointType || '', req.query.viewpointValue || '', req.query.maxDistance || '0', function(err, identifiRes, identifiResHeaders) {
+  identifi.cachedCmd('overview', req.params.idType, req.params.idValue, req.query.viewpointType || '', req.query.viewpointValue || '', req.query.maxDistance || '0', function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }
@@ -59,7 +84,7 @@ exports.overview = function(req, res) {
  * Connections
  */
 exports.connections = function(req, res) {
-  identifi.cmd('getconnections', req.params.idType, req.params.idValue, req.query.limit || '20', req.query.offset || '0', req.query.viewpointType || '', req.query.viewpointValue || '', req.query.maxDistance || '0', function(err, identifiRes, identifiResHeaders) {
+  identifi.cachedCmd('getconnections', req.params.idType, req.params.idValue, req.query.limit || '20', req.query.offset || '0', req.query.viewpointType || '', req.query.viewpointValue || '', req.query.maxDistance || '0', function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }
@@ -72,7 +97,7 @@ exports.connections = function(req, res) {
  * Trust path
  */
 exports.trustpaths = function(req, res) {
-  identifi.cmd('getpaths', req.query.viewpointType || 'keyID', req.query.viewpointValue || '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', req.params.idType, req.params.idValue, function(err, identifiRes, identifiResHeaders) {
+  identifi.cachedCmd('getpaths', req.query.viewpointType || 'keyID', req.query.viewpointValue || '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', req.params.idType, req.params.idValue, function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }
@@ -85,7 +110,7 @@ exports.trustpaths = function(req, res) {
  * Messages by author
  */
 exports.sent = function(req, res) {
-  identifi.cmd('getmsgsbyauthor', req.params.idType, req.params.idValue, req.query.limit || '20', req.query.offset || '0', '', '', '0', req.query.msgType || '', function(err, identifiRes, identifiResHeaders) {
+  identifi.cachedCmd('getmsgsbyauthor', req.params.idType, req.params.idValue, req.query.limit || '20', req.query.offset || '0', '', '', '0', req.query.msgType || '', function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }
@@ -98,7 +123,7 @@ exports.sent = function(req, res) {
  * Messages by recipient 
  */
 exports.received = function(req, res) {
-  identifi.cmd('getmsgsbyrecipient', req.params.idType, req.params.idValue, req.query.limit || '20', req.query.offset || '0', req.query.viewpointType || '', req.query.viewpointValue || '', req.query.maxDistance || '0', req.query.msgType || '', function(err, identifiRes, identifiResHeaders) {
+  identifi.cachedCmd('getmsgsbyrecipient', req.params.idType, req.params.idValue, req.query.limit || '20', req.query.offset || '0', req.query.viewpointType || '', req.query.viewpointValue || '', req.query.maxDistance || '0', req.query.msgType || '', function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }
@@ -111,7 +136,7 @@ exports.received = function(req, res) {
  * Connecting messages
  */
 exports.connectingmsgs = function(req, res) {
-  identifi.cmd('getconnectingmsgs', req.params.idType, req.params.idValue, req.query.id2Type, req.query.id2Value, req.query.limit || '20', req.query.offset || '0', req.query.viewpointType || '', req.query.viewpointValue || '', '0', function(err, identifiRes, identifiResHeaders) {
+  identifi.cachedCmd('getconnectingmsgs', req.params.idType, req.params.idValue, req.query.id2Type, req.query.id2Value, req.query.limit || '20', req.query.offset || '0', req.query.viewpointType || '', req.query.viewpointValue || '', '0', function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }
@@ -124,7 +149,7 @@ exports.connectingmsgs = function(req, res) {
  * Identifier middleware
  */
 exports.identifierByID = function(req, res, next, id) { 
-  identifi.cmd('overview', req.params.idType, req.params.idValue, function(err, identifier, identifiResHeaders) {
+  identifi.cachedCmd('overview', req.params.idType, req.params.idValue, function(err, identifier, identifiResHeaders) {
 		if (err) return next(err);
 		if (! identifier) return next(new Error('Failed to load Identifier ' + id.type + ': ' + id.value));
 
