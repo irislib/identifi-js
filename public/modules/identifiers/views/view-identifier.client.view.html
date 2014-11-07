@@ -6,7 +6,7 @@
           <span data-ng-bind="idType" id="id-type"></span>
         </small>
       </h4>
-      <div class="panel panel-default">
+      <div data-ng-if="isUniqueType" class="panel panel-default">
     <div class="panel-body">
       <table class="stats-box table-condensed">
         <tbody><tr>
@@ -55,10 +55,10 @@
     </div>
   </div>
 
-  <div data-ng-if="hasQuickContacts" class="panel quick-contact">
+  <div data-ng-if="isUniqueType && hasQuickContacts" class="panel quick-contact">
     <a data-ng-repeat="id in connections" data-ng-if="id.quickContact" class="btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span>&nbsp;</a> 
   </div>
-  <div data-ng-if="trustpaths.length > 0" class="panel panel-default">
+  <div data-ng-if="isUniqueType && trustpaths.length > 0" class="panel panel-default">
     <div class="panel-body">
       <ul data-ng-repeat="level in trustpaths" class="trustpath-list list-unstyled">
         <li data-ng-repeat-start="id in level">
@@ -80,7 +80,7 @@
     <div class="col-md-8">
       <!-- Nav tabs -->
       <tabset>
-        <tab data-ng-click="activeTab = 'received'">
+        <tab data-ng-if="isUniqueType" data-ng-click="activeTab = 'received'">
           <tab-heading><span class="glyphicon glyphicon-download"></span> <span class="hidden-xs">Received </span>({{0+overview.receivedPositive+overview.receivedNeutral+overview.receivedNegative}})</tab-heading>
           <br>
           <div class="alert alert-info text-center login-alert-info">
@@ -92,7 +92,7 @@
           </div>
           <div data-ng-if="!received.$resolved" style="position:relative;padding:20px" us-spinner></div>
         </tab>
-        <tab data-ng-click="activeTab = 'sent'">
+        <tab data-ng-if="isUniqueType" data-ng-click="activeTab = 'sent'">
           <tab-heading><span class="glyphicon glyphicon-upload"></span> <span class="hidden-xs">Sent </span>({{0+overview.authoredPositive+overview.authoredNeutral+overview.authoredNegative}})</tab-heading>
           <br>
           <div data-ng-if="sent.$resolved && sent.length == 0" class="alert alert-info text-center animated fadeIn">No messages to show</div>

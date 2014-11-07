@@ -23,6 +23,20 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
       viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
     };
     $scope.activeTab = 'received';
+    $scope.uniqueIdentifierTypes = [
+      'url',
+      'account',
+      'email',
+      'bitcoin',
+      'bitcoin_address',
+      'keyID',
+      'gpg_fingerprint',
+      'gpg_keyid',
+      'phone',
+      'tel',
+      'google_oauth2'
+    ];
+    $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1;
 
     var processMessages = function(messages) {
       for (var key in messages) {
@@ -100,6 +114,8 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
         for (var i = 0; i < $scope.identifiers.length; i++) {
           var id = $scope.identifiers[i];
           for (var j in id) {
+            if (!id.linkTo && $scope.uniqueIdentifierTypes.indexOf(id[j][0]) > -1)
+              id.linkTo = id[j];
             switch (id[j][0]) {
               case 'email':
                 id.email = id[j][1];
@@ -124,6 +140,8 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
                 break;
             }
           }
+          if (!id.linkTo)
+            id.linkTo = id[0];
           if (!id.gravatar)
             id.gravatar = CryptoJS.MD5(id[0][1]).toString();
           if (!id.name) {
@@ -136,7 +154,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 		};
 
     $scope.resultClicked = function(result) {
-      $location.path('/id/' + encodeURIComponent(result[0][0]) + '/' + encodeURIComponent(result[0][1]));
+      $location.path('/id/' + encodeURIComponent(result.linkTo[0]) + '/' + encodeURIComponent(result.linkTo[1]));
     };
 
     $scope.$on('SearchKeydown', function(event, args) {
@@ -162,7 +180,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
         case 13:
           args.event.preventDefault();
           var id = $scope.identifiers[$scope.identifiers.activeKey];
-          $location.path('/id/' + id[0][0] + '/' + id[0][1]);
+          $scope.resultClicked(id);
           break;
         case 33:
         case 34:
