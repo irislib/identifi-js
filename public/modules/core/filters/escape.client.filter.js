@@ -7,3 +7,11 @@ angular.module('identifi').filter('escape', [
     };
 	}
 ]);
+
+angular.module('identifi').filter('encodeURIComponent', [
+	function() {
+    return function(input) {
+      return encodeURIComponent(input);
+    };
+	}
+]);

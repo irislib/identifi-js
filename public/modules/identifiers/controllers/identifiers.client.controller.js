@@ -38,6 +38,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
       'google_oauth2'
     ];
     $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1;
+    $scope.writeMsgSlider = 0;
 
     var processMessages = function(messages) {
       for (var key in messages) {

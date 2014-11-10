@@ -21,6 +21,8 @@
     "angular-spinner": "~0.5.1",
     "animate.css": "~3.2.0",
     "jquery": "~2.1.1",
-    "ngInfiniteScroll": "1.0.0"
+    "ngInfiniteScroll": "1.0.0",
+    "angular-persona": "~1.0.0",
+    "angular-bootstrap-slider": "~0.0.8"
   }
 }

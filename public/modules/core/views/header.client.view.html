@@ -5,82 +5,45 @@
       <span class="small glyphicon glyphicon-chevron-left" ui-route="/" data-ng-hide="$uiRoute"></span>
       Identifi</a></h1>
     </div>
-		<ul class="nav navbar-nav" data-ng-if="menu.shouldRender(authentication.user);">
-			<li data-ng-repeat="item in menu.items | orderBy: 'position'" data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.menuItemType" ui-route="{{item.uiRoute}}" class="{{item.menuItemClass}}" ng-class="{active: ($uiRoute)}" dropdown="item.menuItemType === 'dropdown'">
-				<a ng-switch-when="dropdown" class="dropdown-toggle">
-					<span data-ng-bind="item.title"></span>
-					<b class="caret"></b>
+
+    <ul class="nav navbar-nav navbar-right">
+      <li class="" ui-route="/messages" ng-class="{active: $uiRoute}"><a href="#!/messages"><span class="glyphicon glyphicon-globe"></span></a></li>
+      <li class="" ui-route="/about" ng-class="{active: $uiRoute}"><a href="#!/about"><span class="glyphicon glyphicon-info-sign"></span></a></li>
+			<li data-ng-show="authentication.user" ui-route="/id/url/{{authentication.user.providerData.link|encodeURIComponent}}" data-ng-class="{active: $uiRoute}">
+				<a data-ng-href="#!/id/url/{{authentication.user.providerData.link|escape}}">
+					<span class="glyphicon glyphicon-user"></span> <span class="hidden-xs" data-ng-bind="authentication.user.displayName"></span>
 				</a>
-				<ul ng-switch-when="dropdown" class="dropdown-menu">
-					<li data-ng-repeat="subitem in item.items | orderBy: 'position'" data-ng-if="subitem.shouldRender(authentication.user);" ui-route="{{subitem.uiRoute}}" ng-class="{active: $uiRoute}">
-						<a href="/#!/{{subitem.link}}" data-ng-bind="subitem.title"></a>
-					</li>
-				</ul>
-				<a ng-switch-default href="/#!/{{item.link}}" data-ng-bind="item.title"></a>
 			</li>
-		</ul>
-
-
-
-    <ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">
-            <li class="" ui-route="/messages" ng-class="{active: $uiRoute}"><a href="#!/messages"><span class="glyphicon glyphicon-globe"></span></a></li>
-            <li class="" ui-route="/about" ng-class="{active: $uiRoute}"><a href="#!/about"><span class="glyphicon glyphicon-info-sign"></span></a></li>
-              <li class="hidden-xs dropdown ">
-                <a href="#" class="dropdown-toggle login-button" data-toggle="dropdown"><span class="glyphicon glyphicon-log-in"></span> Log in <b class="caret"></b></a>
-                <ul class="dropdown-menu login-menu">
-                  <li>
-      <form id="persona-form" action="/auth/email/callback">
-        <input type="hidden" name="assertion">
-        <button id="email-login" class="btn btn-block btn-social btn-success">
-          <i class="fa fa-envelope"></i> Email
-        </button>
-      </form>
-    </li>
-    <li>
-      <button onclick="window.location='/auth/facebook';" class="btn btn-block btn-social btn-facebook">
-        <i class="fa fa-facebook"></i> Facebook
-      </button>
-    </li>
-    <li>
-      <button onclick="window.location='/auth/twitter';" class="btn btn-block btn-social btn-twitter">
-        <i class="fa fa-twitter"></i> Twitter
-      </button>
-    </li>
-    <li>
-      <button onclick="window.location='/auth/google_oauth2';" class="btn btn-block btn-social btn-google-plus">
-        <i class="fa fa-google-plus"></i> Google
-      </button>
-    </li>
-
+      <li data-ng-show="authentication.user"><a href="/auth/signout" class="glyphicon glyphicon-log-out"></span></a></li>
+      <li class="hidden-xs dropdown " data-ng-hide="authentication.user">
+        <a href="#" class="dropdown-toggle login-button" data-toggle="dropdown"><span class="glyphicon glyphicon-log-in"></span> Log in <b class="caret"></b></a>
+        <ul class="dropdown-menu login-menu">
+          <li>
+            <button data-ng-click="login()" id="email-login" class="btn btn-block btn-social btn-success">
+              <i class="fa fa-envelope"></i> Email
+            </button>
+          </li>
+          <li>
+            <button onclick="window.location='/auth/facebook';" class="btn btn-block btn-social btn-facebook">
+              <i class="fa fa-facebook"></i> Facebook
+            </button>
+          </li>
+          <li>
+            <button onclick="window.location='/auth/twitter';" class="btn btn-block btn-social btn-twitter">
+              <i class="fa fa-twitter"></i> Twitter
+            </button>
+          </li>
+          <li>
+            <button onclick="window.location='/auth/google';" class="btn btn-block btn-social btn-google-plus">
+              <i class="fa fa-google-plus"></i> Google
+            </button>
+          </li>
         </ul>
       </li>
-      <li class="visible-xs " ui-route="/signin" ng-class="{active: $uiRoute}">
-        <a href="#!/signin" class="login-button" ><span class="glyphicon glyphicon-log-in"></span> Log in</b></a>
+      <li data-ng-hide="authentication.user" ui-route="/signin" ng-class="{active: $uiRoute}">
+        <a href="#!/signin" class="visible-xs login-button" ><span class="glyphicon glyphicon-log-in"></span> Log in</b></a>
       </li>
     </ul>
-
-		<ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
-			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-					<span data-ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
-				</a>
-				<ul class="dropdown-menu">
-					<li>
-						<a href="/#!/settings/profile">Edit Profile</a>
-					</li>
-					<li>
-						<a href="/#!/settings/accounts">Manage Social Accounts</a>
-					</li>
-					<li data-ng-show="authentication.user.provider === 'local'">
-						<a href="/#!/settings/password">Change Password</a>
-					</li>
-					<li class="divider"></li>
-					<li>
-						<a href="/auth/signout">Signout</a>
-					</li>
-				</ul>
-			</li>
-		</ul>
 
     <form class="navbar-form navbar-left" id="nav-search" role="search" data-ng-if="isActive('/')">
       <div class="input-group">

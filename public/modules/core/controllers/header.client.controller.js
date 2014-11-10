@@ -1,7 +1,31 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', '$location', 'Authentication', 'Menus',
-	function($scope, $location, Authentication, Menus) {
+angular.module('core').controller('HeaderController', ['$scope', '$location', 'Authentication', 'Menus', 'Persona',
+	function($scope, $location, Authentication, Menus, Persona) {
+    Persona.watch({
+      loggedInUser: user.email,
+      onlogin: function(assertion) {
+        console.log('login');
+        $http.post(
+          '/auth/persona', // This is a URL on your website.
+          {assertion: assertion}
+        ).then(function () {
+            // stuff
+          })
+      },
+      onlogout: function() {
+        console.log('logout');
+      }
+    });
+
+    $scope.login = function() {
+      Persona.request();
+    };
+
+    $scope.logout = function() {
+      Persona.logout();
+    };
+
 		$scope.authentication = Authentication;
 		$scope.isCollapsed = false;
 		$scope.menu = Menus.getMenu('topbar');
