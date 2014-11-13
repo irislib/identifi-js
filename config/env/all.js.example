@@ -17,6 +17,7 @@ module.exports = {
 				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
 				'public/lib/font-awesome/css/font-awesome.css',
 				'public/lib/bootstrap-social/bootstrap-social.css',
+				'public/lib/seiyria-bootstrap-slider/css/bootstrap-slider.css',
 				'public/lib/animate.css/animate.css'
 			],
 			js: [
@@ -33,7 +34,11 @@ module.exports = {
 				'public/lib/crypto-js/rollups/md5.js',
 				'public/lib/ngInfiniteScroll/build/ng-infinite-scroll.js',
         'public/lib/angular-spinner/angular-spinner.js',
-        'public/lib/spin.js/spin.js'
+        'public/lib/spin.js/spin.js',
+        'https://login.persona.org/include.js',
+        'public/lib/angular-persona/angular-persona.js',
+        'public/lib/angular-bootstrap-slider/slider.js',
+        'public/lib/seiyria-bootstrap-slider/js/bootstrap-slider.js'
 			]
 		},
 		css: [
