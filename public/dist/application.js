@@ -11,9 +11,11 @@ var ApplicationConfiguration = function () {
         'ngSanitize',
         'ui.router',
         'ui.bootstrap',
+        'ui.bootstrap-slider',
         'ui.utils',
         'angularSpinner',
-        'infinite-scroll'
+        'infinite-scroll',
+        'persona'
       ];
     // Add a new vertical module
     var registerModule = function (moduleName, dependencies) {
@@ -162,7 +164,25 @@ angular.module('core').controller('HeaderController', [
   '$location',
   'Authentication',
   'Menus',
-  function ($scope, $location, Authentication, Menus) {
+  'Persona',
+  function ($scope, $location, Authentication, Menus, Persona) {
+    Persona.watch({
+      loggedInUser: user.email,
+      onlogin: function (assertion) {
+        console.log('login');
+        $http.post('/auth/persona', { assertion: assertion }).then(function () {
+        });
+      },
+      onlogout: function () {
+        console.log('logout');
+      }
+    });
+    $scope.login = function () {
+      Persona.request();
+    };
+    $scope.logout = function () {
+      Persona.logout();
+    };
     $scope.authentication = Authentication;
     $scope.isCollapsed = false;
     $scope.menu = Menus.getMenu('topbar');
@@ -195,6 +215,11 @@ angular.module('core').controller('HomeController', [
 angular.module('identifi').filter('escape', [function () {
     return function (input) {
       return encodeURIComponent(encodeURIComponent(input));
+    };
+  }]);
+angular.module('identifi').filter('encodeURIComponent', [function () {
+    return function (input) {
+      return encodeURIComponent(input);
     };
   }]);'use strict';
 //Menu service used for managing  menus
@@ -381,6 +406,7 @@ angular.module('identifiers').controller('IdentifiersController', [
       viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
     };
     $scope.activeTab = 'received';
+    $scope.collapseLevel = {};
     $scope.uniqueIdentifierTypes = [
       'url',
       'account',
@@ -395,6 +421,7 @@ angular.module('identifiers').controller('IdentifiersController', [
       'google_oauth2'
     ];
     $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1;
+    $scope.writeMsgSlider = 1;
     var processMessages = function (messages) {
       for (var key in messages) {
         if (isNaN(key))
