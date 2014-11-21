@@ -96,15 +96,14 @@
                 <h3 class="panel-title"><a data-toggle="collapse" data-target="#write-feedback"><span class="glyphicon glyphicon-chevron-down"></span> Write feedback</a></h3>
             </div>
             <div class="panel-body collapse" id="write-feedback">
-              <form action="/id/write" method="post">
-                <input id="type" name="type" type="hidden" value="url">      <input id="value" name="value" type="hidden" value="https://www.facebook.com/mmalmi">      <input id="authenticity_token" name="authenticity_token" type="hidden" value="njR25Ffg4u9LX7JLrREa0AYNDD66NHEerkHOegRH8qc=">      <div class="form-group">
-                  <textarea name="comment" class="form-control" id="comment" placeholder="Write feedback"></textarea>
+              <form data-ng-controller="MessagesController" data-ng-submit="create()">
+                <div class="form-group">
+                  <textarea name="comment" class="form-control" id="comment" data-ng-model="message.comment" placeholder="Write feedback"></textarea>
                 </div>
 
                 <div class="row">
                   <div class="col-sm-10 col-xs-12 rating-slider" id="write-msg-slider">
-                    <slider data-ng-model="writeMsgSlider" min="-3" max="3" step="1" value="1">
-                    <input type="hidden" name="rating" id="buttonvalue" autocomplete="off" value="1">
+                    <slider data-ng-model="message.rating" min="-3" max="3" step="1">
                     <span class="hidden-xs write-msg-icons mar-left5">
                       <span class="write-msg-icon glyphicon glyphicon-thumbs-up mar-left5"></span>
                       <span class="write-msg-icon glyphicon glyphicon-thumbs-up mar-left5" style="display:none;"></span>

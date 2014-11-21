@@ -38,7 +38,6 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
       'google_oauth2'
     ];
     $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1;
-    $scope.writeMsgSlider = 1;
 
     var processMessages = function(messages) {
       for (var key in messages) {
@@ -158,6 +157,16 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
     $scope.resultClicked = function(result) {
       $location.path('/id/' + encodeURIComponent(result.linkTo[0]) + '/' + encodeURIComponent(result.linkTo[1]));
     };
+
+    var messagesAdded = false;
+    $scope.$on('MessageAdded', function(event, args) {
+      if (messagesAdded)
+        $scope.received.shift();
+      
+      $scope.received.unshift(args.message);
+      messagesAdded = true;
+      processMessages($scope.received);
+    });
 
     $scope.$on('SearchKeydown', function(event, args) {
       switch (args.event.which) {

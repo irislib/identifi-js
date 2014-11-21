@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', '$location', 'Authentication', 'Menus', 'Persona',
-	function($scope, $location, Authentication, Menus, Persona) {
+angular.module('core').controller('HeaderController', ['$scope', '$location', '$http', 'Authentication', 'Menus', 'Persona',
+	function($scope, $location, $http, Authentication, Menus, Persona) {
     Persona.watch({
-      loggedInUser: user.email,
+      loggedInUser: Authentication.user.email,
       onlogin: function(assertion) {
         console.log('login');
         $http.post(
@@ -11,7 +11,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$location', 'A
           {assertion: assertion}
         ).then(function () {
             // stuff
-          })
+          });
       },
       onlogout: function() {
         console.log('logout');

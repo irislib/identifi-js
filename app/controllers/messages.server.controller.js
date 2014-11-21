@@ -58,18 +58,35 @@ identifi.cachedCmd = function() {
  * Create a Message
  */
 exports.create = function(req, res) {
-	var message = new Message(req.body);
-	message.user = req.user;
+  var data = {
+    signedData:
+      {
+        timestamp: parseInt(Date.now() / 1000),
+        author: [['email', req.user.email]],
+        recipient: [[req.body.recipientType, req.body.recipientValue]],
+        rating: parseInt(req.body.rating) || 0,
+        maxRating: 3,
+        minRating: -3,
+        comment: req.body.comment || '',
+        type: ['rating', 'confirm_connection', 'refute_connection'].indexOf(req.body.type) > -1 ? req.body.type : 'rating'
+      },
+    signature: {}
+  };
 
-	message.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(message);
-		}
-	});
+  console.log(JSON.stringify(data));
+  identifi.cmd('savemsgfromdata', JSON.stringify(data), 'false', function(err, identifiRes, identifiResHeaders) {
+    if (!err) {
+      identifi.cmd('getmsgbyhash', identifiRes, function(err2, identifiRes2, identifiResHeaders2) {
+        if (!err2)
+          return res.jsonp(identifiRes2[0]);
+        else
+          return res.status(200).send({hash: identifiRes});
+      });
+    } else {
+      console.error(err);
+      return res.status(400).send();
+    }
+  });
 };
 
 /**
