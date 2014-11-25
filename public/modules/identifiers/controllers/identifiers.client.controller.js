@@ -160,12 +160,18 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 
     var messagesAdded = false;
     $scope.$on('MessageAdded', function(event, args) {
-      if (messagesAdded)
-        $scope.received.shift();
-      
-      $scope.received.unshift(args.message);
-      messagesAdded = true;
-      processMessages($scope.received);
+      if (args.message.data.signedData.type === 'confirm_connection') {
+        args.id.confirmations += 1;
+      } else if (args.message.data.signedData.type === 'refute_connection') {
+        args.id.refutations += 1;
+      } else if (args.message.data.signedData.type === 'rating') {
+        if (messagesAdded)
+          $scope.received.shift();
+        
+        $scope.received.unshift(args.message);
+        messagesAdded = true;
+        processMessages($scope.received);
+      }
     });
 
     $scope.$on('SearchKeydown', function(event, args) {

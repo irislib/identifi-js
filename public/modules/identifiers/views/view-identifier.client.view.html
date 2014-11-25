@@ -96,7 +96,7 @@
                 <h3 class="panel-title"><a data-toggle="collapse" data-target="#write-feedback"><span class="glyphicon glyphicon-chevron-down"></span> Write feedback</a></h3>
             </div>
             <div class="panel-body collapse" id="write-feedback">
-              <form data-ng-controller="MessagesController" data-ng-submit="create()">
+              <form data-ng-controller="MessagesController" data-ng-submit="create($event, { type: 'rating', rating: message.rating, comment: message.comment })">
                 <div class="form-group">
                   <textarea name="comment" class="form-control" id="comment" data-ng-model="message.comment" placeholder="Write feedback"></textarea>
                 </div>
@@ -148,8 +148,8 @@
                       <a data-ng-if="id.iconStyle&&id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
                       <span data-ng-if="id.iconStyle&&!id.link" class="pull-left btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span></a>
                       <span class="visible-xs pull-right">
-                        <button autocomplete="off" name="confirm" class="ladda-button btn btn-default btn-confirm disabled" data-style="zoom-out"><span class="ladda-label"><span class="positive glyphicon glyphicon-ok"></span> {{id.confirmations}}</span><span class="ladda-spinner"></span></button>
-                        <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute disabled" data-style="zoom-out"><span class="ladda-label"><span class="negative glyphicon glyphicon-remove"></span> {{id.refutations}}</span><span class="ladda-spinner"></span></button>
+                        <button autocomplete="off" data-ng-controller="MessagesController" name="confirm" class="ladda-button btn btn-default btn-confirm" data-ng-click="create($event, { type: 'confirm_connection', recipientType: idType, recipientValue: idValue, recipientType2: id.type, recipientValue2: id.value }, id)" data-ng-disabled="!authentication.user" data-style="zoom-out"><span class="ladda-label"><span class="positive glyphicon glyphicon-ok"></span> {{id.confirmations}}</span><span class="ladda-spinner"></span></button>
+                        <button autocomplete="off" data-ng-controller="MessagesController" name="refute" class="ladda-button btn btn-default btn-refute" data-ng-click="create($event, { type: 'refute_connection', recipientType: idType, recipientValue: idValue, recipientType2: id.type, recipientValue2: id.value }, id)" data-ng-disabled="!authentication.user" data-style="zoom-out"><span class="ladda-label"><span class="negative glyphicon glyphicon-remove"></span> {{id.refutations}}</span><span class="ladda-spinner"></span></button>
                       </span>
                     </td>
                     <td colspan="3">
@@ -160,8 +160,8 @@
                       <input class="form-control linkedComment" type="text" placeholder="comment" disabled>
                     </td>-->
                     <td class="hidden-xs">
-                      <button autocomplete="off" name="confirm" class="ladda-button btn btn-default btn-confirm disabled" data-style="zoom-out"><span class="ladda-label"><span class="positive glyphicon glyphicon-ok"></span> {{id.confirmations}}</span><span class="ladda-spinner"></span></button>
-                      <button autocomplete="off" name="refute" class="ladda-button btn btn-default btn-refute disabled" data-style="zoom-out"><span class="ladda-label"><span class="negative glyphicon glyphicon-remove"></span> {{id.refutations}}</span><span class="ladda-spinner"></span></button>
+                      <button autocomplete="off" data-ng-controller="MessagesController" name="confirm" class="ladda-button btn btn-default btn-confirm" data-ng-click="create($event, { type: 'confirm_connection', recipientType: idType, recipientValue: idValue, recipientType2: id.type, recipientValue2: id.value }, id)" data-ng-disabled="!authentication.user" data-style="zoom-out"><span class="ladda-label"><span class="positive glyphicon glyphicon-ok"></span> {{id.confirmations}}</span><span class="ladda-spinner"></span></button>
+                      <button autocomplete="off" data-ng-controller="MessagesController" name="refute" class="ladda-button btn btn-default btn-refute" data-ng-click="create($event, { type: 'refute_connection', recipientType: idType, recipientValue: idValue, recipientType2: id.type, recipientValue2: id.value }, id)" data-ng-disabled="!authentication.user" data-style="zoom-out"><span class="ladda-label"><span class="negative glyphicon glyphicon-remove"></span> {{id.refutations}}</span><span class="ladda-spinner"></span></button>
                     </td>
                   </tr>
                   <tr data-ng-repeat-end collapse="!id.collapse" data-ng-if="!id.isCurrent" class="active connectingmsgs">

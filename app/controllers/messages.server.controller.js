@@ -73,6 +73,9 @@ exports.create = function(req, res) {
     signature: {}
   };
 
+  if ((['confirm_connection', 'refute_connection'].indexOf(req.body.type) > -1) && req.body.recipientType2 && req.body.recipientValue2)
+    data.signedData.recipient.push([req.body.recipientType2, req.body.recipientValue2]);
+
   console.log(JSON.stringify(data));
   identifi.cmd('savemsgfromdata', JSON.stringify(data), 'false', function(err, identifiRes, identifiResHeaders) {
     if (!err) {

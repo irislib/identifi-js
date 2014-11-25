@@ -78,21 +78,20 @@ angular.module('messages').controller('MessagesController', ['$scope', '$statePa
     };
 
 		// Create new Message
-		$scope.create = function() {
+		$scope.create = function(event, params, id) {
+      event.stopPropagation();
 			// Create new Message object
 			var message = new Messages ({
 				recipientType: $scope.idType,
 				recipientValue: $scope.idValue,
-        type: $scope.message.type,
-        rating: $scope.message.rating,
-        comment: $scope.message.comment
 			});
+      angular.extend(message, params);
 
 			message.$save(function(response) {
 				// Clear form fields
 				$scope.message.comment = '';
 				$scope.message.rating = 1;
-        $scope.$root.$broadcast('MessageAdded', { message: message });
+        $scope.$root.$broadcast('MessageAdded', { message: message, id: id });
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
