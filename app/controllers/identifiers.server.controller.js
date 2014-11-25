@@ -80,6 +80,19 @@ exports.overview = function(req, res) {
   });
 };
 
+
+/**
+ * Getname 
+ */
+exports.getname = function(req, res) {
+  identifi.cachedCmd('getname', req.params.idType, req.params.idValue, function(err, identifiRes, identifiResHeaders) {
+    if (err) {
+      return console.error(err);
+    }
+
+    res.jsonp({ name: identifiRes });
+  });
+};
 /**
  * Connections
  */

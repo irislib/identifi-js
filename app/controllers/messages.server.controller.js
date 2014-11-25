@@ -77,7 +77,7 @@ exports.create = function(req, res) {
     data.signedData.recipient.push([req.body.recipientType2, req.body.recipientValue2]);
 
   console.log(JSON.stringify(data));
-  identifi.cmd('savemsgfromdata', JSON.stringify(data), 'false', function(err, identifiRes, identifiResHeaders) {
+  identifi.cmd('savemsgfromdata', JSON.stringify(data), process.env.NODE_ENV === 'production' ? 'true' : 'false', function(err, identifiRes, identifiResHeaders) {
     if (!err) {
       identifi.cmd('getmsgbyhash', identifiRes, function(err2, identifiRes2, identifiResHeaders2) {
         if (!err2)

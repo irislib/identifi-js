@@ -11,6 +11,27 @@ var passport = require('passport'),
 
 module.exports = function() {
 	// Use Persona strategy
+  passport.use(new PersonaStrategy({
+      audience: 'http://seed1.identifi.org:3000'
+    },
+    function(email, done) {
+			var providerUserProfile = {
+				displayName: email,
+				email: email,
+				provider: 'persona',
+				providerIdentifierField: 'email',
+        idType: 'email',
+        idValue: email,
+        providerData: { email: email }
+			};
+
+      var req = {};
+			// Save the user OAuth profile
+			users.saveOAuthUserProfile(req, providerUserProfile, done);
+    }
+  ));
+
+/*
 	passport.use(new PersonaStrategy({
       audience: config.persona.audience,
 			callbackURL: config.persona.callbackURL,
@@ -38,4 +59,5 @@ module.exports = function() {
 			users.saveOAuthUserProfile(req, providerUserProfile, done);
 		}
 	));
+*/
 };

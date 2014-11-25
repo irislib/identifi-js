@@ -9,6 +9,14 @@ var _ = require('lodash'),
 	passport = require('passport'),
 	User = mongoose.model('User');
 
+var bitcoin = require('bitcoin');
+var identifi = new bitcoin.Client({
+    host: 'localhost',
+      port: 4945,
+      user: 'identifirpc',
+      pass: '7FA6FfaoXr6VzCzQa8X2YBrUxR1ANEvnxtdTugvD5mzc'
+});
+
 /**
  * Signup
  */
@@ -62,6 +70,7 @@ exports.signin = function(req, res, next) {
 				if (err) {
 					res.status(400).send(err);
 				} else {
+          identifi.cmd('generatetrustmap', 'email', user.email);
 					res.jsonp(user);
 				}
 			});

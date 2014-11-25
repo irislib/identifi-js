@@ -9,12 +9,12 @@
     <ul class="nav navbar-nav navbar-right">
       <li class="" ui-route="/messages" ng-class="{active: $uiRoute}"><a href="#!/messages"><span class="glyphicon glyphicon-globe"></span></a></li>
       <li class="" ui-route="/about" ng-class="{active: $uiRoute}"><a href="#!/about"><span class="glyphicon glyphicon-info-sign"></span></a></li>
-			<li data-ng-show="authentication.user" ui-route="/id/url/{{authentication.user.providerData.link|encodeURIComponent}}" data-ng-class="{active: $uiRoute}">
-				<a data-ng-href="#!/id/url/{{authentication.user.providerData.link|escape}}">
+			<li data-ng-show="authentication.user" ui-route="/id/{{authentication.user.idType}}/{{authentication.user.idValue|encodeURIComponent}}" data-ng-class="{active: $uiRoute}">
+				<a data-ng-href="#!/id/{{authentication.user.idType}}/{{authentication.user.idValue|escape}}">
 					<span class="glyphicon glyphicon-user"></span> <span class="hidden-xs" data-ng-bind="authentication.user.displayName"></span>
 				</a>
 			</li>
-      <li data-ng-show="authentication.user"><a href="/auth/signout" class="glyphicon glyphicon-log-out"></span></a></li>
+      <li data-ng-show="authentication.user"><a href="/auth/signout" data-ng-click="logout()" class="glyphicon glyphicon-log-out"></span></a></li>
       <li class="hidden-xs dropdown " data-ng-hide="authentication.user">
         <a href="#" class="dropdown-toggle login-button" data-toggle="dropdown"><span class="glyphicon glyphicon-log-in"></span> Log in <b class="caret"></b></a>
         <ul class="dropdown-menu login-menu">

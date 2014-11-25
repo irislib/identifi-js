@@ -11,9 +11,12 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
     $rootScope.filters = $rootScope.filters || {
       maxDistance: 0,
       msgType: 'rating',
+      receivedOffset: 0,
+      sentOffset: 0,
       offset: 0,
       limit: 20,
     };
+    angular.extend($rootScope.filters, { receivedOffset: 0, sentOffset: 0 });
     $rootScope.defaultViewpoint = $rootScope.defaultViewpoint || {
       viewpointName: 'Identi.fi',
       viewpointType: 'keyID',
@@ -144,6 +147,7 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
 		};
     $scope.setFilters = function(filters) {
       angular.extend($rootScope.filters, filters);
+      angular.extend($rootScope.filters, { offset: 0, receivedOffset: 0, sentOffset: 0 });
       $scope.find(0);
     };
 	}

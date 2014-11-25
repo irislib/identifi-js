@@ -65,7 +65,7 @@
         <li data-ng-repeat-start="id in level" data-ng-if="$index < 3 || collapseLevel[$parent.$index]">
           <a data-id-type="{{id[0]}}" data-id-value="{{id[1]}}" class="id-link" data-ng-href="#!/id/{{id[0]|escape}}/{{id[1]|escape}}" data-original-title="" title="">
             <img alt="" src="https://www.gravatar.com/avatar/{{id.gravatar}}?d=retro&amp;s=30" class="mar-bot5 img-rounded mar-right5"> 
-            {{id[1]}}
+            <span data-ng-bind="id.name.name || id[1]"></span>
           </a>
         </li>
         <li class="mar-bot5" data-ng-if="level.length > 3 && $index === 2">

@@ -14,6 +14,9 @@ module.exports = function(app) {
 	app.route('/id/:idType/:idValue/overview')
 		.get(identifiers.overview);
 
+	app.route('/id/:idType/:idValue/getname')
+		.get(identifiers.getname);
+
 	app.route('/id/:idType/:idValue/connections')
 		.get(identifiers.connections);
 

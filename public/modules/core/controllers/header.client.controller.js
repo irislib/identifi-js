@@ -5,16 +5,15 @@ angular.module('core').controller('HeaderController', ['$scope', '$location', '$
     Persona.watch({
       loggedInUser: Authentication.user.email,
       onlogin: function(assertion) {
-        console.log('login');
         $http.post(
           '/auth/persona', // This is a URL on your website.
           {assertion: assertion}
         ).then(function () {
+          console.log('jepa');
             // stuff
           });
       },
       onlogout: function() {
-        console.log('logout');
       }
     });
 

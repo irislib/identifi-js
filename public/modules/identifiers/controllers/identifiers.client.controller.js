@@ -17,6 +17,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       sentOffset: 0,
       limit: 20,
     };
+    angular.extend($rootScope.filters, { receivedOffset: 0, sentOffset: 0 });
     $rootScope.defaultViewpoint = $rootScope.defaultViewpoint || {
       viewpointName: 'Identi.fi',
       viewpointType: 'keyID',
@@ -402,10 +403,10 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       $scope.getSentMsgs();
       $scope.getReceivedMsgs();
 
-			var allPaths = Identifiers.trustpaths({ 
+			var allPaths = Identifiers.trustpaths(angular.extend({ 
 				idType: $scope.idType,
         idValue: $scope.idValue
-			}, function() {
+			}, $rootScope.viewpoint), function() {
         if (allPaths.length === 0) return;
         var shortestPath = Object.keys(allPaths[0]).length;
         angular.forEach (allPaths[0], function(value, i) {
@@ -422,11 +423,27 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
           }
           $scope.trustpaths.push(row);
         });
+
+        // Names for trustpath nodes
+        $scope.trustpaths[0][0].name = { name: $rootScope.viewpoint.viewpointName };
+        $scope.trustpaths[$scope.trustpaths.length - 1][0].name = { name: $scope.overview.name };
+        
+        var setIdName = function(res) { id.name = res.name; };
+        for (var i = 1; i < $scope.trustpaths.length - 1; i++) {
+          var n = 0;
+          console.log ($scope.trustpaths[i]);
+          for (var key in $scope.trustpaths[i]) {
+            var id = $scope.trustpaths[i][key];
+            id.name = Identifiers.getname({idType: id[0], idValue: id[1]});
+            if (++n === 3) break;
+          }
+        }
       });
 		};
 
     $scope.setFilters = function(filters) {
       angular.extend($rootScope.filters, filters);
+      angular.extend($rootScope.filters, { offset: 0, receivedOffset: 0, sentOffset: 0 });
       getConnections();
       getOverview();
       $scope.getReceivedMsgs(0);
