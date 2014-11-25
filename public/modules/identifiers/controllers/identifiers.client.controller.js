@@ -1,8 +1,8 @@
 'use strict';
 
 // Identifiers controller
-angular.module('identifiers').controller('IdentifiersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Identifiers',
-	function($scope, $stateParams, $location, Authentication, Identifiers ) {
+angular.module('identifiers').controller('IdentifiersController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Identifiers',
+	function($scope, $rootScope, $stateParams, $location, Authentication, Identifiers ) {
 		$scope.authentication = Authentication;
 
     $scope.idType = decodeURIComponent($stateParams.idType);
@@ -10,21 +10,28 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
     $scope.sent = [];
     $scope.received = [];
     $scope.trustpaths = [];
-    $scope.filters = {
+    $rootScope.filters = $rootScope.filters || {
       maxDistance: 0,
       msgType: 'rating',
       receivedOffset: 0,
       sentOffset: 0,
       limit: 20,
     };
-    $scope.defaultViewpoint = {
+    $rootScope.defaultViewpoint = $rootScope.defaultViewpoint || {
       viewpointName: 'Identi.fi',
       viewpointType: 'keyID',
       viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
     };
+    if ($scope.authentication.user) {
+      $rootScope.viewpoint = { viewpointName: $scope.authentication.user.displayName,
+                               viewpointType: 'email',
+                               viewpointValue: $scope.authentication.user.email };
+    } else {
+      $rootScope.viewpoint = $rootScope.viewpoint || $rootScope.defaultViewpoint;
+    }
     $scope.activeTab = 'received';
     $scope.collapseLevel = {};
-    $scope.uniqueIdentifierTypes = [
+    $rootScope.uniqueIdentifierTypes = [
       'url',
       'account',
       'email',
@@ -109,7 +116,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 
 		// Search
 		$scope.search = function() {
-			$scope.identifiers = Identifiers.query({idValue: $scope.queryTerm || ''}, function() {
+			$scope.identifiers = Identifiers.query(angular.extend({idValue: $scope.queryTerm || ''}, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function() {
         $scope.identifiers.activeKey = 0;
         $scope.identifiers[0].active = true;
         for (var i = 0; i < $scope.identifiers.length; i++) {
@@ -222,7 +229,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 			$scope.connections = Identifiers.connections(angular.extend({ 
 				idType: $scope.idType,
         idValue: $scope.idValue,
-			}, $scope.filters, $scope.filters.maxDistance > -1 ? $scope.defaultViewpoint : {}), function() {
+			}, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function() {
         var mostConfirmations = $scope.connections.length > 0 ? $scope.connections[0].confirmations : 1;
         $scope.connections.unshift({type: $scope.idType, value: $scope.idValue, confirmations: 1, refutations: 0, isCurrent: true });
         for (var key in $scope.connections) {
@@ -304,7 +311,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
         }
         $scope.connectionClicked = function(event, id) {
           id.collapse = !id.collapse;
-          id.connectingmsgs = id.connectingmsgs || Identifiers.connectingmsgs(angular.extend({idType: $scope.idType, idValue: $scope.idValue, id2Type: id.type, id2Value: id.value}, $scope.filters), function() {
+          id.connectingmsgs = id.connectingmsgs || Identifiers.connectingmsgs(angular.extend({idType: $scope.idType, idValue: $scope.idValue, id2Type: id.type, id2Value: id.value}, $rootScope.filters), function() {
             for (var key in id.connectingmsgs) {
               if (isNaN(key)) continue;
               var msg = id.connectingmsgs[key];
@@ -320,7 +327,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 				idType: $scope.idType,
         idValue: $scope.idValue,
         method: 'overview'
-			}, $scope.filters, $scope.filters.maxDistance > -1 ? $scope.defaultViewpoint : 0), function() {
+			}, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function() {
         $scope.email = $scope.overview.email;
         if ($scope.email === '')
           $scope.email = $scope.idValue;
@@ -330,16 +337,16 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 
     $scope.getSentMsgs = function(offset) {
       if (!isNaN(offset))
-        $scope.filters.sentOffset = offset;
+        $rootScope.filters.sentOffset = offset;
 			var sent = Identifiers.sent(angular.extend({ 
 				idType: $scope.idType,
         idValue: $scope.idValue,
-        msgType: $scope.filters.msgType,
-        offset: $scope.filters.sentOffset,
-        limit: $scope.filters.limit
-      }, $scope.filters, $scope.filters.maxDistance > -1 ? $scope.defaultViewpoint : 0), function () {
+        msgType: $rootScope.filters.msgType,
+        offset: $rootScope.filters.sentOffset,
+        limit: $rootScope.filters.limit
+      }, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function () {
         processMessages(sent);
-        if ($scope.filters.sentOffset === 0)
+        if ($rootScope.filters.sentOffset === 0)
           $scope.sent = sent;
         else {
           for (var key in sent) {
@@ -348,8 +355,8 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
           }
         }
         $scope.sent.$resolved = sent.$resolved;
-        $scope.filters.sentOffset = $scope.filters.sentOffset + sent.length;
-        if (sent.length < $scope.filters.limit)
+        $rootScope.filters.sentOffset = $rootScope.filters.sentOffset + sent.length;
+        if (sent.length < $rootScope.filters.limit)
           $scope.sent.finished = true;
 			});
       if (offset === 0) {
@@ -360,16 +367,16 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 
     $scope.getReceivedMsgs = function(offset) {
       if (!isNaN(offset))
-        $scope.filters.receivedOffset = offset;
+        $rootScope.filters.receivedOffset = offset;
 			var received = Identifiers.received(angular.extend({ 
 				idType: $scope.idType,
         idValue: $scope.idValue,
-        msgType: $scope.filters.msgType,
-        offset: $scope.filters.receivedOffset,
-        limit: $scope.filters.limit
-      }, $scope.filters, $scope.filters.maxDistance > -1 ? $scope.defaultViewpoint : 0), function () {
+        msgType: $rootScope.filters.msgType,
+        offset: $rootScope.filters.receivedOffset,
+        limit: $rootScope.filters.limit
+      }, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function () {
         processMessages(received);
-        if ($scope.filters.receivedOffset === 0)
+        if ($rootScope.filters.receivedOffset === 0)
           $scope.received = received;
         else {
           for (var key in received) {
@@ -378,8 +385,8 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
           }
         }
         $scope.received.$resolved = received.$resolved;
-        $scope.filters.receivedOffset = $scope.filters.receivedOffset + received.length;
-        if (received.length < $scope.filters.limit)
+        $rootScope.filters.receivedOffset = $rootScope.filters.receivedOffset + received.length;
+        if (received.length < $rootScope.filters.limit)
           $scope.received.finished = true;
 			});
       if (offset === 0) {
@@ -419,7 +426,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$s
 		};
 
     $scope.setFilters = function(filters) {
-      angular.extend($scope.filters, filters);
+      angular.extend($rootScope.filters, filters);
       getConnections();
       getOverview();
       $scope.getReceivedMsgs(0);

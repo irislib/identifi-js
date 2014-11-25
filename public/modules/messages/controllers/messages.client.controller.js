@@ -1,24 +1,31 @@
 'use strict';
 
 // Messages controller
-angular.module('messages').controller('MessagesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Messages',
-	function($scope, $stateParams, $location, Authentication, Messages ) {
+angular.module('messages').controller('MessagesController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Messages',
+	function($scope, $rootScope, $stateParams, $location, Authentication, Messages ) {
 		$scope.authentication = Authentication;
     $scope.idType = decodeURIComponent($stateParams.idType);
     $scope.idValue = decodeURIComponent($stateParams.idValue);
     $scope.messages = [];
     $scope.message = { type: 'rating', rating: 1, comment: '' };
-    $scope.filters = {
+    $rootScope.filters = $rootScope.filters || {
       maxDistance: 0,
       msgType: 'rating',
       offset: 0,
       limit: 20,
     };
-    $scope.defaultViewpoint = {
+    $rootScope.defaultViewpoint = $rootScope.defaultViewpoint || {
       viewpointName: 'Identi.fi',
       viewpointType: 'keyID',
       viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
     };
+    if ($scope.authentication.user) {
+      $rootScope.viewpoint = { viewpointName: $scope.authentication.user.displayName,
+                               viewpointType: 'email',
+                               viewpointValue: $scope.authentication.user.email };
+    } else {
+      $rootScope.viewpoint = $rootScope.viewpoint || $rootScope.defaultViewpoint;
+    }
 
     var processMessages = function(messages) {
       for (var key in messages) {
@@ -99,13 +106,13 @@ angular.module('messages').controller('MessagesController', ['$scope', '$statePa
 
     $scope.find = function(offset) {
       if (!isNaN(offset))
-        $scope.filters.offset = offset;
+        $rootScope.filters.offset = offset;
 			var messages = Messages.query(angular.extend({ 
 				idType: $scope.idType,
         idValue: $scope.idValue,
-      }, $scope.filters, $scope.filters.maxDistance > -1 ? $scope.defaultViewpoint : {}), function () {
+      }, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : {}), function () {
         processMessages(messages);
-        if ($scope.filters.offset === 0)
+        if ($rootScope.filters.offset === 0)
           $scope.messages = messages;
         else {
           for (var key in messages) {
@@ -114,8 +121,8 @@ angular.module('messages').controller('MessagesController', ['$scope', '$statePa
           }
         }
         $scope.messages.$resolved = messages.$resolved;
-        $scope.filters.offset = $scope.filters.offset + messages.length;
-        if (messages.length < $scope.filters.limit)
+        $rootScope.filters.offset = $rootScope.filters.offset + messages.length;
+        if (messages.length < $rootScope.filters.limit)
           $scope.messages.finished = true;
 			});
       if (offset === 0) {
@@ -136,7 +143,7 @@ angular.module('messages').controller('MessagesController', ['$scope', '$statePa
       });
 		};
     $scope.setFilters = function(filters) {
-      angular.extend($scope.filters, filters);
+      angular.extend($rootScope.filters, filters);
       $scope.find(0);
     };
 	}
