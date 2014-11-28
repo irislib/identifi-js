@@ -9,8 +9,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$location', '$
           '/auth/persona', // This is a URL on your website.
           {assertion: assertion}
         ).then(function () {
-          console.log('jepa');
-            // stuff
+            location.reload(); // FIXME
           });
       },
       onlogout: function() {
