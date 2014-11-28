@@ -57,6 +57,20 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
           gravatarEmail = msg.data.signedData.author[0][0] + msg.data.signedData.author[0][1];
         msg.gravatar = CryptoJS.MD5(gravatarEmail).toString();
 
+        msg.linkToAuthor = msg.data.signedData.author[0];
+        var i;
+        for (i = 0; i < msg.data.signedData.author.length; i++) {
+          if ($scope.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1)) {
+            msg.linkToAuthor = msg.data.signedData.author[i];
+          }
+        }
+
+        msg.linkToRecipient = msg.data.signedData.recipient[0];
+        for (i = 0; i < msg.data.signedData.recipient.length; i++) {
+          if ($scope.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0] > -1)) {
+            msg.linkToRecipient = msg.data.signedData.recipient[i];
+          }
+        }
 
         var signedData = msg.data.signedData;
         var alpha;
@@ -340,13 +354,13 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
     $scope.getSentMsgs = function(offset) {
       if (!isNaN(offset))
         $rootScope.filters.sentOffset = offset;
-			var sent = Identifiers.sent(angular.extend({ 
+			var sent = Identifiers.sent(angular.extend($rootScope.filters, { 
 				idType: $scope.idType,
         idValue: $scope.idValue,
         msgType: $rootScope.filters.msgType,
         offset: $rootScope.filters.sentOffset,
         limit: $rootScope.filters.limit
-      }, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function () {
+      }, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function () {
         processMessages(sent);
         if ($rootScope.filters.sentOffset === 0)
           $scope.sent = sent;
@@ -370,13 +384,13 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
     $scope.getReceivedMsgs = function(offset) {
       if (!isNaN(offset))
         $rootScope.filters.receivedOffset = offset;
-			var received = Identifiers.received(angular.extend({ 
+			var received = Identifiers.received(angular.extend($rootScope.filters, { 
 				idType: $scope.idType,
         idValue: $scope.idValue,
         msgType: $rootScope.filters.msgType,
         offset: $rootScope.filters.receivedOffset,
         limit: $rootScope.filters.limit
-      }, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function () {
+      }, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function () {
         processMessages(received);
         if ($rootScope.filters.receivedOffset === 0)
           $scope.received = received;
