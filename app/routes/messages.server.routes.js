@@ -5,11 +5,11 @@ module.exports = function(app) {
 	var messages = require('../../app/controllers/messages');
 
 	// Messages Routes
-	app.route('/messages')
+	app.route('/api/messages')
 		.get(messages.list)
 		.post(users.requiresLogin, messages.create);
 
-	app.route('/messages/:messageId')
+	app.route('/api/messages/:messageId')
 		.get(messages.read)
 		.delete(users.requiresLogin, messages.hasAuthorization, messages.delete);
 

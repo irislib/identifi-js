@@ -22,6 +22,19 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
       viewpointType: 'keyID',
       viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
     };
+    $rootScope.uniqueIdentifierTypes = [
+      'url',
+      'account',
+      'email',
+      'bitcoin',
+      'bitcoin_address',
+      'keyID',
+      'gpg_fingerprint',
+      'gpg_keyid',
+      'phone',
+      'tel',
+      'google_oauth2'
+    ];
     if ($scope.authentication.user) {
       $rootScope.viewpoint = { viewpointName: $scope.authentication.user.displayName,
                                viewpointType: 'email',

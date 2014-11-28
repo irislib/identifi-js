@@ -27,8 +27,6 @@ module.exports = function() {
 			var providerUserProfile = {
 				displayName: profile.displayName,
 				username: profile.username,
-        idType: 'url',
-        idValue: providerData.link,
 				provider: 'twitter',
 				providerIdentifierField: 'id_str',
 				providerData: providerData

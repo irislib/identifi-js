@@ -25,6 +25,16 @@ angular.module('core').controller('HeaderController', ['$scope', '$location', '$
     };
 
 		$scope.authentication = Authentication;
+    if (Authentication.user) {
+      if (Authentication.user.provider === 'persona') {
+        Authentication.user.idType = 'email';
+        Authentication.user.idValue = Authentication.user.email;
+      } else {
+        Authentication.user.idType = 'url';
+        Authentication.user.idValue = Authentication.user.providerData.link;
+      }
+    }
+
 		$scope.isCollapsed = false;
 		$scope.menu = Menus.getMenu('topbar');
 

@@ -3,7 +3,7 @@
 //Identifiers service used to communicate Identifiers REST endpoints
 angular.module('identifiers').factory('Identifiers', ['$resource',
 	function($resource) {
-		return $resource('id/:idType/:idValue/:method', {
+		return $resource('api/id/:idType/:idValue/:method', {
 		}, {
 			connections: {
         action: 'GET',

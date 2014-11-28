@@ -27,8 +27,6 @@ module.exports = function() {
 			var providerUserProfile = {
 				displayName: profile.displayName,
 				email: profile.emails[0].value,
-        idType: 'url',
-        idValue: providerData.link,
 				username: profile.username,
 				provider: 'github',
 				providerIdentifierField: 'id',

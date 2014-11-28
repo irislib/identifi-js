@@ -20,8 +20,6 @@ module.exports = function() {
 				email: email,
 				provider: 'persona',
 				providerIdentifierField: 'email',
-        idType: 'email',
-        idValue: email,
         providerData: { email: email }
 			};
 
