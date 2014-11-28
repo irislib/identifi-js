@@ -15,6 +15,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       msgType: 'rating',
       receivedOffset: 0,
       sentOffset: 0,
+      offset: 0,
       limit: 20,
     };
     angular.extend($rootScope.filters, { receivedOffset: 0, sentOffset: 0 });
@@ -431,7 +432,6 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
         var setIdName = function(res) { id.name = res.name; };
         for (var i = 1; i < $scope.trustpaths.length - 1; i++) {
           var n = 0;
-          console.log ($scope.trustpaths[i]);
           for (var key in $scope.trustpaths[i]) {
             var id = $scope.trustpaths[i][key];
             id.name = Identifiers.getname({idType: id[0], idValue: id[1]});

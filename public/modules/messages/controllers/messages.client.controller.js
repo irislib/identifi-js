@@ -110,10 +110,11 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
     $scope.find = function(offset) {
       if (!isNaN(offset))
         $rootScope.filters.offset = offset;
-			var messages = Messages.query(angular.extend({ 
+      var params = angular.extend({ 
 				idType: $scope.idType,
         idValue: $scope.idValue,
-      }, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : {}), function () {
+      }, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : {});
+			var messages = Messages.query(params, function () {
         processMessages(messages);
         if ($rootScope.filters.offset === 0)
           $scope.messages = messages;
@@ -124,7 +125,7 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
           }
         }
         $scope.messages.$resolved = messages.$resolved;
-        $rootScope.filters.offset = $rootScope.filters.offset + messages.length;
+        $rootScope.filters.offset = $rootScope.filters.offset + (messages.length || 0);
         if (messages.length < $rootScope.filters.limit)
           $scope.messages.finished = true;
 			});
