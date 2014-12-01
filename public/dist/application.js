@@ -245,7 +245,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
   'Authentication',
   'Identifiers',
   function ($scope, $rootScope, $stateParams, $location, Authentication, Identifiers) {
-    $scope.authentication = Authentication, $scope.idType = decodeURIComponent($stateParams.idType), $scope.idValue = decodeURIComponent($stateParams.idValue), $scope.sent = [], $scope.received = [], $scope.trustpaths = [], $rootScope.filters = $rootScope.filters || {
+    $scope.authentication = Authentication, $scope.sent = [], $scope.received = [], $scope.trustpaths = [], $rootScope.filters = $rootScope.filters || {
       maxDistance: 0,
       msgType: 'rating',
       receivedOffset: 0,
@@ -275,7 +275,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
       'phone',
       'tel',
       'google_oauth2'
-    ], $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1;
+    ];
     var processMessages = function (messages) {
         for (var key in messages)
           if (!isNaN(key)) {
@@ -365,82 +365,80 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
           }, 300);
         $scope.timer = wait;
       }
-    });
-    var getConnections = function () {
-        $scope.connections = Identifiers.connections(angular.extend({
-          idType: $scope.idType,
-          idValue: $scope.idValue
-        }, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function () {
-          var mostConfirmations = $scope.connections.length > 0 ? $scope.connections[0].confirmations : 1;
-          $scope.connections.unshift({
-            type: $scope.idType,
-            value: $scope.idValue,
-            confirmations: 1,
-            refutations: 0,
-            isCurrent: !0
-          });
-          for (var key in $scope.connections) {
-            var conn = $scope.connections[key];
-            switch (conn.type) {
-            case 'email':
-              conn.iconStyle = 'glyphicon glyphicon-envelope', conn.btnStyle = 'btn-success', conn.link = 'mailto:' + conn.value, conn.quickContact = !0, '' === $scope.email && ($scope.email = conn.value);
-              break;
-            case 'bitcoin_address':
-            case 'bitcoin':
-              conn.iconStyle = 'fa fa-bitcoin', conn.btnStyle = 'btn-primary', conn.link = 'https://blockchain.info/address/' + conn.value, conn.quickContact = !0;
-              break;
-            case 'gpg_fingerprint':
-            case 'gpg_keyid':
-              conn.iconStyle = 'fa fa-key', conn.btnStyle = 'btn-default', conn.link = 'https://pgp.mit.edu/pks/lookup?op=get&search=0x' + conn.value;
-              break;
-            case 'account':
-              conn.iconStyle = 'fa fa-at';
-              break;
-            case 'nickname':
-            case 'name':
-              conn.iconStyle = 'glyphicon glyphicon-font';
-              break;
-            case 'phone':
-              conn.iconStyle = 'glyphicon glyphicon-earphone', conn.btnStyle = 'btn-success', conn.link = 'tel:' + conn.value, conn.quickContact = !0;
-              break;
-            case 'url':
-              conn.link = conn.value, conn.value.indexOf('facebook.com/') > -1 ? (conn.iconStyle = 'fa fa-facebook', conn.btnStyle = 'btn-facebook', conn.quickContact = !0) : conn.value.indexOf('twitter.com/') > -1 ? (conn.iconStyle = 'fa fa-twitter', conn.btnStyle = 'btn-twitter', conn.quickContact = !0) : conn.value.indexOf('plus.google.com/') > -1 ? (conn.iconStyle = 'fa fa-google-plus', conn.btnStyle = 'btn-google-plus', conn.quickContact = !0) : conn.value.indexOf('linkedin.com/') > -1 ? (conn.iconStyle = 'fa fa-linkedin', conn.btnStyle = 'btn-linkedin') : conn.value.indexOf('github.com/') > -1 ? (conn.iconStyle = 'fa fa-github', conn.btnStyle = 'btn-github') : (conn.iconStyle = 'glyphicon glyphicon-link', conn.btnStyle = 'btn-default');
-            }
-            if (conn.confirmations + conn.refutations > 0) {
-              var percentage = 100 * conn.confirmations / (conn.confirmations + conn.refutations);
-              if (percentage >= 80) {
-                var alpha = conn.confirmations / mostConfirmations * 0.7 + 0.3;
-                conn.rowStyle = 'background-color: rgba(223,240,216,' + alpha + ')';
-              } else
-                conn.rowClass = percentage >= 60 ? 'warning' : 'danger';
-            }
-            $scope.hasQuickContacts = $scope.hasQuickContacts || conn.quickContact;
+    }), $scope.getConnections = function () {
+      $scope.connections = Identifiers.connections(angular.extend($rootScope.filters, {
+        idType: $scope.idType,
+        idValue: $scope.idValue
+      }, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function () {
+        var mostConfirmations = $scope.connections.length > 0 ? $scope.connections[0].confirmations : 1;
+        $scope.connections.unshift({
+          type: $scope.idType,
+          value: $scope.idValue,
+          confirmations: 1,
+          refutations: 0,
+          isCurrent: !0
+        });
+        for (var key in $scope.connections) {
+          var conn = $scope.connections[key];
+          switch (conn.type) {
+          case 'email':
+            conn.iconStyle = 'glyphicon glyphicon-envelope', conn.btnStyle = 'btn-success', conn.link = 'mailto:' + conn.value, conn.quickContact = !0, '' === $scope.email && ($scope.email = conn.value);
+            break;
+          case 'bitcoin_address':
+          case 'bitcoin':
+            conn.iconStyle = 'fa fa-bitcoin', conn.btnStyle = 'btn-primary', conn.link = 'https://blockchain.info/address/' + conn.value, conn.quickContact = !0;
+            break;
+          case 'gpg_fingerprint':
+          case 'gpg_keyid':
+            conn.iconStyle = 'fa fa-key', conn.btnStyle = 'btn-default', conn.link = 'https://pgp.mit.edu/pks/lookup?op=get&search=0x' + conn.value;
+            break;
+          case 'account':
+            conn.iconStyle = 'fa fa-at';
+            break;
+          case 'nickname':
+          case 'name':
+            conn.iconStyle = 'glyphicon glyphicon-font';
+            break;
+          case 'phone':
+            conn.iconStyle = 'glyphicon glyphicon-earphone', conn.btnStyle = 'btn-success', conn.link = 'tel:' + conn.value, conn.quickContact = !0;
+            break;
+          case 'url':
+            conn.link = conn.value, conn.value.indexOf('facebook.com/') > -1 ? (conn.iconStyle = 'fa fa-facebook', conn.btnStyle = 'btn-facebook', conn.quickContact = !0) : conn.value.indexOf('twitter.com/') > -1 ? (conn.iconStyle = 'fa fa-twitter', conn.btnStyle = 'btn-twitter', conn.quickContact = !0) : conn.value.indexOf('plus.google.com/') > -1 ? (conn.iconStyle = 'fa fa-google-plus', conn.btnStyle = 'btn-google-plus', conn.quickContact = !0) : conn.value.indexOf('linkedin.com/') > -1 ? (conn.iconStyle = 'fa fa-linkedin', conn.btnStyle = 'btn-linkedin') : conn.value.indexOf('github.com/') > -1 ? (conn.iconStyle = 'fa fa-github', conn.btnStyle = 'btn-github') : (conn.iconStyle = 'glyphicon glyphicon-link', conn.btnStyle = 'btn-default');
           }
-          $scope.connectionClicked = function (event, id) {
-            id.collapse = !id.collapse, id.connectingmsgs = id.connectingmsgs || Identifiers.connectingmsgs(angular.extend({
-              idType: $scope.idType,
-              idValue: $scope.idValue,
-              id2Type: id.type,
-              id2Value: id.value
-            }, $rootScope.filters), function () {
-              for (var key in id.connectingmsgs)
-                if (!isNaN(key)) {
-                  var msg = id.connectingmsgs[key];
-                  msg.gravatar = CryptoJS.MD5(msg.authorEmail || msg.data.signedData.author[0][1]).toString();
-                }
-            });
-          };
-        });
-      }, getOverview = function () {
-        $scope.overview = Identifiers.get(angular.extend({
-          idType: $scope.idType,
-          idValue: $scope.idValue,
-          method: 'overview'
-        }, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function () {
-          $scope.email = $scope.overview.email, '' === $scope.email && ($scope.email = $scope.idValue), $scope.gravatar = CryptoJS.MD5($scope.email).toString();
-        });
-      };
-    $scope.getSentMsgs = function (offset) {
+          if (conn.confirmations + conn.refutations > 0) {
+            var percentage = 100 * conn.confirmations / (conn.confirmations + conn.refutations);
+            if (percentage >= 80) {
+              var alpha = conn.confirmations / mostConfirmations * 0.7 + 0.3;
+              conn.rowStyle = 'background-color: rgba(223,240,216,' + alpha + ')';
+            } else
+              conn.rowClass = percentage >= 60 ? 'warning' : 'danger';
+          }
+          $scope.hasQuickContacts = $scope.hasQuickContacts || conn.quickContact;
+        }
+        $scope.connectionClicked = function (event, id) {
+          id.collapse = !id.collapse, id.connectingmsgs = id.connectingmsgs || Identifiers.connectingmsgs(angular.extend({
+            idType: $scope.idType,
+            idValue: $scope.idValue,
+            id2Type: id.type,
+            id2Value: id.value
+          }, $rootScope.filters), function () {
+            for (var key in id.connectingmsgs)
+              if (!isNaN(key)) {
+                var msg = id.connectingmsgs[key];
+                msg.gravatar = CryptoJS.MD5(msg.authorEmail || msg.data.signedData.author[0][1]).toString();
+              }
+          });
+        };
+      });
+    }, $scope.getOverview = function () {
+      $scope.overview = Identifiers.get(angular.extend({}, $rootScope.filters, {
+        idType: $scope.idType,
+        idValue: $scope.idValue,
+        method: 'overview'
+      }, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function () {
+        $scope.email = $scope.overview.email, '' === $scope.email && ($scope.email = $scope.idValue), $scope.gravatar = CryptoJS.MD5($scope.email).toString();
+      });
+    }, $scope.getSentMsgs = function (offset) {
       isNaN(offset) || ($rootScope.filters.sentOffset = offset);
       var sent = Identifiers.sent(angular.extend($rootScope.filters, {
           idType: $scope.idType,
@@ -475,7 +473,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
         });
       0 === offset && ($scope.received = {}), $scope.received.$resolved = received.$resolved;
     }, $scope.findOne = function () {
-      getConnections(), getOverview(), $scope.getSentMsgs(), $scope.getReceivedMsgs();
+      $scope.idType = decodeURIComponent($stateParams.idType), $scope.idValue = decodeURIComponent($stateParams.idValue), $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1, $scope.getConnections(), $scope.getOverview(), $scope.getSentMsgs(), $scope.getReceivedMsgs();
       var allPaths = Identifiers.trustpaths(angular.extend({
           idType: $scope.idType,
           idValue: $scope.idValue
@@ -509,7 +507,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
         offset: 0,
         receivedOffset: 0,
         sentOffset: 0
-      }), getConnections(), getOverview(), $scope.getReceivedMsgs(0), $scope.getSentMsgs(0);
+      }), $scope.getConnections(), $scope.getOverview(), $scope.getReceivedMsgs(0), $scope.getSentMsgs(0);
     };
   }
 ]), angular.module('identifiers').factory('Identifiers', [
@@ -588,10 +586,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
       sentOffset: 0,
       offset: 0,
       limit: 20
-    }, angular.extend($rootScope.filters, {
-      receivedOffset: 0,
-      sentOffset: 0
-    }), $rootScope.defaultViewpoint = $rootScope.defaultViewpoint || {
+    }, angular.extend($rootScope.filters, { offset: 0 }), $rootScope.defaultViewpoint = $rootScope.defaultViewpoint || {
       viewpointName: 'Identi.fi',
       viewpointType: 'keyID',
       viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'

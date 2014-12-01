@@ -5,8 +5,6 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
 	function($scope, $rootScope, $stateParams, $location, Authentication, Identifiers ) {
 		$scope.authentication = Authentication;
 
-    $scope.idType = decodeURIComponent($stateParams.idType);
-    $scope.idValue = decodeURIComponent($stateParams.idValue);
     $scope.sent = [];
     $scope.received = [];
     $scope.trustpaths = [];
@@ -46,7 +44,6 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       'tel',
       'google_oauth2'
     ];
-    $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1;
 
     var processMessages = function(messages) {
       for (var key in messages) {
@@ -241,11 +238,11 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       }
     });
 
-    var getConnections = function() {
-			$scope.connections = Identifiers.connections(angular.extend({ 
+    $scope.getConnections = function() {
+			$scope.connections = Identifiers.connections(angular.extend($rootScope.filters, { 
 				idType: $scope.idType,
         idValue: $scope.idValue,
-			}, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function() {
+			}, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function() {
         var mostConfirmations = $scope.connections.length > 0 ? $scope.connections[0].confirmations : 1;
         $scope.connections.unshift({type: $scope.idType, value: $scope.idValue, confirmations: 1, refutations: 0, isCurrent: true });
         for (var key in $scope.connections) {
@@ -338,12 +335,12 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       });
     };
 
-    var getOverview = function() {
-			$scope.overview = Identifiers.get(angular.extend({ 
+    $scope.getOverview = function() {
+			$scope.overview = Identifiers.get(angular.extend({}, $rootScope.filters, { 
 				idType: $scope.idType,
         idValue: $scope.idValue,
         method: 'overview'
-			}, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function() {
+			}, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function() {
         $scope.email = $scope.overview.email;
         if ($scope.email === '')
           $scope.email = $scope.idValue;
@@ -413,8 +410,12 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
 
 		// Find existing Identifier
 		$scope.findOne = function() {
-      getConnections();
-      getOverview();
+      $scope.idType = decodeURIComponent($stateParams.idType);
+      $scope.idValue = decodeURIComponent($stateParams.idValue);
+      $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1;
+
+      $scope.getConnections();
+      $scope.getOverview();
       $scope.getSentMsgs();
       $scope.getReceivedMsgs();
 
@@ -458,8 +459,8 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
     $scope.setFilters = function(filters) {
       angular.extend($rootScope.filters, filters);
       angular.extend($rootScope.filters, { offset: 0, receivedOffset: 0, sentOffset: 0 });
-      getConnections();
-      getOverview();
+      $scope.getConnections();
+      $scope.getOverview();
       $scope.getReceivedMsgs(0);
       $scope.getSentMsgs(0);
     };
