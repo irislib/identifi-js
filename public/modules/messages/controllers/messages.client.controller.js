@@ -16,7 +16,7 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
       offset: 0,
       limit: 20,
     };
-    angular.extend($rootScope.filters, { receivedOffset: 0, sentOffset: 0 });
+    angular.extend($rootScope.filters, { offset: 0 });
     $rootScope.defaultViewpoint = $rootScope.defaultViewpoint || {
       viewpointName: 'Identi.fi',
       viewpointType: 'keyID',

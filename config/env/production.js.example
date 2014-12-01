@@ -7,17 +7,31 @@ module.exports = {
 			css: [
 				'public/lib/bootstrap/dist/css/bootstrap.min.css',
 				'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
+				'public/lib/font-awesome/css/font-awesome.css',
+				'public/lib/bootstrap-social/bootstrap-social.css',
+				'public/lib/seiyria-bootstrap-slider/css/bootstrap-slider.css',
+				'public/lib/animate.css/animate.css'
 			],
 			js: [
+				'public/lib/jquery/dist/jquery.min.js',
 				'public/lib/angular/angular.min.js',
 				'public/lib/angular-resource/angular-resource.js', 
+				'public/lib/angular-route/angular-route.min.js', 
 				'public/lib/angular-cookies/angular-cookies.js', 
 				'public/lib/angular-animate/angular-animate.js', 
 				'public/lib/angular-touch/angular-touch.js', 
 				'public/lib/angular-sanitize/angular-sanitize.js', 
-				'public/lib/angular-ui-router/release/angular-ui-router.min.js',
-				'public/lib/angular-ui-utils/ui-utils.min.js',
-				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js'
+				'public/lib/angular-ui-router/release/angular-ui-router.js',
+				'public/lib/angular-ui-utils/ui-utils.js',
+				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
+				'public/lib/crypto-js/rollups/md5.js',
+				'public/lib/ngInfiniteScroll/build/ng-infinite-scroll.js',
+        'public/lib/angular-spinner/angular-spinner.js',
+        'public/lib/spin.js/spin.js',
+        'https://login.persona.org/include.js',
+        'public/lib/angular-persona/angular-persona.js',
+        'public/lib/angular-bootstrap-slider/slider.js',
+        'public/lib/seiyria-bootstrap-slider/js/bootstrap-slider.js'
 			]
 		},
 		css: 'public/dist/application.min.css',

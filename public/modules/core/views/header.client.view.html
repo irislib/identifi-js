@@ -7,8 +7,8 @@
     </div>
 
     <ul class="nav navbar-nav navbar-right">
-      <li class="" ui-route="/messages" ng-class="{active: $uiRoute}"><a href="#!/messages"><span class="glyphicon glyphicon-globe"></span></a></li>
-      <li class="" ui-route="/about" ng-class="{active: $uiRoute}"><a href="#!/about"><span class="glyphicon glyphicon-info-sign"></span></a></li>
+      <li class="" ui-route="/messages" ng-class="{active: $uiRoute}"><a data-ng-href="#!/messages"><span class="glyphicon glyphicon-globe"></span></a></li>
+      <li class="" ui-route="/about" ng-class="{active: $uiRoute}"><a data-ng-href="#!/about"><span class="glyphicon glyphicon-info-sign"></span></a></li>
 			<li data-ng-show="authentication.user" ui-route="/id/{{authentication.user.idType}}/{{authentication.user.idValue|encodeURIComponent}}" data-ng-class="{active: $uiRoute}">
 				<a data-ng-href="#!/id/{{authentication.user.idType}}/{{authentication.user.idValue|escape}}">
 					<span class="glyphicon glyphicon-user"></span> <span class="hidden-xs" data-ng-bind="authentication.user.displayName"></span>
