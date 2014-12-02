@@ -14,7 +14,7 @@
 					<span class="glyphicon glyphicon-user"></span> <span class="hidden-xs" data-ng-bind="authentication.user.displayName"></span>
 				</a>
 			</li>
-      <li data-ng-show="authentication.user"><a href="/auth/signout" data-ng-click="logout()" class="glyphicon glyphicon-log-out"></span></a></li>
+      <li data-ng-show="authentication.user"><a href="/auth/signout" target="_self" data-ng-click="logout()" class="glyphicon glyphicon-log-out"></span></a></li>
       <li class="hidden-xs dropdown " data-ng-hide="authentication.user">
         <a href="#" class="dropdown-toggle login-button" data-toggle="dropdown"><span class="glyphicon glyphicon-log-in"></span> Log in <b class="caret"></b></a>
         <ul class="dropdown-menu login-menu">
