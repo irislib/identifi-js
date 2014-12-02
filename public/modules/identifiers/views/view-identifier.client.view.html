@@ -95,7 +95,7 @@
             <div class="panel-heading visible-xs">
                 <h3 class="panel-title"><a data-toggle="collapse" data-target="#write-feedback"><span class="glyphicon glyphicon-chevron-down"></span> Write feedback</a></h3>
             </div>
-            <div class="panel-body collapse" id="write-feedback">
+            <div class="panel-body collapse in" id="write-feedback">
               <form data-ng-controller="MessagesController" data-ng-submit="create($event, { type: 'rating', rating: message.rating, comment: message.comment })">
                 <div class="form-group">
                   <textarea name="comment" class="form-control" id="comment" data-ng-model="message.comment" placeholder="Write feedback"></textarea>
