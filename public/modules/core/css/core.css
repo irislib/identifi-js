@@ -1259,6 +1259,10 @@ a:hover {
   margin-bottom: 10px;
 }
 
+.msg-type-filter li.active .positive, .msg-type-filter li.active .neutral, .msg-type-filter li.active .negative {
+  color: #FFFFFF;
+}
+
 .positive {
   color: #3C763D;
 }

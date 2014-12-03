@@ -3,10 +3,7 @@
     <p class="">
         <span class="mar-left5 pull-right" data-ng-class="msg.iconStyle" data-ng-repeat="n in msg.iconCount track by $index"></span>
       <strong>
-        <a data-ng-href="#!/id/{{msg.linkToAuthor[0]|escape}}/{{msg.linkToAuthor[1]|escape}}" data-id-type="" data-id-value="" class="id-link">
-          <img alt="" src="https://www.gravatar.com/avatar/{{msg.gravatar}}?d=retro&amp;s=30" class="img-rounded mar-right5"> 
-          <span data-ng-bind="msg.authorName||msg.linkToAuthor[1]"></span>
-        </a>
+        <a data-ng-href="#!/id/{{msg.linkToAuthor[0]|escape}}/{{msg.linkToAuthor[1]|escape}}" data-id-type="" data-id-value="" class="id-link"><img alt="" src="https://www.gravatar.com/avatar/{{msg.gravatar}}?d=retro&amp;s=30" class="img-rounded mar-right10"><span data-ng-bind="msg.authorName||msg.linkToAuthor[1]"></span></a>
       </strong>
       <small><i class="glyphicon glyphicon-play"></i></small>
       <a href="#!/id/{{msg.linkToRecipient[0]|escape}}/{{msg.linkToRecipient[1]|escape}}" data-ng-bind="msg.recipientName||msg.linkToRecipient[1]" data-id-type="" data-id-value="" class="id-link"></a>

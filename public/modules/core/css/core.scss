@@ -1195,6 +1195,10 @@ a {
   a { margin-right: 10px; margin-bottom: 10px; }
 }
 
+.msg-type-filter li.active {
+  .positive, .neutral, .negative { color: #FFFFFF; }
+}
+
 .positive {
   color: #3C763D;
 }
