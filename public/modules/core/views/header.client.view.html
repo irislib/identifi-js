@@ -1,7 +1,7 @@
 <nav class="navbar navbar-default navbar-fixed-top" data-ng-controller="HeaderController">
 	<div class="container" role="navigation">
     <div class="navbar-header">
-      <h1><a href="/#!/" class="navbar-brand">
+      <h1><a href="/#!/" data-ng-click="logoClicked()" class="navbar-brand">
       <span class="small glyphicon glyphicon-chevron-left" ui-route="/" data-ng-hide="$uiRoute"></span>
       Identifi</a></h1>
     </div>
@@ -47,7 +47,7 @@
 
     <form class="navbar-form navbar-left" id="nav-search" role="search" data-ng-if="isActive('/')">
       <div class="input-group">
-        <input type="text" data-ng-keydown="searchKeydown($event)" data-ng-model="queryTerm" autocomplete="off" autofocus value="" id="nav-search-field" class="search-search form-control" placeholder="Search">
+        <input type="text" data-ng-keydown="searchKeydown($event)" data-ng-model="query.term" autocomplete="off" autofocus value="" id="nav-search-field" class="search-search form-control" placeholder="Search">
         <span class="input-group-btn"><button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button></span>
       </div>
     </form>

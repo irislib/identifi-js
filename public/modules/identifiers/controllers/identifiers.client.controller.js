@@ -195,7 +195,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
     });
 
     $scope.$on('SearchKeydown', function(event, args) {
-      switch (args.event.which) {
+      switch (args.event ? args.event.which : -1) {
         case 38:
           args.event.preventDefault();
           if ($scope.identifiers.activeKey > 0) {
@@ -218,6 +218,11 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
           args.event.preventDefault();
           var id = $scope.identifiers[$scope.identifiers.activeKey];
           $scope.resultClicked(id);
+          break;
+        case -1:
+          clearTimeout($scope.timer);
+          $scope.queryTerm = '';
+          $scope.search();
           break;
         case 33:
         case 34:

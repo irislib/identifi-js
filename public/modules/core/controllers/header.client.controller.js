@@ -16,12 +16,19 @@ angular.module('core').controller('HeaderController', ['$scope', '$location', '$
       }
     });
 
+    $scope.query = { term: '' };
+
     $scope.login = function() {
       Persona.request();
     };
 
     $scope.logout = function() {
       Persona.logout();
+    };
+
+    $scope.logoClicked = function() {
+      $scope.query.term = '';
+      $scope.searchKeydown();
     };
 
 		$scope.authentication = Authentication;
@@ -48,7 +55,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$location', '$
 		});
 
     $scope.searchChanged = function() {
-      $scope.$root.$broadcast('StartSearch', { queryTerm: $scope.queryTerm });
+      $scope.$root.$broadcast('StartSearch', { queryTerm: $scope.query.term });
     };
 
     $scope.isActive = function(viewLocation) {
