@@ -12,7 +12,7 @@ var passport = require('passport'),
 module.exports = function() {
 	// Use Persona strategy
   passport.use(new PersonaStrategy({
-      audience: 'http://seed1.identifi.org:3000'
+      audience: config.persona.audience
     },
     function(email, done) {
 			var providerUserProfile = {
