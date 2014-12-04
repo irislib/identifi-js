@@ -62,7 +62,7 @@ exports.create = function(req, res) {
     signedData:
       {
         timestamp: parseInt(Date.now() / 1000),
-        author: [['email', req.user.email]],
+        author: [[req.user.idType(), req.user.idValue()]],
         recipient: [[req.body.recipientType, req.body.recipientValue]],
         rating: parseInt(req.body.rating) || 0,
         maxRating: 3,

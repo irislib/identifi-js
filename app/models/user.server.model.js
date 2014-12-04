@@ -121,6 +121,30 @@ UserSchema.methods.authenticate = function(password) {
 	return this.password === this.hashPassword(password);
 };
 
+UserSchema.methods.idType = function() {
+  if (this.provider === 'persona')
+    return 'email';
+  else
+    return 'url';
+};
+
+UserSchema.methods.idValue = function() {
+  var value;
+  switch (this.provider) {
+    case 'persona':
+      value = this.email;
+      break;
+    case 'twitter':
+      value = 'https://twitter.com/' + this.username;
+      break;
+    default:
+      value = this.providerData.link;
+      break;
+  }
+
+  return value;
+};
+
 /**
  * Find possible not used username
  */
