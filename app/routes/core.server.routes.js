@@ -7,4 +7,5 @@ module.exports = function(app) {
 	app.route('/messages*').get(core.index);
 	app.route('/id*').get(core.index);
 	app.route('/about*').get(core.index);
+	app.route('/signin*').get(core.index);
 };
