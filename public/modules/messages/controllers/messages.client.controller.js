@@ -8,6 +8,21 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
     $scope.idValue = decodeURIComponent($stateParams.idValue);
     $scope.messages = [];
     $scope.message = { type: 'rating', rating: 1, comment: '' };
+    $scope.iconCount = function(rating) {
+      return new Array(Math.max(1, Math.abs(rating)));   
+    };
+    $scope.iconStyle = function(rating) {
+      var iconStyle = 'neutral';
+      if (rating > 0) iconStyle = 'positive';
+      else if (rating < 0) iconStyle = 'negative';
+      return iconStyle;
+    };
+    $scope.iconClass = function(rating) {
+      var iconStyle = 'glyphicon-question-sign';
+      if (rating > 0) iconStyle = 'glyphicon-thumbs-up';
+      else if (rating < 0) iconStyle = 'glyphicon-thumbs-down';
+      return iconStyle;
+    };
     $rootScope.filters = $rootScope.filters || {
       maxDistance: 0,
       msgType: 'rating',
