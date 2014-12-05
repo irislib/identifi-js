@@ -93,21 +93,21 @@
                 <h3 class="panel-title"><a data-toggle="collapse" data-target="#write-feedback"><span class="glyphicon glyphicon-chevron-down"></span> Write feedback</a></h3>
             </div>
             <div class="panel-body collapse in" id="write-feedback">
-              <form data-ng-controller="MessagesController" data-ng-submit="create($event, { type: 'rating', rating: message.rating, comment: message.comment })">
+              <form data-ng-controller="MessagesController" data-ng-submit="create($event, { type: 'rating', rating: newMessage.rating, comment: newMessage.comment })">
                 <div class="form-group">
-                  <textarea name="comment" class="form-control" id="comment" data-ng-model="message.comment" placeholder="Write feedback"></textarea>
+                  <textarea name="comment" class="form-control" id="comment" data-ng-model="newMessage.comment" placeholder="Write feedback"></textarea>
                 </div>
 
                 <div class="row">
                   <div class="col-sm-10 col-xs-12 rating-slider" id="write-msg-slider">
-                    <slider data-ng-model="message.rating" tooltip="hide" min="-3" max="3" step="1"></slider>
+                    <slider data-ng-model="newMessage.rating" tooltip="hide" min="-3" max="3" step="1"></slider>
                     <span class="hidden-xs write-msg-icons mar-left5">
-                      <span data-ng-repeat="i in iconCount(message.rating) track by $index" class="write-msg-icon glyphicon glyphicon-thumbs-up mar-left5" data-ng-class="[iconStyle(message.rating), iconClass(message.rating)]"></span>
+                      <span data-ng-repeat="i in iconCount(newMessage.rating) track by $index" class="write-msg-icon glyphicon glyphicon-thumbs-up mar-left5" data-ng-class="[iconStyle(newMessage.rating), iconClass(newMessage.rating)]"></span>
                     </span>
                   </div>
                   <div class="col-sm-2 col-xs-12" style="text-align:right">
                     <span class="visible-xs pull-left write-msg-icons">
-                      <span data-ng-repeat="i in iconCount(message.rating) track by $index" class="write-msg-icon glyphicon glyphicon-thumbs-up mar-left5" data-ng-class="[iconStyle(message.rating), iconClass(message.rating)]"></span>
+                      <span data-ng-repeat="i in iconCount(newMessage.rating) track by $index" class="write-msg-icon glyphicon glyphicon-thumbs-up mar-left5" data-ng-class="[iconStyle(newMessage.rating), iconClass(newMessage.rating)]"></span>
                     </span>
                     <button type="submit" class="pull-right ladda-button btn btn-primary" data-style="zoom-out"><span class="ladda-label"><span class="fa fa-edit"></span> Publish</span><span class="ladda-spinner"></span></button>
                   </div>
@@ -182,11 +182,11 @@
                       </div>
                     </td>
                   </tr>
-                  <tr class="active add-row">
-                    <td colspan="3"><input id="addValue" class="form-control" name="linkedValue" type="text" placeholder="value" disabled=""></td>
-                    <td><input id="addType" class="form-control" name="linkedType" type="text" placeholder="type" disabled=""></td>
+                  <tr class="active add-row" data-ng-controller="MessagesController">
+                    <td colspan="3"><input id="addValue" data-ng-model="newConnection.value" class="form-control" name="linkedValue" type="text" placeholder="value" data-ng-disabled="!authentication.user"></td>
+                    <td><input id="addType" data-ng-model="newConnection.type" class="form-control" name="linkedType" type="text" placeholder="type" data-ng-disabled="!authentication.user"></td>
                     <!--<td><input id="addComment" class="form-control" name="linkedComment" type="text" placeholder="comment" disabled></td> -->
-                    <td><button autocomplete="off" id="addButton" class="ladda-button btn btn-default disabled" data-style="zoom-out"><span class="ladda-label"><span class="glyphicon glyphicon-plus"></span> Add</span><span class="ladda-spinner"></span></button></td>
+                    <td><button autocomplete="off" id="addButton" data-ng-click="create($event, { type: 'confirm_connection', recipientType: idType, recipientValue: idValue, recipientType2: newConnection.type, recipientValue2: newConnection.value }, { confirmations: 0, refutations: 0, type: newConnection.type, value: newConnection.value })" class="ladda-button btn btn-default" data-style="zoom-out" data-ng-disabled="!authentication.user"><span class="ladda-label"><span class="glyphicon glyphicon-plus"></span> Add</span><span class="ladda-spinner"></span></button></td>
                   </tr>
               </tbody>
             </table>

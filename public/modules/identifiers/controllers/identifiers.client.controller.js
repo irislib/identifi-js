@@ -182,8 +182,12 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
     $scope.$on('MessageAdded', function(event, args) {
       if (args.message.data.signedData.type === 'confirm_connection') {
         args.id.confirmations += 1;
+        if ($scope.connections.indexOf(args.id) === -1)
+          $scope.connections.push(args.id);
       } else if (args.message.data.signedData.type === 'refute_connection') {
         args.id.refutations += 1;
+        if ($scope.connections.indexOf(args.id) === -1)
+          $scope.connections.push(args.id);
       } else if (args.message.data.signedData.type === 'rating') {
         if (messagesAdded)
           $scope.received.shift();

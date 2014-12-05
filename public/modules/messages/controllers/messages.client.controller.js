@@ -7,7 +7,8 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
     $scope.idType = decodeURIComponent($stateParams.idType);
     $scope.idValue = decodeURIComponent($stateParams.idValue);
     $scope.messages = [];
-    $scope.message = { type: 'rating', rating: 1, comment: '' };
+    $scope.newMessage = { type: 'rating', rating: 1, comment: '' };
+    $scope.newConnection = { type: '', value: '' };
     $scope.iconCount = function(rating) {
       return new Array(Math.max(1, Math.abs(rating)));   
     };
@@ -142,8 +143,10 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
 
 			message.$save(function(response) {
 				// Clear form fields
-				$scope.message.comment = '';
-				$scope.message.rating = 1;
+				$scope.newMessage.comment = '';
+				$scope.newMessage.rating = 1;
+				$scope.newConnection.type = '';
+				$scope.newConnection.value = '';
         $scope.$root.$broadcast('MessageAdded', { message: message, id: id });
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
