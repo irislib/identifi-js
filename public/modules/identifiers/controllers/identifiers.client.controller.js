@@ -30,6 +30,10 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       $rootScope.viewpoint = $rootScope.viewpoint || $rootScope.defaultViewpoint;
     }
     $scope.activeTab = 'received';
+    $scope.newIdentifier = { type: '', value: $stateParams.value };
+    $scope.goToID = function(type, value) {
+      $location.path('/id/' + encodeURIComponent(type) + '/' + encodeURIComponent(value));
+    };
     $scope.collapseLevel = {};
     $rootScope.uniqueIdentifierTypes = [
       'url',

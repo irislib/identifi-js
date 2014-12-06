@@ -18,6 +18,10 @@ angular.module('core').controller('HeaderController', ['$scope', '$location', '$
 
     $scope.query = { term: '' };
 
+    $scope.addIdentifier = function() {
+      $location.path('/id/create/' + $scope.query.term);
+    };
+
     $scope.login = function() {
       Persona.request();
     };

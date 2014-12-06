@@ -10,7 +10,7 @@ angular.module('identifiers').config(['$stateProvider',
 			templateUrl: 'modules/identifiers/views/list-identifiers.client.view.html'
 		}).
 		state('createIdentifier', {
-			url: '/identifiers/create',
+			url: '/id/create/:value',
 			templateUrl: 'modules/identifiers/views/create-identifier.client.view.html'
 		}).
 		state('viewIdentifier', {
