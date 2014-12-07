@@ -1,20 +1,38 @@
-<section data-ng-controller="IdentifiersController" data-ng-init="findOne()">
+<div data-ng-controller="IdentifiersController">
+<section class="cover-container">
+  <div class="cover" data-ng-style="coverPhoto"></div>
+  <div class="container hidden-xs hidden-sm">
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-9">
+        <ul class="list-inline tab-list">
+          <li data-ng-if="isUniqueType" data-ng-class="{ active: activeTab === 'received' }">
+            <a href="" data-ng-click="activeTab = 'received'"><span class="glyphicon glyphicon-download"></span> <span class="hidden-xs">Received </span>({{0+overview.receivedPositive+overview.receivedNeutral+overview.receivedNegative}})</a>
+          </li>
+          <li data-ng-if="isUniqueType" data-ng-class="{ active: activeTab === 'sent' }">
+            <a href="" data-ng-click="activeTab = 'sent'"><span class="glyphicon glyphicon-upload"></span> <span class="hidden-xs">Sent </span>({{0+overview.authoredPositive+overview.authoredNeutral+overview.authoredNegative}})</a>
+          </li>
+          <li data-ng-class="{ active: activeTab === 'connections' }">
+            <a href="" data-ng-click="activeTab = 'connections'"><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>(<span data-ng-show="connections.$resolved && connections.length > 0" data-ng-bind="connections.length - 1"></span><span data-ng-hide="connections.$resolved">0</span>)</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section data-ng-init="findOne()">
   <div class="row">
-    <div class="col-md-4">
-      <h4><span data-ng-bind="idValue" id="id-value"></span>
-        <small class="text-muted">
-          <span data-ng-hide="idType === 'url'" data-ng-bind="idType" id="id-type"></span>
-          <a data-ng-href="{{idValue}}" data-ng-show="idType === 'url'" data-ng-bind="idType" id="id-type"></a>
-        </small>
-      </h4>
-      <div data-ng-if="isUniqueType" class="panel panel-default">
+    <div class="col-md-3 id-left-column">
+    <div data-ng-if="isUniqueType" class="panel panel-default">
     <div class="panel-body">
       <table class="stats-box table-condensed">
         <tbody><tr>
-          <td style="width:120px">
-            <a data-ng-href="http://www.gravatar.com/{{gravatar}}" data-toggle="tooltip" data-placement="right" title="Gravatar for {{email}}"><img src="http://www.gravatar.com/avatar/{{gravatar}}?d=retro&amp;s=100" class="img-thumbnail mar-right5" alt="Gravatar for {{overview.email}}"></a>
+          <td colspan="2">
+            <a data-ng-href="http://www.gravatar.com/{{gravatar}}" data-toggle="tooltip" data-placement="right" title="Gravatar for {{email}}"><img src="http://www.gravatar.com/avatar/{{gravatar}}?d=retro&amp;s=210" class="img-thumbnail mar-right5" alt="Gravatar for {{overview.email}}"></a>
           </td>
-          <td>
+        </tr>
+        <tr>
+          <td colspan="2">
             <h4 data-ng-bind="overview.name||idValue"></h4>
           </td>
         </tr>
@@ -78,12 +96,11 @@
     <div data-ng-include="'modules/messages/views/filters.partial.html'"></div>
 
     </div>
-    <div class="col-md-8">
+    <div class="col-md-8 id-right-column">
       <!-- Nav tabs -->
       <tabset>
-        <tab data-ng-if="isUniqueType" data-ng-click="activeTab = 'received'">
-          <tab-heading><span class="glyphicon glyphicon-download"></span> <span class="hidden-xs">Received </span>({{0+overview.receivedPositive+overview.receivedNeutral+overview.receivedNegative}})</tab-heading>
-          <br>
+        <tab active="activeTab === 'received'" data-ng-if="isUniqueType">
+          <tab-heading data-ng-click="activeTab = 'received'"><span class="glyphicon glyphicon-download"></span> <span class="hidden-xs">Received </span>({{0+overview.receivedPositive+overview.receivedNeutral+overview.receivedNegative}})</tab-heading>
           <div data-ng-hide="authentication.user" class="alert alert-info text-center login-alert-info">
             <strong><a href="#!/signin">Log in</a></strong> to write messages.
           </div>
@@ -122,18 +139,16 @@
           </div>
           <div data-ng-if="!received.$resolved" style="position:relative;padding:20px" us-spinner></div>
         </tab>
-        <tab data-ng-if="isUniqueType" data-ng-click="activeTab = 'sent'">
-          <tab-heading><span class="glyphicon glyphicon-upload"></span> <span class="hidden-xs">Sent </span>({{0+overview.authoredPositive+overview.authoredNeutral+overview.authoredNegative}})</tab-heading>
-          <br>
+        <tab active="activeTab === 'sent'" data-ng-if="isUniqueType" data-ng-click="activeTab = 'sent'">
+          <tab-heading data-ng-click="activeTab = 'sent'"><span class="glyphicon glyphicon-upload"></span> <span class="hidden-xs">Sent </span>({{0+overview.authoredPositive+overview.authoredNeutral+overview.authoredNegative}})</tab-heading>
           <div data-ng-if="sent.$resolved && sent.length == 0" class="alert alert-info text-center animated fadeIn">No messages to show</div>
           <div infinite-scroll="getSentMsgs()" infinite-scroll-distance="2" infinite-scroll-disabled="!sent.$resolved || sent.finished || activeTab !== 'sent'">
             <div data-ng-repeat="msg in sent" data-ng-include="'modules/messages/views/message.partial.html'"></div>
           </div>
           <div data-ng-if="!sent.$resolved" style="position:relative;padding:20px" us-spinner></div>
         </tab>
-        <tab data-ng-if="true" data-ng-click="activeTab = 'connections'">
-          <tab-heading><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>(<span data-ng-show="connections.$resolved && connections.length > 0" data-ng-bind="connections.length - 1"></span>)</tab-heading>
-          <br>
+        <tab active="activeTab === 'connections'" data-ng-if="true" data-ng-click="activeTab = 'connections'">
+            <tab-heading data-ng-click="activeTab = 'connections'"><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>(<span data-ng-show="connections.$resolved && connections.length > 0" data-ng-bind="connections.length - 1"></span><span data-ng-hide="connections.$resolved"></span>)</tab-heading>
             <div id="connections">
               <input id="authenticity_token" name="authenticity_token" type="hidden" value="z1JM7ffnFK7gOv6S3yzG9UFyakukYHikAU94/3TcT2o=">    <table class="table truncated-table table-hover">
                 <tbody>
@@ -197,3 +212,4 @@
     </div>
   </div>
 </section>
+</div>

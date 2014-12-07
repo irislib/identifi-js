@@ -13,7 +13,7 @@
   <table id="search-results" class="table table-hover">
     <tbody>
       <tr data-ng-repeat="result in identifiers | filter:queryTerm" id="result{{$index}}" data-ng-click="resultClicked(result)" class="search-result-row" data-ng-class="{active: result.active}">
-        <td class="gravatar-col"><img alt="" src="https://www.gravatar.com/avatar/{{result.gravatar}}?d=retro&amp;s=45"></td>
+        <td class="gravatar-col"><img alt="" height="45" width="45" src="https://www.gravatar.com/avatar/{{result.gravatar}}?d=retro&amp;s=45"></td>
         <td><a data-ng-bind="result.name" data-ng-href="#!/id/{{result.linkTo[0]|escape}}/{{result.linkTo[1]|escape}}"></a>
           <small data-ng-if="!result.name" class="list-group-item-text">
             <span data-ng-bind="result[0][0]"></span>

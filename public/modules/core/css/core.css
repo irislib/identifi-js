@@ -1,4 +1,3 @@
-/*csslint ids:false */
 /* ==== Google font ==== */
 @import url("http://fonts.googleapis.com/css?family=Lato:400,300,700,900");
 body {
@@ -462,6 +461,17 @@ section.section {
 
 .login-menu li {
   float: none;
+}
+
+.tab-list {
+  margin: 0;
+}
+.tab-list li {
+  padding: 12px;
+  height: 50px;
+}
+.tab-list li.active {
+  border-bottom: 4px solid #337ab7;
 }
 
 /*
@@ -1307,7 +1317,36 @@ a:hover {
   cursor: pointer;
 }
 
+.id-left-column {
+  margin-top: 75px;
+}
+
+.cover {
+  height: 200px;
+  background-image: url("https://pbs.twimg.com/profile_banners/543463785/1398252206/1500x500");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+.cover-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50px;
+  height: 250px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #efefef;
+}
+
 @media (min-width: 768px) {
+  .nav-tabs {
+    display: none;
+  }
+
+  .id-right-column {
+    margin-top: 250px;
+  }
+
   #nav-search-field {
     width: 320px;
   }

@@ -1,8 +1,8 @@
 'use strict';
 
 // Identifiers controller
-angular.module('identifiers').controller('IdentifiersController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Identifiers',
-	function($scope, $rootScope, $stateParams, $location, Authentication, Identifiers ) {
+angular.module('identifiers').controller('IdentifiersController', ['$scope', '$rootScope', '$stateParams', '$location', '$http', 'Authentication', 'Identifiers',
+	function($scope, $rootScope, $stateParams, $location, $http, Authentication, Identifiers ) {
 		$scope.authentication = Authentication;
 
     $scope.sent = [];
@@ -29,7 +29,6 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
     } else {
       $rootScope.viewpoint = $rootScope.viewpoint || $rootScope.defaultViewpoint;
     }
-    $scope.activeTab = 'received';
     $scope.newIdentifier = { type: '', value: $stateParams.value };
     $scope.goToID = function(type, value) {
       $location.path('/id/' + encodeURIComponent(type) + '/' + encodeURIComponent(value));
@@ -158,10 +157,10 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
                 id.bitcoin = id[j][1];
                 break;
               case 'url':
-                if (id[j][1].indexOf('facebook.com/') > -1)
-                  id.facebook = id[j][1].split('facebook.com/')[1];
                 if (id[j][1].indexOf('twitter.com/') > -1)
                   id.twitter = id[j][1].split('twitter.com/')[1];
+                if (id[j][1].indexOf('facebook.com/') > -1) 
+                  id.facebook = id[j][1].split('facebook.com/')[1];
                 if (id[j][1].indexOf('plus.google.com/') > -1)
                   id.googlePlus = id[j][1].split('plus.google.com/')[1];
                 break;
@@ -303,10 +302,12 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
                 conn.iconStyle = 'fa fa-facebook';
                 conn.btnStyle = 'btn-facebook';
                 conn.quickContact = true;
+                $scope.getCoverPhotoFromFB(conn.value.split('facebook.com/')[1]);
               } else if (conn.value.indexOf('twitter.com/') > -1) {
                 conn.iconStyle = 'fa fa-twitter';
                 conn.btnStyle = 'btn-twitter';
                 conn.quickContact = true;
+                $scope.getCoverPhotoFromTwitter(conn.value);
               } else if (conn.value.indexOf('plus.google.com/') > -1) {
                 conn.iconStyle = 'fa fa-google-plus';
                 conn.btnStyle = 'btn-google-plus';
@@ -423,11 +424,29 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       $scope.received.$resolved = received.$resolved;
     };
 
+    $scope.getCoverPhotoFromTwitter = function(profileUrl) {
+      if (!$scope.isUniqueType) return;
+/*
+      if (Authentication.user.providerData.profile_banner_url) {
+        return { 'background-image': 'url(' + Authentication.user.providerData.profile_banner_url + ')' };
+      } */
+      return null;
+    };
+
+    $scope.getCoverPhotoFromFB = function(username) {
+      if (!$scope.isUniqueType) return;
+      $http.get('http://graph.facebook.com/' + username  + '?fields=cover').success(function(data, status, headers, config) {
+        console.log(data);
+        $scope.coverPhoto = $scope.coverPhoto || { 'background-image': 'url(' + data.cover.source + ')' };
+      });
+    };
+
 		// Find existing Identifier
 		$scope.findOne = function() {
       $scope.idType = decodeURIComponent($stateParams.idType);
       $scope.idValue = decodeURIComponent($stateParams.idValue);
       $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1;
+      $rootScope.activeTab = $scope.isUniqueType ? 'received' : 'connections';
       $rootScope.pageTitle = ' - ' + $scope.idValue;
 
       $scope.getConnections();
