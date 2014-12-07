@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'identifi';
-	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',  'ui.router', 'ui.bootstrap', 'ui.bootstrap-slider', 'ui.utils', 'angularSpinner', 'infinite-scroll', 'persona'];
+	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',  'ui.router', 'ui.bootstrap', 'ui.bootstrap-slider', 'ui.utils', 'angularSpinner', 'infinite-scroll', 'persona', 'angular-parallax'];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {

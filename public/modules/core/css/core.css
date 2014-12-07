@@ -1317,10 +1317,6 @@ a:hover {
   cursor: pointer;
 }
 
-.id-left-column {
-  margin-top: 75px;
-}
-
 .cover {
   height: 200px;
   background-image: url("https://pbs.twimg.com/profile_banners/543463785/1398252206/1500x500");
@@ -1338,6 +1334,10 @@ a:hover {
   border-bottom: 1px solid #efefef;
 }
 
+.nav-tabs {
+  margin-bottom: 20px;
+}
+
 @media (min-width: 768px) {
   .nav-tabs {
     display: none;
@@ -1345,6 +1345,10 @@ a:hover {
 
   .id-right-column {
     margin-top: 250px;
+  }
+
+  .id-left-column {
+    margin-top: 75px;
   }
 
   #nav-search-field {

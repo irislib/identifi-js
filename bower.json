@@ -24,6 +24,7 @@
     "ngInfiniteScroll": "1.0.0",
     "angular-persona": "~1.0.0",
     "seiyria-bootstrap-slider": "~3.1.0",
-    "angular-bootstrap-slider": "~0.0.8"
+    "angular-bootstrap-slider": "~0.0.8",
+    "angular-parallax": "~0.0.1"
   }
 }

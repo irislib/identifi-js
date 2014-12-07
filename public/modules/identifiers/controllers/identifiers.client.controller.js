@@ -4,6 +4,7 @@
 angular.module('identifiers').controller('IdentifiersController', ['$scope', '$rootScope', '$stateParams', '$location', '$http', 'Authentication', 'Identifiers',
 	function($scope, $rootScope, $stateParams, $location, $http, Authentication, Identifiers ) {
 		$scope.authentication = Authentication;
+    $scope.tab = { active: 'received' };
 
     $scope.sent = [];
     $scope.received = [];
@@ -446,7 +447,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       $scope.idType = decodeURIComponent($stateParams.idType);
       $scope.idValue = decodeURIComponent($stateParams.idValue);
       $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1;
-      $rootScope.activeTab = $scope.isUniqueType ? 'received' : 'connections';
+      $scope.tab.active = $scope.isUniqueType ? 'received' : 'connections';
       $rootScope.pageTitle = ' - ' + $scope.idValue;
 
       $scope.getConnections();
