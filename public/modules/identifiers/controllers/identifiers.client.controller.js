@@ -133,6 +133,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
 
 		// Search
 		$scope.search = function() {
+      $rootScope.pageTitle = '';
 			Identifiers.query(angular.extend({idValue: $scope.queryTerm || ''}, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function(res) {
         $scope.identifiers = res;
         $scope.identifiers.activeKey = 0;

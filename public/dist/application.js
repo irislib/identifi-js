@@ -29,73 +29,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
   }
 ]), angular.element(document).ready(function () {
   '#_=_' === window.location.hash && (window.location.hash = '#!'), angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
-}), ApplicationConfiguration.registerModule('articles'), ApplicationConfiguration.registerModule('core'), ApplicationConfiguration.registerModule('identifiers'), ApplicationConfiguration.registerModule('messages'), ApplicationConfiguration.registerModule('users'), angular.module('articles').run([
-  'Menus',
-  function (Menus) {
-    Menus.addMenuItem('topbar', 'Articles', 'articles', 'dropdown', '/articles(/create)?'), Menus.addSubMenuItem('topbar', 'articles', 'List Articles', 'articles'), Menus.addSubMenuItem('topbar', 'articles', 'New Article', 'articles/create');
-  }
-]), angular.module('articles').config([
-  '$stateProvider',
-  function ($stateProvider) {
-    $stateProvider.state('listArticles', {
-      url: '/articles',
-      templateUrl: 'modules/articles/views/list-articles.client.view.html'
-    }).state('createArticle', {
-      url: '/articles/create',
-      templateUrl: 'modules/articles/views/create-article.client.view.html'
-    }).state('viewArticle', {
-      url: '/articles/:articleId',
-      templateUrl: 'modules/articles/views/view-article.client.view.html'
-    }).state('editArticle', {
-      url: '/articles/:articleId/edit',
-      templateUrl: 'modules/articles/views/edit-article.client.view.html'
-    });
-  }
-]), angular.module('articles').controller('ArticlesController', [
-  '$scope',
-  '$stateParams',
-  '$location',
-  'Authentication',
-  'Articles',
-  function ($scope, $stateParams, $location, Authentication, Articles) {
-    $scope.authentication = Authentication, $scope.create = function () {
-      var article = new Articles({
-          title: this.title,
-          content: this.content
-        });
-      article.$save(function (response) {
-        $location.path('articles/' + response._id), $scope.title = '', $scope.content = '';
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    }, $scope.remove = function (article) {
-      if (article) {
-        article.$remove();
-        for (var i in $scope.articles)
-          $scope.articles[i] === article && $scope.articles.splice(i, 1);
-      } else
-        $scope.article.$remove(function () {
-          $location.path('articles');
-        });
-    }, $scope.update = function () {
-      var article = $scope.article;
-      article.$update(function () {
-        $location.path('articles/' + article._id);
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    }, $scope.find = function () {
-      $scope.articles = Articles.query();
-    }, $scope.findOne = function () {
-      $scope.article = Articles.get({ articleId: $stateParams.articleId });
-    };
-  }
-]), angular.module('articles').factory('Articles', [
-  '$resource',
-  function ($resource) {
-    return $resource('articles/:articleId', { articleId: '@_id' }, { update: { method: 'PUT' } });
-  }
-]), angular.module('core').config([
+}), ApplicationConfiguration.registerModule('core'), ApplicationConfiguration.registerModule('identifiers'), ApplicationConfiguration.registerModule('messages'), ApplicationConfiguration.registerModule('users'), angular.module('core').config([
   '$stateProvider',
   '$urlRouterProvider',
   function ($stateProvider, $urlRouterProvider) {
@@ -327,7 +261,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
         pos.top && (pos.top - 60 < window.pageYOffset ? window.scrollTo(0, pos.top - 60) : pos.bottom > window.pageYOffset + (window.innerHeight || document.documentElement.clientHeight) && window.scrollTo(0, pos.bottom - (window.innerHeight || document.documentElement.clientHeight) + 15));
       };
     $scope.search = function () {
-      Identifiers.query(angular.extend({ idValue: $scope.queryTerm || '' }, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function (res) {
+      $rootScope.pageTitle = '', Identifiers.query(angular.extend({ idValue: $scope.queryTerm || '' }, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function (res) {
         $scope.identifiers = res, $scope.identifiers.activeKey = 0, $scope.identifiers[0].active = !0;
         for (var i = 0; i < $scope.identifiers.length; i++) {
           var id = $scope.identifiers[i];
