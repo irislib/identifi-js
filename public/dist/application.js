@@ -112,25 +112,40 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
   'Menus',
   'Persona',
   function ($scope, $location, $http, Authentication, Menus, Persona) {
-    Persona.watch({
-      loggedInUser: Authentication.user.email,
-      onlogin: function (assertion) {
-        $http.post('/auth/persona', { assertion: assertion }).then(function () {
-          location.reload();
-        });
-      },
-      onlogout: function () {
+    if (Persona.watch({
+        loggedInUser: Authentication.user.email,
+        onlogin: function (assertion) {
+          $http.post('/auth/persona', { assertion: assertion }).then(function () {
+            location.reload();
+          });
+        },
+        onlogout: function () {
+        }
+      }), $scope.query = { term: '' }, $scope.addIdentifier = function () {
+        $location.path('/id/create/' + $scope.query.term);
+      }, $scope.login = function () {
+        Persona.request();
+      }, $scope.logout = function () {
+        Persona.logout();
+      }, $scope.logoClicked = function () {
+        $scope.query.term = '', $scope.searchKeydown();
+      }, $scope.authentication = Authentication, Authentication.user)
+      switch (Authentication.user.idType = 'persona' === Authentication.user.provider ? 'email' : 'url', Authentication.user.provider) {
+      case 'persona':
+        Authentication.user.idValue = Authentication.user.email;
+        break;
+      case 'twitter':
+        Authentication.user.idValue = 'https://twitter.com/' + Authentication.user.username;
+        break;
+      default:
+        Authentication.user.idValue = Authentication.user.providerData.link;
       }
-    }), $scope.login = function () {
-      Persona.request();
-    }, $scope.logout = function () {
-      Persona.logout();
-    }, $scope.authentication = Authentication, Authentication.user && ('persona' === Authentication.user.provider ? (Authentication.user.idType = 'email', Authentication.user.idValue = Authentication.user.email) : (Authentication.user.idType = 'url', Authentication.user.idValue = Authentication.user.providerData.link)), $scope.isCollapsed = !1, $scope.menu = Menus.getMenu('topbar'), $scope.toggleCollapsibleMenu = function () {
+    $scope.isCollapsed = !1, $scope.menu = Menus.getMenu('topbar'), $scope.toggleCollapsibleMenu = function () {
       $scope.isCollapsed = !$scope.isCollapsed;
     }, $scope.$on('$stateChangeSuccess', function () {
       $scope.isCollapsed = !1;
     }), $scope.searchChanged = function () {
-      $scope.$root.$broadcast('StartSearch', { queryTerm: $scope.queryTerm });
+      $scope.$root.$broadcast('StartSearch', { queryTerm: $scope.query.term });
     }, $scope.isActive = function (viewLocation) {
       return viewLocation === $location.path();
     }, $scope.searchKeydown = function (e) {
@@ -227,7 +242,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
       url: '/',
       templateUrl: 'modules/identifiers/views/list-identifiers.client.view.html'
     }).state('createIdentifier', {
-      url: '/identifiers/create',
+      url: '/id/create/:value',
       templateUrl: 'modules/identifiers/views/create-identifier.client.view.html'
     }).state('viewIdentifier', {
       url: '/id/:idType/:idValue',
@@ -263,7 +278,12 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
       viewpointName: $scope.authentication.user.displayName,
       viewpointType: 'email',
       viewpointValue: $scope.authentication.user.email
-    } : $rootScope.viewpoint || $rootScope.defaultViewpoint, $scope.activeTab = 'received', $scope.collapseLevel = {}, $rootScope.uniqueIdentifierTypes = [
+    } : $rootScope.viewpoint || $rootScope.defaultViewpoint, $scope.activeTab = 'received', $scope.newIdentifier = {
+      type: '',
+      value: $stateParams.value
+    }, $scope.goToID = function (type, value) {
+      $location.path('/id/' + encodeURIComponent(type) + '/' + encodeURIComponent(value));
+    }, $scope.collapseLevel = {}, $rootScope.uniqueIdentifierTypes = [
       'url',
       'account',
       'email',
@@ -307,8 +327,8 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
         pos.top && (pos.top - 60 < window.pageYOffset ? window.scrollTo(0, pos.top - 60) : pos.bottom > window.pageYOffset + (window.innerHeight || document.documentElement.clientHeight) && window.scrollTo(0, pos.bottom - (window.innerHeight || document.documentElement.clientHeight) + 15));
       };
     $scope.search = function () {
-      $scope.identifiers = Identifiers.query(angular.extend({ idValue: $scope.queryTerm || '' }, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function () {
-        $scope.identifiers.activeKey = 0, $scope.identifiers[0].active = !0;
+      Identifiers.query(angular.extend({ idValue: $scope.queryTerm || '' }, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function (res) {
+        $scope.identifiers = res, $scope.identifiers.activeKey = 0, $scope.identifiers[0].active = !0;
         for (var i = 0; i < $scope.identifiers.length; i++) {
           var id = $scope.identifiers[i];
           for (var j in id)
@@ -336,9 +356,9 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
     };
     var messagesAdded = !1;
     $scope.$on('MessageAdded', function (event, args) {
-      'confirm_connection' === args.message.data.signedData.type ? args.id.confirmations += 1 : 'refute_connection' === args.message.data.signedData.type ? args.id.refutations += 1 : 'rating' === args.message.data.signedData.type && (messagesAdded && $scope.received.shift(), $scope.received.unshift(args.message), messagesAdded = !0, processMessages($scope.received));
+      'confirm_connection' === args.message.data.signedData.type ? (args.id.confirmations += 1, -1 === $scope.connections.indexOf(args.id) && $scope.connections.push(args.id)) : 'refute_connection' === args.message.data.signedData.type ? (args.id.refutations += 1, -1 === $scope.connections.indexOf(args.id) && $scope.connections.push(args.id)) : 'rating' === args.message.data.signedData.type && (messagesAdded && $scope.received.shift(), $scope.received.unshift(args.message), messagesAdded = !0, processMessages($scope.received));
     }), $scope.$on('SearchKeydown', function (event, args) {
-      switch (args.event.which) {
+      switch (args.event ? args.event.which : -1) {
       case 38:
         args.event.preventDefault(), $scope.identifiers.activeKey > 0 && ($scope.identifiers[$scope.identifiers.activeKey].active = !1, $scope.identifiers[$scope.identifiers.activeKey - 1].active = !0, $scope.identifiers.activeKey--), scrollTo(document.getElementById('result' + $scope.identifiers.activeKey));
         break;
@@ -349,6 +369,9 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
         args.event.preventDefault();
         var id = $scope.identifiers[$scope.identifiers.activeKey];
         $scope.resultClicked(id);
+        break;
+      case -1:
+        clearTimeout($scope.timer), $scope.queryTerm = '', $scope.search();
         break;
       case 33:
       case 34:
@@ -473,7 +496,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
         });
       0 === offset && ($scope.received = {}), $scope.received.$resolved = received.$resolved;
     }, $scope.findOne = function () {
-      $scope.idType = decodeURIComponent($stateParams.idType), $scope.idValue = decodeURIComponent($stateParams.idValue), $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1, $scope.getConnections(), $scope.getOverview(), $scope.getSentMsgs(), $scope.getReceivedMsgs();
+      $scope.idType = decodeURIComponent($stateParams.idType), $scope.idValue = decodeURIComponent($stateParams.idValue), $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1, $rootScope.pageTitle = ' - ' + $scope.idValue, $scope.getConnections(), $scope.getOverview(), $scope.getSentMsgs(), $scope.getReceivedMsgs();
       var allPaths = Identifiers.trustpaths(angular.extend({
           idType: $scope.idType,
           idValue: $scope.idValue
@@ -575,10 +598,21 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
   'Authentication',
   'Messages',
   function ($scope, $rootScope, $stateParams, $location, Authentication, Messages) {
-    $scope.authentication = Authentication, $scope.idType = decodeURIComponent($stateParams.idType), $scope.idValue = decodeURIComponent($stateParams.idValue), $scope.messages = [], $scope.message = {
+    $scope.authentication = Authentication, $scope.idType = decodeURIComponent($stateParams.idType), $scope.idValue = decodeURIComponent($stateParams.idValue), $scope.messages = [], $scope.newMessage = {
       type: 'rating',
       rating: 1,
       comment: ''
+    }, $scope.newConnection = {
+      type: '',
+      value: ''
+    }, $scope.iconCount = function (rating) {
+      return new Array(Math.max(1, Math.abs(rating)));
+    }, $scope.iconStyle = function (rating) {
+      var iconStyle = 'neutral';
+      return rating > 0 ? iconStyle = 'positive' : 0 > rating && (iconStyle = 'negative'), iconStyle;
+    }, $scope.iconClass = function (rating) {
+      var iconStyle = 'glyphicon-question-sign';
+      return rating > 0 ? iconStyle = 'glyphicon-thumbs-up' : 0 > rating && (iconStyle = 'glyphicon-thumbs-down'), iconStyle;
     }, $rootScope.filters = $rootScope.filters || {
       maxDistance: 0,
       msgType: 'rating',
@@ -641,7 +675,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
           recipientValue: $scope.idValue
         });
       angular.extend(message, params), message.$save(function () {
-        $scope.message.comment = '', $scope.message.rating = 1, $scope.$root.$broadcast('MessageAdded', {
+        $scope.newMessage.comment = '', $scope.newMessage.rating = 1, $scope.newConnection.type = '', $scope.newConnection.value = '', $scope.$root.$broadcast('MessageAdded', {
           message: message,
           id: id
         });
@@ -649,7 +683,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
         $scope.error = errorResponse.data.message;
       });
     }, $scope.find = function (offset) {
-      isNaN(offset) || ($rootScope.filters.offset = offset);
+      $rootScope.pageTitle = ' - Latest messages', isNaN(offset) || ($rootScope.filters.offset = offset);
       var params = angular.extend({
           idType: $scope.idType,
           idValue: $scope.idValue
@@ -664,7 +698,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
       0 === offset && ($scope.messages = {}), $scope.messages.$resolved = messages.$resolved;
     }, $scope.findOne = function () {
       $scope.message = Messages.get({ messageId: $stateParams.messageId }, function () {
-        $scope.message.strData = JSON.stringify($scope.message.data, void 0, 2), $scope.message.authorGravatar = CryptoJS.MD5($scope.message.authorEmail || $scope.message.data.signedData.author[0][1]).toString(), $scope.message.recipientGravatar = CryptoJS.MD5($scope.message.recipientEmail || $scope.message.data.signedData.recipient[0][1]).toString();
+        $rootScope.pageTitle = ' - Message ' + $stateParams.messageId, $scope.message.strData = JSON.stringify($scope.message.data, void 0, 2), $scope.message.authorGravatar = CryptoJS.MD5($scope.message.authorEmail || $scope.message.data.signedData.author[0][1]).toString(), $scope.message.recipientGravatar = CryptoJS.MD5($scope.message.recipientEmail || $scope.message.data.signedData.recipient[0][1]).toString();
       });
     }, $scope.setFilters = function (filters) {
       angular.extend($rootScope.filters, filters), angular.extend($rootScope.filters, {

@@ -154,6 +154,7 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
 		};
 
     $scope.find = function(offset) {
+      $rootScope.pageTitle = ' - Latest messages';
       if (!isNaN(offset))
         $rootScope.filters.offset = offset;
       var params = angular.extend({ 
@@ -187,6 +188,7 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
 			$scope.message = Messages.get({ 
 				messageId: $stateParams.messageId
 			}, function() {
+        $rootScope.pageTitle = ' - Message ' + $stateParams.messageId;
         $scope.message.strData = JSON.stringify($scope.message.data, undefined, 2);
         $scope.message.authorGravatar = CryptoJS.MD5($scope.message.authorEmail||$scope.message.data.signedData.author[0][1]).toString();
         $scope.message.recipientGravatar = CryptoJS.MD5($scope.message.recipientEmail||$scope.message.data.signedData.recipient[0][1]).toString();

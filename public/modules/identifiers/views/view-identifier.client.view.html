@@ -132,7 +132,7 @@
           <div data-ng-if="!sent.$resolved" style="position:relative;padding:20px" us-spinner></div>
         </tab>
         <tab data-ng-if="true" data-ng-click="activeTab = 'connections'">
-          <tab-heading><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>({{0+connections.length}})</tab-heading>
+          <tab-heading><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>(<span data-ng-show="connections.$resolved && connections.length > 0" data-ng-bind="connections.length - 1"></span>)</tab-heading>
           <br>
             <div id="connections">
               <input id="authenticity_token" name="authenticity_token" type="hidden" value="z1JM7ffnFK7gOv6S3yzG9UFyakukYHikAU94/3TcT2o=">    <table class="table truncated-table table-hover">

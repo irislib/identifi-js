@@ -133,7 +133,8 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
 
 		// Search
 		$scope.search = function() {
-			$scope.identifiers = Identifiers.query(angular.extend({idValue: $scope.queryTerm || ''}, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function() {
+			Identifiers.query(angular.extend({idValue: $scope.queryTerm || ''}, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function(res) {
+        $scope.identifiers = res;
         $scope.identifiers.activeKey = 0;
         $scope.identifiers[0].active = true;
         for (var i = 0; i < $scope.identifiers.length; i++) {
@@ -174,7 +175,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
             else id.name = id[0][1];
           }
         }
-
+        
       });
 		};
 
@@ -426,6 +427,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       $scope.idType = decodeURIComponent($stateParams.idType);
       $scope.idValue = decodeURIComponent($stateParams.idValue);
       $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1;
+      $rootScope.pageTitle = ' - ' + $scope.idValue;
 
       $scope.getConnections();
       $scope.getOverview();
