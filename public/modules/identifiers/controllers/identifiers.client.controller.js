@@ -333,10 +333,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
         idValue: $scope.idValue,
         method: 'overview'
 			}, $rootScope.filters.maxDistance > -1 ? ApplicationConfiguration.defaultViewpoint : 0), function() {
-        $scope.email = $scope.overview.email;
-        if ($scope.email === '')
-          $scope.email = $scope.idValue;
-        $scope.gravatar = CryptoJS.MD5($scope.email).toString();
+        $scope.email = $scope.email || $scope.overview.email;
       });
     };
 
@@ -418,6 +415,8 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
     };
 
     $scope.getPhotosFromGravatar = function() {
+      var email = $scope.email || $scope.idValue;
+      $scope.gravatar = CryptoJS.MD5(email).toString();
       if (!$scope.isUniqueType) return;
       $scope.profilePhotoUrl = $scope.profilePhotoUrl || 'http://www.gravatar.com/avatar/' + $scope.gravatar + '?d=retro&s=210';
     };
