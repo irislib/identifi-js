@@ -2,9 +2,19 @@
 <section class="cover-container">
   <div class="cover" parallax-background parallax-ratio="-0.2" data-ng-style="coverPhoto"></div>
   <div class="container hidden-xs hidden-sm">
+    <div class="heading-row row">
+      <div class="col-md-9 col-md-offset-3">
+        <h4>
+          <span data-ng-bind="idValue" id="id-value"></span>
+          <small class="text-muted">
+            <span data-ng-hide="idType === 'url'" data-ng-bind="idType" id="id-type"></span>
+            <a data-ng-href="{{idValue}}" data-ng-show="idType === 'url'" data-ng-bind="idType" id="id-type"></a>
+          </small>
+        </h4>
+      </div>
+    </div>
     <div class="row">
-      <div class="col-md-3"></div>
-      <div class="col-md-9">
+      <div class="col-md-9 col-md-offset-3">
         <ul class="list-inline tab-list">
           <li data-ng-if="isUniqueType">
             <a href="" data-ng-class="{ active: tabs[0].active }" data-ng-click="tabs[0].active = true"><span class="glyphicon glyphicon-download"></span> <span class="hidden-xs">Received </span>({{0+overview.receivedPositive+overview.receivedNeutral+overview.receivedNegative}})</a>
