@@ -467,10 +467,18 @@ section.section {
   margin: 0;
 }
 .tab-list li {
+  padding: 0;
+}
+.tab-list a {
+  display: inline-block;
   padding: 12px;
   height: 50px;
 }
-.tab-list li.active {
+.tab-list a:hover, .tab-list a:active {
+  text-decoration: none;
+}
+.tab-list a.active {
+  text-decoration: none;
   border-bottom: 4px solid #337ab7;
 }
 

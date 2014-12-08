@@ -16,7 +16,6 @@ module.exports = {
 				'public/lib/jquery/dist/jquery.min.js',
 				'public/lib/angular/angular.min.js',
 				'public/lib/angular-resource/angular-resource.js', 
-				'public/lib/angular-route/angular-route.min.js', 
 				'public/lib/angular-cookies/angular-cookies.js', 
 				'public/lib/angular-animate/angular-animate.js', 
 				'public/lib/angular-touch/angular-touch.js', 
@@ -31,7 +30,8 @@ module.exports = {
         'https://login.persona.org/include.js',
         'public/lib/angular-persona/angular-persona.js',
         'public/lib/angular-bootstrap-slider/slider.js',
-        'public/lib/seiyria-bootstrap-slider/js/bootstrap-slider.js'
+        'public/lib/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js',
+        'public/lib/angular-parallax/scripts/angular-parallax.js'
 			]
 		},
 		css: 'public/dist/application.min.css',

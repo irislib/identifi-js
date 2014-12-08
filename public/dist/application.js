@@ -12,7 +12,8 @@ var ApplicationConfiguration = function () {
         'ui.utils',
         'angularSpinner',
         'infinite-scroll',
-        'persona'
+        'persona',
+        'angular-parallax'
       ], registerModule = function (moduleName, dependencies) {
         angular.module(moduleName, dependencies || []), angular.module(applicationModuleName).requires.push(moduleName);
       };
@@ -191,10 +192,15 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
   '$rootScope',
   '$stateParams',
   '$location',
+  '$http',
   'Authentication',
   'Identifiers',
-  function ($scope, $rootScope, $stateParams, $location, Authentication, Identifiers) {
-    $scope.authentication = Authentication, $scope.sent = [], $scope.received = [], $scope.trustpaths = [], $rootScope.filters = $rootScope.filters || {
+  function ($scope, $rootScope, $stateParams, $location, $http, Authentication, Identifiers) {
+    $scope.authentication = Authentication, $scope.tabs = [
+      { active: !0 },
+      { active: !1 },
+      { active: !1 }
+    ], $scope.sent = [], $scope.received = [], $scope.trustpaths = [], $rootScope.filters = $rootScope.filters || {
       maxDistance: 0,
       msgType: 'rating',
       receivedOffset: 0,
@@ -212,7 +218,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
       viewpointName: $scope.authentication.user.displayName,
       viewpointType: 'email',
       viewpointValue: $scope.authentication.user.email
-    } : $rootScope.viewpoint || $rootScope.defaultViewpoint, $scope.activeTab = 'received', $scope.newIdentifier = {
+    } : $rootScope.viewpoint || $rootScope.defaultViewpoint, $scope.newIdentifier = {
       type: '',
       value: $stateParams.value
     }, $scope.goToID = function (type, value) {
@@ -280,7 +286,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
               id.bitcoin = id[j][1];
               break;
             case 'url':
-              id[j][1].indexOf('facebook.com/') > -1 && (id.facebook = id[j][1].split('facebook.com/')[1]), id[j][1].indexOf('twitter.com/') > -1 && (id.twitter = id[j][1].split('twitter.com/')[1]), id[j][1].indexOf('plus.google.com/') > -1 && (id.googlePlus = id[j][1].split('plus.google.com/')[1]);
+              id[j][1].indexOf('twitter.com/') > -1 && (id.twitter = id[j][1].split('twitter.com/')[1]), id[j][1].indexOf('facebook.com/') > -1 && (id.facebook = id[j][1].split('facebook.com/')[1]), id[j][1].indexOf('plus.google.com/') > -1 && (id.googlePlus = id[j][1].split('plus.google.com/')[1]);
             }
           id.linkTo || (id.linkTo = id[0]), id.gravatar || (id.gravatar = CryptoJS.MD5(id[0][1]).toString()), id.name || (id.name = id.nickname ? id.nickname : id[0][1]);
         }
@@ -360,7 +366,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
             conn.iconStyle = 'glyphicon glyphicon-earphone', conn.btnStyle = 'btn-success', conn.link = 'tel:' + conn.value, conn.quickContact = !0;
             break;
           case 'url':
-            conn.link = conn.value, conn.value.indexOf('facebook.com/') > -1 ? (conn.iconStyle = 'fa fa-facebook', conn.btnStyle = 'btn-facebook', conn.quickContact = !0) : conn.value.indexOf('twitter.com/') > -1 ? (conn.iconStyle = 'fa fa-twitter', conn.btnStyle = 'btn-twitter', conn.quickContact = !0) : conn.value.indexOf('plus.google.com/') > -1 ? (conn.iconStyle = 'fa fa-google-plus', conn.btnStyle = 'btn-google-plus', conn.quickContact = !0) : conn.value.indexOf('linkedin.com/') > -1 ? (conn.iconStyle = 'fa fa-linkedin', conn.btnStyle = 'btn-linkedin') : conn.value.indexOf('github.com/') > -1 ? (conn.iconStyle = 'fa fa-github', conn.btnStyle = 'btn-github') : (conn.iconStyle = 'glyphicon glyphicon-link', conn.btnStyle = 'btn-default');
+            conn.link = conn.value, conn.value.indexOf('facebook.com/') > -1 ? (conn.iconStyle = 'fa fa-facebook', conn.btnStyle = 'btn-facebook', conn.quickContact = !0, $scope.getCoverPhotoFromFB(conn.value.split('facebook.com/')[1])) : conn.value.indexOf('twitter.com/') > -1 ? (conn.iconStyle = 'fa fa-twitter', conn.btnStyle = 'btn-twitter', conn.quickContact = !0, $scope.getCoverPhotoFromTwitter(conn.value)) : conn.value.indexOf('plus.google.com/') > -1 ? (conn.iconStyle = 'fa fa-google-plus', conn.btnStyle = 'btn-google-plus', conn.quickContact = !0) : conn.value.indexOf('linkedin.com/') > -1 ? (conn.iconStyle = 'fa fa-linkedin', conn.btnStyle = 'btn-linkedin') : conn.value.indexOf('github.com/') > -1 ? (conn.iconStyle = 'fa fa-github', conn.btnStyle = 'btn-github') : (conn.iconStyle = 'glyphicon glyphicon-link', conn.btnStyle = 'btn-default');
           }
           if (conn.confirmations + conn.refutations > 0) {
             var percentage = 100 * conn.confirmations / (conn.confirmations + conn.refutations);
@@ -429,8 +435,14 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
           $scope.received.$resolved = received.$resolved, $rootScope.filters.receivedOffset = $rootScope.filters.receivedOffset + received.length, received.length < $rootScope.filters.limit && ($scope.received.finished = !0);
         });
       0 === offset && ($scope.received = {}), $scope.received.$resolved = received.$resolved;
+    }, $scope.getCoverPhotoFromTwitter = function () {
+      return $scope.isUniqueType ? null : void 0;
+    }, $scope.getCoverPhotoFromFB = function (username) {
+      $scope.isUniqueType && $http.get('http://graph.facebook.com/' + username + '?fields=cover').success(function (data) {
+        console.log(data), $scope.coverPhoto = $scope.coverPhoto || { 'background-image': 'url(' + data.cover.source + ')' };
+      });
     }, $scope.findOne = function () {
-      $scope.idType = decodeURIComponent($stateParams.idType), $scope.idValue = decodeURIComponent($stateParams.idValue), $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1, $rootScope.pageTitle = ' - ' + $scope.idValue, $scope.getConnections(), $scope.getOverview(), $scope.getSentMsgs(), $scope.getReceivedMsgs();
+      $scope.idType = decodeURIComponent($stateParams.idType), $scope.idValue = decodeURIComponent($stateParams.idValue), $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1, $scope.isUniqueType || ($scope.tabs[2].active = !0), $rootScope.pageTitle = ' - ' + $scope.idValue, $scope.getConnections(), $scope.getOverview(), $scope.getSentMsgs(), $scope.getReceivedMsgs();
       var allPaths = Identifiers.trustpaths(angular.extend({
           idType: $scope.idType,
           idValue: $scope.idValue

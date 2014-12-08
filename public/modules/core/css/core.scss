@@ -393,9 +393,17 @@ section.section {
 .tab-list {
   margin: 0;
   li {
+    padding: 0;
+  }
+  a {
+    display: inline-block;
     padding: 12px;
     height: 50px;
+    &:hover, &:active {
+      text-decoration: none;
+    }
     &.active {
+      text-decoration: none;
       border-bottom: 4px solid #337ab7;
     }
   }
