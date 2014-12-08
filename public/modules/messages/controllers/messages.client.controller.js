@@ -24,14 +24,7 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
       else if (rating < 0) iconStyle = 'glyphicon-thumbs-down';
       return iconStyle;
     };
-    $rootScope.filters = $rootScope.filters || {
-      maxDistance: 0,
-      msgType: 'rating',
-      receivedOffset: 0,
-      sentOffset: 0,
-      offset: 0,
-      limit: 20,
-    };
+    $rootScope.filters = $rootScope.filters || ApplicationConfiguration.defaultFilters;
     angular.extend($rootScope.filters, { offset: 0 });
     if ($scope.authentication.user) {
       $rootScope.viewpoint = { viewpointName: $scope.authentication.user.displayName,

@@ -36,6 +36,14 @@ var ApplicationConfiguration = (function() {
       'phone',
       'tel',
       'google_oauth2'
-    ]
+    ],
+    defaultFilters: {
+      maxDistance: 0,
+      msgType: 'rating',
+      receivedOffset: 0,
+      sentOffset: 0,
+      offset: 0,
+      limit: 20,
+    }
 	};
 })();

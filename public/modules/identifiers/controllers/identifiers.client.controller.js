@@ -9,14 +9,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
     $scope.sent = [];
     $scope.received = [];
     $scope.trustpaths = [];
-    $rootScope.filters = $rootScope.filters || {
-      maxDistance: 0,
-      msgType: 'rating',
-      receivedOffset: 0,
-      sentOffset: 0,
-      offset: 0,
-      limit: 20,
-    };
+    $rootScope.filters = $rootScope.filters || ApplicationConfiguration.defaultFilters;
     angular.extend($rootScope.filters, { receivedOffset: 0, sentOffset: 0 });
     if ($scope.authentication.user) {
       $rootScope.viewpoint = { viewpointName: $scope.authentication.user.displayName,
@@ -250,8 +243,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
               conn.btnStyle = 'btn-success';
               conn.link = 'mailto:' + conn.value;
               conn.quickContact = true;
-              if ($scope.email === '')
-                $scope.email = conn.value;
+              $scope.email = $scope.email || conn.value;
               break;
             case 'bitcoin_address':
             case 'bitcoin':
@@ -285,12 +277,12 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
                 conn.iconStyle = 'fa fa-facebook';
                 conn.btnStyle = 'btn-facebook';
                 conn.quickContact = true;
-                $scope.getCoverPhotoFromFB(conn.value.split('facebook.com/')[1]);
+                $scope.getPhotosFromFB(conn.value.split('facebook.com/')[1]);
               } else if (conn.value.indexOf('twitter.com/') > -1) {
                 conn.iconStyle = 'fa fa-twitter';
                 conn.btnStyle = 'btn-twitter';
                 conn.quickContact = true;
-                $scope.getCoverPhotoFromTwitter(conn.value);
+                $scope.getPhotosFromTwitter(conn.value);
               } else if (conn.value.indexOf('plus.google.com/') > -1) {
                 conn.iconStyle = 'fa fa-google-plus';
                 conn.btnStyle = 'btn-google-plus';
@@ -321,6 +313,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
           }
           $scope.hasQuickContacts = $scope.hasQuickContacts || conn.quickContact;
         }
+        $scope.getPhotosFromGravatar();
         $scope.connectionClicked = function(event, id) {
           id.collapse = !id.collapse;
           id.connectingmsgs = id.connectingmsgs || Identifiers.connectingmsgs(angular.extend({idType: $scope.idType, idValue: $scope.idValue, id2Type: id.type, id2Value: id.value}, $rootScope.filters), function() {
@@ -407,7 +400,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       $scope.received.$resolved = received.$resolved;
     };
 
-    $scope.getCoverPhotoFromTwitter = function(profileUrl) {
+    $scope.getPhotosFromTwitter = function(profileUrl) {
       if (!$scope.isUniqueType) return;
 /*
       if (Authentication.user.providerData.profile_banner_url) {
@@ -416,11 +409,17 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       return null;
     };
 
-    $scope.getCoverPhotoFromFB = function(username) {
+    $scope.getPhotosFromFB = function(username) {
       if (!$scope.isUniqueType) return;
       $http.get('http://graph.facebook.com/' + username  + '?fields=cover').success(function(data, status, headers, config) {
         $scope.coverPhoto = $scope.coverPhoto || { 'background-image': 'url(' + data.cover.source + ')' };
       });
+      $scope.profilePhotoUrl = 'http://graph.facebook.com/' + username + '/picture?height=210&width=210';
+    };
+
+    $scope.getPhotosFromGravatar = function() {
+      if (!$scope.isUniqueType) return;
+      $scope.profilePhotoUrl = $scope.profilePhotoUrl || 'http://www.gravatar.com/avatar/' + $scope.gravatar + '?d=retro&s=210';
     };
 
 		// Find existing Identifier
