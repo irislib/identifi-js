@@ -18,6 +18,24 @@ var ApplicationConfiguration = (function() {
 	return {
 		applicationModuleName: applicationModuleName,
 		applicationModuleVendorDependencies: applicationModuleVendorDependencies,
-		registerModule: registerModule
+		registerModule: registerModule,
+    defaultViewpoint: {
+      viewpointName: 'Identi.fi',
+      viewpointType: 'keyID',
+      viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
+    },
+    uniqueIdentifierTypes: [
+      'url',
+      'account',
+      'email',
+      'bitcoin',
+      'bitcoin_address',
+      'keyID',
+      'gpg_fingerprint',
+      'gpg_keyid',
+      'phone',
+      'tel',
+      'google_oauth2'
+    ]
 	};
 })();

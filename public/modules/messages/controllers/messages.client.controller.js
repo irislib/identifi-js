@@ -33,30 +33,12 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
       limit: 20,
     };
     angular.extend($rootScope.filters, { offset: 0 });
-    $rootScope.defaultViewpoint = $rootScope.defaultViewpoint || {
-      viewpointName: 'Identi.fi',
-      viewpointType: 'keyID',
-      viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
-    };
-    $rootScope.uniqueIdentifierTypes = [
-      'url',
-      'account',
-      'email',
-      'bitcoin',
-      'bitcoin_address',
-      'keyID',
-      'gpg_fingerprint',
-      'gpg_keyid',
-      'phone',
-      'tel',
-      'google_oauth2'
-    ];
     if ($scope.authentication.user) {
       $rootScope.viewpoint = { viewpointName: $scope.authentication.user.displayName,
                                viewpointType: 'email',
                                viewpointValue: $scope.authentication.user.email };
     } else {
-      $rootScope.viewpoint = $rootScope.viewpoint || $rootScope.defaultViewpoint;
+      $rootScope.viewpoint = $rootScope.viewpoint || ApplicationConfiguration.defaultViewpoint;
     }
 
     var processMessages = function(messages) {
@@ -71,14 +53,14 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
         msg.linkToAuthor = msg.data.signedData.author[0];
         var i;
         for (i = 0; i < msg.data.signedData.author.length; i++) {
-          if ($scope.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1)) {
+          if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1)) {
             msg.linkToAuthor = msg.data.signedData.author[i];
           }
         }
 
         msg.linkToRecipient = msg.data.signedData.recipient[0];
         for (i = 0; i < msg.data.signedData.recipient.length; i++) {
-          if ($scope.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0] > -1)) {
+          if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0] > -1)) {
             msg.linkToRecipient = msg.data.signedData.recipient[i];
           }
         }
@@ -160,7 +142,7 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
       var params = angular.extend({ 
 				idType: $scope.idType,
         idValue: $scope.idValue,
-      }, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : {});
+      }, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? ApplicationConfiguration.defaultViewpoint : {});
 			var messages = Messages.query(params, function () {
         processMessages(messages);
         if ($rootScope.filters.offset === 0)

@@ -18,36 +18,18 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       limit: 20,
     };
     angular.extend($rootScope.filters, { receivedOffset: 0, sentOffset: 0 });
-    $rootScope.defaultViewpoint = $rootScope.defaultViewpoint || {
-      viewpointName: 'Identi.fi',
-      viewpointType: 'keyID',
-      viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
-    };
     if ($scope.authentication.user) {
       $rootScope.viewpoint = { viewpointName: $scope.authentication.user.displayName,
                                viewpointType: 'email',
                                viewpointValue: $scope.authentication.user.email };
     } else {
-      $rootScope.viewpoint = $rootScope.viewpoint || $rootScope.defaultViewpoint;
+      $rootScope.viewpoint = $rootScope.viewpoint || ApplicationConfiguration.defaultViewpoint;
     }
     $scope.newIdentifier = { type: '', value: $stateParams.value };
     $scope.goToID = function(type, value) {
       $location.path('/id/' + encodeURIComponent(type) + '/' + encodeURIComponent(value));
     };
     $scope.collapseLevel = {};
-    $rootScope.uniqueIdentifierTypes = [
-      'url',
-      'account',
-      'email',
-      'bitcoin',
-      'bitcoin_address',
-      'keyID',
-      'gpg_fingerprint',
-      'gpg_keyid',
-      'phone',
-      'tel',
-      'google_oauth2'
-    ];
 
     var processMessages = function(messages) {
       for (var key in messages) {
@@ -61,14 +43,14 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
         msg.linkToAuthor = msg.data.signedData.author[0];
         var i;
         for (i = 0; i < msg.data.signedData.author.length; i++) {
-          if ($scope.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1)) {
+          if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1)) {
             msg.linkToAuthor = msg.data.signedData.author[i];
           }
         }
 
         msg.linkToRecipient = msg.data.signedData.recipient[0];
         for (i = 0; i < msg.data.signedData.recipient.length; i++) {
-          if ($scope.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0] > -1)) {
+          if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0] > -1)) {
             msg.linkToRecipient = msg.data.signedData.recipient[i];
           }
         }
@@ -141,7 +123,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
         for (var i = 0; i < $scope.identifiers.length; i++) {
           var id = $scope.identifiers[i];
           for (var j in id) {
-            if (!id.linkTo && $scope.uniqueIdentifierTypes.indexOf(id[j][0]) > -1)
+            if (!id.linkTo && ApplicationConfiguration.uniqueIdentifierTypes.indexOf(id[j][0]) > -1)
               id.linkTo = id[j];
             switch (id[j][0]) {
               case 'email':
@@ -357,7 +339,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
 				idType: $scope.idType,
         idValue: $scope.idValue,
         method: 'overview'
-			}, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function() {
+			}, $rootScope.filters.maxDistance > -1 ? ApplicationConfiguration.defaultViewpoint : 0), function() {
         $scope.email = $scope.overview.email;
         if ($scope.email === '')
           $scope.email = $scope.idValue;
@@ -374,7 +356,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
         msgType: $rootScope.filters.msgType,
         offset: $rootScope.filters.sentOffset,
         limit: $rootScope.filters.limit
-      }, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function () {
+      }, $rootScope.filters.maxDistance > -1 ? ApplicationConfiguration.defaultViewpoint : 0), function () {
         processMessages(sent);
         if ($rootScope.filters.sentOffset === 0)
           $scope.sent = sent;
@@ -404,7 +386,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
         msgType: $rootScope.filters.msgType,
         offset: $rootScope.filters.receivedOffset,
         limit: $rootScope.filters.limit
-      }, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function () {
+      }, $rootScope.filters.maxDistance > -1 ? ApplicationConfiguration.defaultViewpoint : 0), function () {
         processMessages(received);
         if ($rootScope.filters.receivedOffset === 0)
           $scope.received = received;
@@ -437,7 +419,6 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
     $scope.getCoverPhotoFromFB = function(username) {
       if (!$scope.isUniqueType) return;
       $http.get('http://graph.facebook.com/' + username  + '?fields=cover').success(function(data, status, headers, config) {
-        console.log(data);
         $scope.coverPhoto = $scope.coverPhoto || { 'background-image': 'url(' + data.cover.source + ')' };
       });
     };
@@ -446,7 +427,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
 		$scope.findOne = function() {
       $scope.idType = decodeURIComponent($stateParams.idType);
       $scope.idValue = decodeURIComponent($stateParams.idValue);
-      $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1;
+      $scope.isUniqueType = ApplicationConfiguration.uniqueIdentifierTypes.indexOf($scope.idType) > -1;
       if (!$scope.isUniqueType)
         $scope.tabs[2].active = true;
       $rootScope.pageTitle = ' - ' + $scope.idValue;
