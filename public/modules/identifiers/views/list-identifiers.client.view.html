@@ -14,26 +14,26 @@
     <tbody>
       <tr data-ng-repeat="result in identifiers | filter:queryTerm" id="result{{$index}}" data-ng-click="resultClicked(result)" class="search-result-row" data-ng-class="{active: result.active}">
         <td class="gravatar-col"><img alt="" height="45" width="45" src="https://www.gravatar.com/avatar/{{result.gravatar}}?d=retro&amp;s=45"></td>
-        <td><a data-ng-bind="result.name" data-ng-href="#!/id/{{result.linkTo[0]|escape}}/{{result.linkTo[1]|escape}}"></a>
+        <td><a data-ng-bind-html="result.name|highlight:queryTerm" data-ng-href="#!/id/{{result.linkTo[0]|escape}}/{{result.linkTo[1]|escape}}"></a>
           <small data-ng-if="!result.name" class="list-group-item-text">
-            <span data-ng-bind="result[0][0]"></span>
+            <span data-ng-bind-html="result[0][0]|highlight:queryTerm"></span>
           </small><br>
           <small>
-            <span data-ng-if="result.nickname" data-ng-bind="result.nickname" class="mar-right10"></span>
+            <span data-ng-if="result.nickname" data-ng-bind-html="result.nickname|highlight:queryTerm" class="mar-right10"></span>
             <span data-ng-if="result.email" class="mar-right10">
-              <span class="glyphicon glyphicon-envelope"></span> <span data-ng-bind="result.email"></span> 
+              <span class="glyphicon glyphicon-envelope"></span> <span data-ng-bind-html="result.email|highlight:queryTerm"></span> 
             </span>
             <span data-ng-if="result.facebook" class="mar-right10">
-              <span class="fa fa-facebook"></span> <span data-ng-bind="result.facebook"></span> 
+              <span class="fa fa-facebook"></span> <span data-ng-bind-html="result.facebook|highlight:queryTerm"></span> 
             </span>
             <span data-ng-if="result.twitter" class="mar-right10">
-              <span class="fa fa-twitter"></span> <span data-ng-bind="result.twitter"></span> 
+              <span class="fa fa-twitter"></span> <span data-ng-bind-html="result.twitter|highlight:queryTerm"></span> 
             </span>
             <span data-ng-if="result.googlePlus" class="mar-right10">
-              <span class="fa fa-google-plus"></span> <span data-ng-bind="result.googlePlus"></span> 
+              <span class="fa fa-google-plus"></span> <span data-ng-bind-html="result.googlePlus|highlight:queryTerm"></span> 
             </span>
             <span data-ng-if="result.bitcoin" class="mar-right10">
-              <span class="fa fa-bitcoin"></span> <span data-ng-bind="result.bitcoin"></span> 
+              <span class="fa fa-bitcoin"></span> <span data-ng-bind-html="result.bitcoin|highlight:queryTerm"></span> 
             </span>
           </small>
         </td>

@@ -1346,6 +1346,10 @@ a:hover {
   margin-bottom: 20px;
 }
 
+.ui-match {
+  font-weight: bold;
+}
+
 @media (min-width: 768px) {
   .nav-tabs {
     display: none;
