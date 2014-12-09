@@ -1207,10 +1207,6 @@ a {
   padding: 10px;
 }
 
-.quick-contact {
-  a { margin-right: 5px; margin-top: 5px; }
-}
-
 .msg-type-filter li.active {
   .positive, .neutral, .negative { color: #FFFFFF; }
 }
@@ -1289,6 +1285,21 @@ a {
     margin: 0;
     padding: 15px;
     display: inline-block;
+  }
+  .quick-contact {
+    margin: 0;
+    a {
+      margin: 5px 5px 0 0;
+    }
+  }
+}
+
+.quick-contact {
+  margin: 0 0 10px 0;
+  box-shadow: none;
+  background-color: inherit;
+  a {
+    margin: 0 10px 10px 0;
   }
 }
 

@@ -3,7 +3,7 @@
   <div class="cover" parallax-background parallax-ratio="-0.2" data-ng-style="coverPhoto"></div>
   <div class="container hidden-xs hidden-sm">
     <div class="heading-row row">
-      <div class="col-md-9 col-md-offset-3">
+      <div class="col-md-8 col-md-offset-3">
         <h4>
           <span data-ng-bind="idValue" id="id-value"></span>
           <small class="text-muted">
@@ -87,6 +87,9 @@
     </div>
   </div>
 
+  <div data-ng-if="isUniqueType && hasQuickContacts" class="visible-xs visible-sm panel quick-contact">
+    <a data-ng-repeat="id in connections" data-ng-if="id.quickContact" class="btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span>&nbsp;</a> 
+  </div>
   <div data-ng-if="isUniqueType && trustpaths.length > 0 && !(idType === filters.viewpointType && idValue === filters.viewpointValue)" class="panel panel-default">
     <div class="panel-body">
       <ul data-ng-repeat="level in trustpaths" class="trustpath-list list-unstyled">

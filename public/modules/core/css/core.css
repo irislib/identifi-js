@@ -1268,11 +1268,6 @@ a:hover {
   padding: 10px;
 }
 
-.quick-contact a {
-  margin-right: 5px;
-  margin-top: 5px;
-}
-
 .msg-type-filter li.active .positive, .msg-type-filter li.active .neutral, .msg-type-filter li.active .negative {
   color: #FFFFFF;
 }
@@ -1352,6 +1347,21 @@ a:hover {
   margin: 0;
   padding: 15px;
   display: inline-block;
+}
+.heading-row .quick-contact {
+  margin: 0;
+}
+.heading-row .quick-contact a {
+  margin: 5px 5px 0 0;
+}
+
+.quick-contact {
+  margin: 0 0 10px 0;
+  box-shadow: none;
+  background-color: inherit;
+}
+.quick-contact a {
+  margin: 0 10px 10px 0;
 }
 
 @media (min-width: 768px) {
