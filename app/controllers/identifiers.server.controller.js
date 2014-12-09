@@ -8,14 +8,15 @@ var mongoose = require('mongoose'),
 	Identifier = mongoose.model('Identifier'),
 	_ = require('lodash');
 
+var config = require('../../config/config.js');
 
 var Memcached = require('memcached');
 var bitcoin = require('bitcoin');
 var identifi = new bitcoin.Client({
-    host: 'localhost',
-      port: 4945,
-      user: 'identifirpc',
-      pass: '7FA6FfaoXr6VzCzQa8X2YBrUxR1ANEvnxtdTugvD5mzc'
+    host: config.identifi.host,
+      port: config.identifi.port,
+      user: config.identifi.user,
+      pass: config.identifi.pass
 });
 identifi.memcached = new Memcached();
 identifi.cachedCmd = function() {
@@ -110,7 +111,7 @@ exports.connections = function(req, res) {
  * Trust path
  */
 exports.trustpaths = function(req, res) {
-  identifi.cachedCmd('getpaths', req.query.viewpointType || 'keyID', req.query.viewpointValue || '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT', req.params.idType, req.params.idValue, function(err, identifiRes, identifiResHeaders) {
+  identifi.cachedCmd('getpaths', req.query.viewpointType || config.defaultViewpoint.type, req.query.viewpointValue || config.defaultViewpoint.value, req.params.idType, req.params.idValue, function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }

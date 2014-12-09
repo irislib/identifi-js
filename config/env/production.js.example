@@ -37,6 +37,16 @@ module.exports = {
 		css: 'public/dist/application.min.css',
 		js: 'public/dist/application.min.js'
 	},
+  identifi: {
+    host: 'localhost',
+    port: 4945,
+    user: 'identifirpc',
+    pass: 'IDENTIFI_RPC_PASS',
+    defaultViewpoint: {
+      type: 'keyID',
+      value: 'LOCAL_NODE_KEYID'
+    }
+  },
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || 'APP_ID',
 		clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',

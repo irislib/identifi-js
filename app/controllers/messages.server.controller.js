@@ -8,22 +8,17 @@ var mongoose = require('mongoose'),
 	Message = mongoose.model('Message'),
 	_ = require('lodash');
 
-var bitcoin = require('bitcoin');
-var identifi = new bitcoin.Client({
-    host: 'localhost',
-      port: 4945,
-      user: 'identifirpc',
-      pass: '7FA6FfaoXr6VzCzQa8X2YBrUxR1ANEvnxtdTugvD5mzc'
-});
+var config = require('../../config/config.js');
 
 var Memcached = require('memcached');
 var bitcoin = require('bitcoin');
 var identifi = new bitcoin.Client({
-    host: 'localhost',
-      port: 4945,
-      user: 'identifirpc',
-      pass: '7FA6FfaoXr6VzCzQa8X2YBrUxR1ANEvnxtdTugvD5mzc'
+    host: config.identifi.host,
+      port: config.identifi.port,
+      user: config.identifi.user,
+      pass: config.identifi.pass
 });
+
 identifi.memcached = new Memcached();
 identifi.cachedCmd = function() {
   var cmdSignature = Array.prototype.slice.call(arguments, 0, -1).join();
