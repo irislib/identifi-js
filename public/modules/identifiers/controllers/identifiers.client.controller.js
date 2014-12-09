@@ -1,8 +1,8 @@
 'use strict';
 
 // Identifiers controller
-angular.module('identifiers').controller('IdentifiersController', ['$scope', '$rootScope', '$stateParams', '$location', '$http', 'Authentication', 'Identifiers',
-	function($scope, $rootScope, $stateParams, $location, $http, Authentication, Identifiers ) {
+angular.module('identifiers').controller('IdentifiersController', ['$scope', '$rootScope', '$window', '$stateParams', '$location', '$http', 'Authentication', 'Identifiers',
+	function($scope, $rootScope, $window, $stateParams, $location, $http, Authentication, Identifiers ) {
 		$scope.authentication = Authentication;
     $scope.tabs = [{active:true}, {active:false}, {active:false}];
 
@@ -23,6 +23,8 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       $location.path('/id/' + encodeURIComponent(type) + '/' + encodeURIComponent(value));
     };
     $scope.collapseLevel = {};
+
+    $scope.collapseFilters = $window.innerWidth < 768;
 
     var processMessages = function(messages) {
       for (var key in messages) {

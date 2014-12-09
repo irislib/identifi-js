@@ -1,8 +1,8 @@
 'use strict';
 
 // Messages controller
-angular.module('messages').controller('MessagesController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Messages',
-	function($scope, $rootScope, $stateParams, $location, Authentication, Messages ) {
+angular.module('messages').controller('MessagesController', ['$scope', '$rootScope', '$window', '$stateParams', '$location', 'Authentication', 'Messages',
+	function($scope, $rootScope, $window, $stateParams, $location, Authentication, Messages ) {
 		$scope.authentication = Authentication;
     $scope.idType = decodeURIComponent($stateParams.idType);
     $scope.idValue = decodeURIComponent($stateParams.idValue);
@@ -33,6 +33,8 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
     } else {
       $rootScope.viewpoint = $rootScope.viewpoint || ApplicationConfiguration.defaultViewpoint;
     }
+
+    $scope.collapseFilters = $window.innerWidth < 768;
 
     var processMessages = function(messages) {
       for (var key in messages) {

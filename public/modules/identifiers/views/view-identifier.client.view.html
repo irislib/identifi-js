@@ -46,6 +46,13 @@
         </tr>
         <tr>
           <td colspan="2">
+            <div class="hidden-md hidden-lg" data-ng-hide="!overview.name">
+              <span data-ng-bind="idValue" id="id-value"></span>
+              <small class="text-muted">
+                <span data-ng-hide="idType === 'url'" data-ng-bind="idType" id="id-type"></span>
+                <a data-ng-href="{{idValue}}" data-ng-show="idType === 'url'" data-ng-bind="idType" id="id-type"></a>
+              </small>
+            </div>
             <h4 data-ng-bind="overview.name||idValue"></h4>
           </td>
         </tr>
