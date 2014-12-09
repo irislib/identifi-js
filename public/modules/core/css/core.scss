@@ -1303,7 +1303,7 @@ a {
   }
 }
 
-@media (min-width: 768px) { 
+@media (min-width: 992px) { 
   .nav-tabs {
     display: none;
   }
@@ -1322,11 +1322,17 @@ a {
    }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
+  .cover {
+    border-bottom: 1px solid #efefef;
+  }
   .cover-container {
     background-color: inherit;
     border: 0;
   }
+}
+
+@media (max-width: 767px) {
   .mar-top60-xs {
     margin-top: 60px;
   }

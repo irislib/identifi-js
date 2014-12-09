@@ -24,7 +24,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
     };
     $scope.collapseLevel = {};
 
-    $scope.collapseFilters = $window.innerWidth < 768;
+    $scope.collapseFilters = $window.innerWidth < 992;
 
     var processMessages = function(messages) {
       for (var key in messages) {

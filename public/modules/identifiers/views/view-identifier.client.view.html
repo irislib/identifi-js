@@ -26,7 +26,7 @@
             <a href="" data-ng-class="{ active: tabs[1].active }" data-ng-click="tabs[1].active = true"><span class="glyphicon glyphicon-upload"></span> <span class="hidden-xs">Sent </span>({{0+overview.authoredPositive+overview.authoredNeutral+overview.authoredNegative}})</a>
           </li>
           <li>
-            <a href="" data-ng-class="{ active: tabs[2].active }" data-ng-click="tabs[2].active = true"><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>(<span data-ng-show="connections.$resolved && connections.length > 0" data-ng-bind="connections.length - 1"></span><span data-ng-hide="connections.$resolved">0</span>)</a>
+            <a href="" data-ng-class="{ active: tabs[2].active }" data-ng-click="tabs[2].active = true"><span class="fa fa-book"></span> <span class="hidden-xs">Details </span>(<span data-ng-show="connections.$resolved && connections.length > 0" data-ng-bind="connections.length - 1"></span><span data-ng-hide="connections.$resolved">0</span>)</a>
           </li>
         </ul>
       </div>
@@ -155,7 +155,7 @@
           <div data-ng-if="!sent.$resolved" style="position:relative;padding:20px" us-spinner></div>
         </tab>
         <tab active="tabs[2].active" data-ng-if="true">
-            <tab-heading><span class="glyphicon glyphicon-link"></span> <span class="hidden-xs">Connections </span>(<span data-ng-show="connections.$resolved && connections.length > 0" data-ng-bind="connections.length - 1"></span><span data-ng-hide="connections.$resolved"></span>)</tab-heading>
+            <tab-heading><span class="fa fa-book"></span> <span class="hidden-xs">Details </span>(<span data-ng-show="connections.$resolved && connections.length > 0" data-ng-bind="connections.length - 1"></span><span data-ng-hide="connections.$resolved"></span>)</tab-heading>
             <div id="connections">
               <input id="authenticity_token" name="authenticity_token" type="hidden" value="z1JM7ffnFK7gOv6S3yzG9UFyakukYHikAU94/3TcT2o=">    <table class="table truncated-table table-hover">
                 <tbody>
