@@ -38,59 +38,49 @@
     <div class="col-md-3 id-left-column">
     <div data-ng-if="isUniqueType" class="panel panel-default">
     <div class="panel-body">
-      <table class="stats-box table-condensed">
-        <tbody><tr>
-          <td colspan="2">
-            <a data-ng-href="" data-toggle="tooltip" data-placement="right"><img data-ng-src="{{profilePhotoUrl}}" width="220" height="220" class="img-thumbnail mar-right5"></a>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <div class="hidden-md hidden-lg" data-ng-hide="!overview.name">
-              <span data-ng-bind="idValue" id="id-value"></span>
-              <small class="text-muted">
-                <span data-ng-hide="idType === 'url'" data-ng-bind="idType" id="id-type"></span>
-                <a data-ng-href="{{idValue}}" data-ng-show="idType === 'url'" data-ng-bind="idType" id="id-type"></a>
-              </small>
-            </div>
+      <p class="hidden-md hidden-lg" data-ng-hide="!overview.name">
+        <span data-ng-bind="idValue" id="id-value"></span>
+        <small class="text-muted">
+          <span data-ng-hide="idType === 'url'" data-ng-bind="idType" id="id-type"></span>
+          <a data-ng-href="{{idValue}}" data-ng-show="idType === 'url'" data-ng-bind="idType" id="id-type"></a>
+        </small>
+      </p>
+      <div class="stats-box">
+        <div class="row">
+          <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
+            <p>
+              <a data-ng-href="" data-toggle="tooltip" data-placement="right"><img data-ng-src="{{profilePhotoUrl}}" width="230" height="230" class="img-thumbnail mar-right5"></a>
+            </p>
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
             <h4 data-ng-bind="overview.name||idValue"></h4>
-          </td>
-        </tr>
-        <tr class="received-stats">
-          <td><strong>Received</strong></td>
-          <td>
-            <strong>
-              <span class="positive"><span class="glyphicon glyphicon-thumbs-up"></span> <span data-ng-bind="overview.receivedPositive">-</span></span>
-              <span class="neutral"><span class="glyphicon glyphicon-question-sign"></span> <span data-ng-bind="overview.receivedNeutral">-</span></span> 
-              <span class="negative"><span class="glyphicon glyphicon-thumbs-down"></span> <span data-ng-bind="overview.receivedNegative">-</span></span>
-            </strong>
-          </td>
-        </tr>
-        <tr>
-          <td>Sent</td> 
-          <td>
-            <span class="positive"><span class="glyphicon glyphicon-thumbs-up"></span> <span data-ng-bind="overview.authoredPositive">-</span></span>
-            <span class="neutral"><span class="glyphicon glyphicon-question-sign"></span> <span data-ng-bind="overview.authoredNeutral">-</span></span> 
-            <span class="negative"><span class="glyphicon glyphicon-thumbs-down"></span> <span data-ng-bind="overview.authoredNegative">-</span></span>
-          </td>
-        </tr>
-    <!--    <tr>
-          <td>Recommendation <br>quality <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Recommendations given for identifiers that got good feedback later"></span></td>
-          <td>- %</td>
-        </tr>
-        <tr>
-          <td>Connection <br>quality <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Created connections that were not disputed by others"></span></td>
-          <td>- %</td>
-        </tr> -->
-       <tr>
-          <td>First seen</td>
-          <td><span data-ng-if="overview.firstSeen" data-ng-bind="overview.firstSeen*1000|date:'mediumDate'"></span><span data-ng-if="!overview.firstSeen">-</span></td>
-        </tr>
-  <!--       <tr>
-          <td>Trust map size</td>
-          <td>0</td>
-        </tr> -->
-      </tbody></table>
+            <p class="received-stats">
+              <div><strong>Received</strong></div>
+              <div>
+                <strong>
+                  <span class="positive"><span class="glyphicon glyphicon-thumbs-up"></span> <span data-ng-bind="overview.receivedPositive">-</span></span>
+                  <span class="neutral"><span class="glyphicon glyphicon-question-sign"></span> <span data-ng-bind="overview.receivedNeutral">-</span></span> 
+                  <span class="negative"><span class="glyphicon glyphicon-thumbs-down"></span> <span data-ng-bind="overview.receivedNegative">-</span></span>
+                </strong>
+              </div>
+            </p>
+            <p>
+              <div>Sent</div> 
+              <div>
+                <span class="positive"><span class="glyphicon glyphicon-thumbs-up"></span> <span data-ng-bind="overview.authoredPositive">-</span></span>
+                <span class="neutral"><span class="glyphicon glyphicon-question-sign"></span> <span data-ng-bind="overview.authoredNeutral">-</span></span> 
+                <span class="negative"><span class="glyphicon glyphicon-thumbs-down"></span> <span data-ng-bind="overview.authoredNegative">-</span></span>
+              </div>
+            </p>
+            <div class="hidden-xs">
+              <p class="hidden-xs">
+                <div>First seen</div>
+                <div><span data-ng-if="overview.firstSeen" data-ng-bind="overview.firstSeen*1000|date:'mediumDate'"></span><span data-ng-if="!overview.firstSeen">-</span></div>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -121,9 +111,6 @@
       <tabset>
         <tab active="tabs[0].active" data-ng-if="isUniqueType">
           <tab-heading><span class="glyphicon glyphicon-download"></span> <span class="hidden-xs">Received </span>({{0+overview.receivedPositive+overview.receivedNeutral+overview.receivedNegative}})</tab-heading>
-          <div data-ng-hide="authentication.user" class="alert alert-info text-center login-alert-info">
-            <strong><a href="#!/signin">Log in</a></strong> to write messages.
-          </div>
 
           <div data-ng-show="authentication.user" class="panel panel-default panel-success">
             <div class="panel-heading visible-xs">

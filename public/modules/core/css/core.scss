@@ -1323,6 +1323,10 @@ a {
 }
 
 @media (max-width: 767px) {
+  .cover-container {
+    background-color: inherit;
+    border: 0;
+  }
   .mar-top60-xs {
     margin-top: 60px;
   }
