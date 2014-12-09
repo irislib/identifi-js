@@ -1268,14 +1268,9 @@ a:hover {
   padding: 10px;
 }
 
-.quick-contact {
-  background-color: inherit;
-  box-shadow: none;
-  margin-bottom: 10px;
-}
 .quick-contact a {
-  margin-right: 10px;
-  margin-bottom: 10px;
+  margin-right: 5px;
+  margin-top: 5px;
 }
 
 .msg-type-filter li.active .positive, .msg-type-filter li.active .neutral, .msg-type-filter li.active .negative {
@@ -1352,10 +1347,11 @@ a:hover {
 
 .heading-row {
   height: 50px;
-  padding: 15px;
 }
 .heading-row h4 {
   margin: 0;
+  padding: 15px;
+  display: inline-block;
 }
 
 @media (min-width: 768px) {

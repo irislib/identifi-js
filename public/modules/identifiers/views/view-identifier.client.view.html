@@ -11,6 +11,9 @@
             <a data-ng-href="{{idValue}}" data-ng-show="idType === 'url'" data-ng-bind="idType" id="id-type"></a>
           </small>
         </h4>
+        <div data-ng-if="isUniqueType && hasQuickContacts" class="pull-right quick-contact">
+          <a data-ng-repeat="id in connections" data-ng-if="id.quickContact" class="btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span>&nbsp;</a> 
+        </div>
       </div>
     </div>
     <div class="row">
@@ -84,9 +87,6 @@
     </div>
   </div>
 
-  <div data-ng-if="isUniqueType && hasQuickContacts" class="panel quick-contact">
-    <a data-ng-repeat="id in connections" data-ng-if="id.quickContact" class="btn btn-lg btn-social-icon" data-ng-class="id.btnStyle" data-ng-href="{{id.link}}"><span data-ng-class="id.iconStyle"></span>&nbsp;</a> 
-  </div>
   <div data-ng-if="isUniqueType && trustpaths.length > 0 && !(idType === filters.viewpointType && idValue === filters.viewpointValue)" class="panel panel-default">
     <div class="panel-body">
       <ul data-ng-repeat="level in trustpaths" class="trustpath-list list-unstyled">

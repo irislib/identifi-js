@@ -1208,10 +1208,7 @@ a {
 }
 
 .quick-contact {
-  background-color: inherit;
-  box-shadow: none;
-  margin-bottom: 10px;
-  a { margin-right: 10px; margin-bottom: 10px; }
+  a { margin-right: 5px; margin-top: 5px; }
 }
 
 .msg-type-filter li.active {
@@ -1288,8 +1285,11 @@ a {
 
 .heading-row {
   height: 50px;
-  padding: 15px;
-  h4 { margin: 0; }
+  h4 { 
+    margin: 0;
+    padding: 15px;
+    display: inline-block;
+  }
 }
 
 @media (min-width: 768px) { 
