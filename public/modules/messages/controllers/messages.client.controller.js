@@ -48,15 +48,17 @@ angular.module('messages').controller('MessagesController', ['$scope', '$rootSco
         msg.linkToAuthor = msg.data.signedData.author[0];
         var i;
         for (i = 0; i < msg.data.signedData.author.length; i++) {
-          if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1)) {
+          if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0]) > -1) {
             msg.linkToAuthor = msg.data.signedData.author[i];
+            break;
           }
         }
 
         msg.linkToRecipient = msg.data.signedData.recipient[0];
         for (i = 0; i < msg.data.signedData.recipient.length; i++) {
-          if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0] > -1)) {
+          if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0]) > -1) {
             msg.linkToRecipient = msg.data.signedData.recipient[i];
+            break;
           }
         }
 
