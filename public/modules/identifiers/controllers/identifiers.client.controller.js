@@ -6,6 +6,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
 		$scope.authentication = Authentication;
     $scope.tabs = [{active:true}, {active:false}, {active:false}];
 
+    $scope.info = {};
     $scope.sent = [];
     $scope.received = [];
     $scope.trustpaths = [];
@@ -247,7 +248,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
               conn.btnStyle = 'btn-success';
               conn.link = 'mailto:' + conn.value;
               conn.quickContact = true;
-              $scope.email = $scope.email || conn.value;
+              $scope.info.email = $scope.info.email || conn.value;
               break;
             case 'bitcoin_address':
             case 'bitcoin':
@@ -266,11 +267,11 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
               conn.iconStyle = 'fa fa-at';
               break;
             case 'nickname':
-              $scope.nickname = $scope.nickname || conn.value;
+              $scope.info.nickname = $scope.info.nickname || conn.value;
               conn.iconStyle = 'glyphicon glyphicon-font';
               break;
             case 'name':
-              $scope.name = $scope.name || conn.value;
+              $scope.info.name = $scope.info.name || conn.value;
               conn.iconStyle = 'glyphicon glyphicon-font';
               break;
             case 'tel', 'phone':
@@ -349,8 +350,8 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
         idValue: $scope.idValue,
         method: 'overview'
 			}, $rootScope.filters.maxDistance > -1 ? ApplicationConfiguration.defaultViewpoint : 0), function() {
-        $scope.email = $scope.email || $scope.overview.email;
-        $scope.name = $scope.name || $scope.overview.name;
+        $scope.info.email = $scope.info.email || $scope.overview.email;
+        $scope.info.name = $scope.info.name || $scope.overview.name;
       });
     };
 
@@ -432,7 +433,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
     };
 
     $scope.getPhotosFromGravatar = function() {
-      var email = $scope.email || $scope.idValue;
+      var email = $scope.info.email || $scope.idValue;
       $scope.gravatar = CryptoJS.MD5(email).toString();
       if (!$scope.isUniqueType) return;
       $scope.profilePhotoUrl = $scope.profilePhotoUrl || 'http://www.gravatar.com/avatar/' + $scope.gravatar + '?d=retro&s=210';
