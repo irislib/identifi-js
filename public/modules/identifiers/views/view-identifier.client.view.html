@@ -53,7 +53,7 @@
             </p>
           </div>
           <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
-            <h4><span data-ng-bind="info.name||info.nickname||idValue"></span><span data-ng-hide="!info.nickname || !info.name || info.nickname === info.name"> (<span class="text-muted" data-ng-bind="info.nickname"></span>)</span></h4>
+            <h4><span data-ng-if="info.name||info.nickname" data-ng-bind="info.name||info.nickname||idValue"></span><span data-ng-hide="!info.nickname || !info.name || info.nickname === info.name"> (<span class="text-muted" data-ng-bind="info.nickname"></span>)</span></h4>
             <p class="received-stats">
               <div><strong>Received</strong></div>
               <div>
