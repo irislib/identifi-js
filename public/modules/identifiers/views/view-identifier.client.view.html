@@ -53,7 +53,7 @@
             </p>
           </div>
           <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
-            <h4><span data-ng-bind="info.name||info.nickname||idValue"></span><span data-ng-show="info.nickname && info.nickname != info.name"> (<span class="text-muted" data-ng-bind="info.nickname"></span>)</span></h4>
+            <h4><span data-ng-bind="info.name||info.nickname||idValue"></span><span data-ng-hide="!info.nickname || !info.name || info.nickname === info.name"> (<span class="text-muted" data-ng-bind="info.nickname"></span>)</span></h4>
             <p class="received-stats">
               <div><strong>Received</strong></div>
               <div>
@@ -90,14 +90,17 @@
   <div data-ng-if="isUniqueType && trustpaths.length > 0 && !(idType === filters.viewpointType && idValue === filters.viewpointValue)" class="panel panel-default">
     <div class="panel-body">
       <ul data-ng-repeat="level in trustpaths" class="trustpath-list list-unstyled">
-        <li data-ng-repeat-start="id in level" data-ng-if="$index < 3 || collapseLevel[$parent.$index]">
-          <a data-id-type="{{id[0]}}" data-id-value="{{id[1]}}" class="id-link" data-ng-href="#!/id/{{id[0]|escape}}/{{id[1]|escape}}" data-original-title="" title=""><img alt="" src="https://www.gravatar.com/avatar/{{id.gravatar}}?d=retro&amp;s=30" class="mar-bot5 img-rounded mar-right10"><span data-ng-bind="id.name.name || id[1]"></span></a>
+        <li data-ng-repeat-start="id in level" data-ng-if="!$parent.$last && ($index < 3 || collapseLevel[$parent.$index])">
+          <a class="id-link" data-ng-href="#!/id/{{id[0]|escape}}/{{id[1]|escape}}" title=""><img alt="" src="https://www.gravatar.com/avatar/{{id.gravatar}}?d=retro&amp;s=30" class="mar-bot5 img-rounded mar-right10"><span data-ng-bind="id.name.name || id[1]"></span></a>
         </li>
         <li class="mar-bot5" data-ng-if="level.length > 3 && $index === 2">
           <a href="" data-ng-click="collapseLevel[$parent.$index] = !collapseLevel[$parent.$index]">{{level.length - 3}} more</a>
         </li>
         <li data-ng-if="$last && !$parent.$last" class="has-success" data-ng-repeat-end>
           <span class="positive mar-left5 mar-bot10 glyphicon glyphicon-thumbs-up"></span>
+        </li>
+        <li data-ng-if="$last">
+          <a class="id-link" data-ng-href="#!/id/{{idType|escape}}/{{idValue|escape}}" title=""><img alt="" src="https://www.gravatar.com/avatar/{{gravatar}}?d=retro&amp;s=30" class="mar-bot5 img-rounded mar-right10"><span data-ng-bind="info.name || info.nickname || idValue"></span></a>
         </li>
       </ul>
     </div>

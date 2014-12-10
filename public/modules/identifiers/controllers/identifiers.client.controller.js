@@ -351,7 +351,6 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
         method: 'overview'
 			}, $rootScope.filters.maxDistance > -1 ? ApplicationConfiguration.defaultViewpoint : 0), function() {
         $scope.info.email = $scope.info.email || $scope.overview.email;
-        $scope.info.name = $scope.info.name || $scope.overview.name;
       });
     };
 
@@ -476,7 +475,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
 
         // Names for trustpath nodes
         $scope.trustpaths[0][0].name = { name: $rootScope.viewpoint.viewpointName };
-        $scope.trustpaths[$scope.trustpaths.length - 1][0].name = { name: $scope.overview.name };
+        $scope.trustpaths[$scope.trustpaths.length - 1][0].name = { name: $scope.info.name };
         
         var setIdName = function(res) { id.name = res.name; };
         for (var i = 1; i < $scope.trustpaths.length - 1; i++) {
