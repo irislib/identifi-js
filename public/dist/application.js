@@ -20,7 +20,33 @@ var ApplicationConfiguration = function () {
     return {
       applicationModuleName: applicationModuleName,
       applicationModuleVendorDependencies: applicationModuleVendorDependencies,
-      registerModule: registerModule
+      registerModule: registerModule,
+      defaultViewpoint: {
+        viewpointName: 'Identi.fi',
+        viewpointType: 'keyID',
+        viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
+      },
+      uniqueIdentifierTypes: [
+        'url',
+        'account',
+        'email',
+        'bitcoin',
+        'bitcoin_address',
+        'keyID',
+        'gpg_fingerprint',
+        'gpg_keyid',
+        'phone',
+        'tel',
+        'google_oauth2'
+      ],
+      defaultFilters: {
+        maxDistance: 0,
+        msgType: 'rating',
+        receivedOffset: 0,
+        sentOffset: 0,
+        offset: 0,
+        limit: 20
+      }
     };
   }();
 angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfiguration.applicationModuleVendorDependencies), angular.module(ApplicationConfiguration.applicationModuleName).config([
@@ -190,52 +216,30 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
 ]), angular.module('identifiers').controller('IdentifiersController', [
   '$scope',
   '$rootScope',
+  '$window',
   '$stateParams',
   '$location',
   '$http',
   'Authentication',
   'Identifiers',
-  function ($scope, $rootScope, $stateParams, $location, $http, Authentication, Identifiers) {
+  function ($scope, $rootScope, $window, $stateParams, $location, $http, Authentication, Identifiers) {
     $scope.authentication = Authentication, $scope.tabs = [
       { active: !0 },
       { active: !1 },
       { active: !1 }
-    ], $scope.sent = [], $scope.received = [], $scope.trustpaths = [], $rootScope.filters = $rootScope.filters || {
-      maxDistance: 0,
-      msgType: 'rating',
-      receivedOffset: 0,
-      sentOffset: 0,
-      offset: 0,
-      limit: 20
-    }, angular.extend($rootScope.filters, {
+    ], $scope.sent = [], $scope.received = [], $scope.trustpaths = [], $rootScope.filters = $rootScope.filters || ApplicationConfiguration.defaultFilters, angular.extend($rootScope.filters, {
       receivedOffset: 0,
       sentOffset: 0
-    }), $rootScope.defaultViewpoint = $rootScope.defaultViewpoint || {
-      viewpointName: 'Identi.fi',
-      viewpointType: 'keyID',
-      viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
-    }, $rootScope.viewpoint = $scope.authentication.user ? {
+    }), $rootScope.viewpoint = $scope.authentication.user ? {
       viewpointName: $scope.authentication.user.displayName,
       viewpointType: 'email',
       viewpointValue: $scope.authentication.user.email
-    } : $rootScope.viewpoint || $rootScope.defaultViewpoint, $scope.newIdentifier = {
+    } : $rootScope.viewpoint || ApplicationConfiguration.defaultViewpoint, $scope.newIdentifier = {
       type: '',
       value: $stateParams.value
     }, $scope.goToID = function (type, value) {
       $location.path('/id/' + encodeURIComponent(type) + '/' + encodeURIComponent(value));
-    }, $scope.collapseLevel = {}, $rootScope.uniqueIdentifierTypes = [
-      'url',
-      'account',
-      'email',
-      'bitcoin',
-      'bitcoin_address',
-      'keyID',
-      'gpg_fingerprint',
-      'gpg_keyid',
-      'phone',
-      'tel',
-      'google_oauth2'
-    ];
+    }, $scope.collapseLevel = {}, $scope.collapseFilters = $window.innerWidth < 992;
     var processMessages = function (messages) {
         for (var key in messages)
           if (!isNaN(key)) {
@@ -243,9 +247,9 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
             '' === msg.authorEmail && (gravatarEmail = msg.data.signedData.author[0][0] + msg.data.signedData.author[0][1]), msg.gravatar = CryptoJS.MD5(gravatarEmail).toString(), msg.linkToAuthor = msg.data.signedData.author[0];
             var i;
             for (i = 0; i < msg.data.signedData.author.length; i++)
-              $scope.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1) && (msg.linkToAuthor = msg.data.signedData.author[i]);
+              ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1) && (msg.linkToAuthor = msg.data.signedData.author[i]);
             for (msg.linkToRecipient = msg.data.signedData.recipient[0], i = 0; i < msg.data.signedData.recipient.length; i++)
-              $scope.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0] > -1) && (msg.linkToRecipient = msg.data.signedData.recipient[i]);
+              ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0] > -1) && (msg.linkToRecipient = msg.data.signedData.recipient[i]);
             var alpha, signedData = msg.data.signedData;
             switch (msg.panelStyle = 'panel-default', msg.iconStyle = '', msg.hasSuccess = '', msg.bgColor = '', msg.iconCount = new Array(1), signedData.type) {
             case 'confirm_connection':
@@ -272,7 +276,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
         for (var i = 0; i < $scope.identifiers.length; i++) {
           var id = $scope.identifiers[i];
           for (var j in id)
-            switch (!id.linkTo && $scope.uniqueIdentifierTypes.indexOf(id[j][0]) > -1 && (id.linkTo = id[j]), id[j][0]) {
+            switch (!id.linkTo && ApplicationConfiguration.uniqueIdentifierTypes.indexOf(id[j][0]) > -1 && (id.linkTo = id[j]), id[j][0]) {
             case 'email':
               id.email = id[j][1], id.gravatar = CryptoJS.MD5(id[j][1]).toString();
               break;
@@ -345,7 +349,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
           var conn = $scope.connections[key];
           switch (conn.type) {
           case 'email':
-            conn.iconStyle = 'glyphicon glyphicon-envelope', conn.btnStyle = 'btn-success', conn.link = 'mailto:' + conn.value, conn.quickContact = !0, '' === $scope.email && ($scope.email = conn.value);
+            conn.iconStyle = 'glyphicon glyphicon-envelope', conn.btnStyle = 'btn-success', conn.link = 'mailto:' + conn.value, conn.quickContact = !0, $scope.email = $scope.email || conn.value;
             break;
           case 'bitcoin_address':
           case 'bitcoin':
@@ -359,14 +363,16 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
             conn.iconStyle = 'fa fa-at';
             break;
           case 'nickname':
+            $scope.nickname = $scope.nickname || conn.value, conn.iconStyle = 'glyphicon glyphicon-font';
+            break;
           case 'name':
-            conn.iconStyle = 'glyphicon glyphicon-font';
+            $scope.name = $scope.name || conn.value, conn.iconStyle = 'glyphicon glyphicon-font';
             break;
           case 'phone':
             conn.iconStyle = 'glyphicon glyphicon-earphone', conn.btnStyle = 'btn-success', conn.link = 'tel:' + conn.value, conn.quickContact = !0;
             break;
           case 'url':
-            conn.link = conn.value, conn.value.indexOf('facebook.com/') > -1 ? (conn.iconStyle = 'fa fa-facebook', conn.btnStyle = 'btn-facebook', conn.quickContact = !0, $scope.getCoverPhotoFromFB(conn.value.split('facebook.com/')[1])) : conn.value.indexOf('twitter.com/') > -1 ? (conn.iconStyle = 'fa fa-twitter', conn.btnStyle = 'btn-twitter', conn.quickContact = !0, $scope.getCoverPhotoFromTwitter(conn.value)) : conn.value.indexOf('plus.google.com/') > -1 ? (conn.iconStyle = 'fa fa-google-plus', conn.btnStyle = 'btn-google-plus', conn.quickContact = !0) : conn.value.indexOf('linkedin.com/') > -1 ? (conn.iconStyle = 'fa fa-linkedin', conn.btnStyle = 'btn-linkedin') : conn.value.indexOf('github.com/') > -1 ? (conn.iconStyle = 'fa fa-github', conn.btnStyle = 'btn-github') : (conn.iconStyle = 'glyphicon glyphicon-link', conn.btnStyle = 'btn-default');
+            conn.link = conn.value, conn.value.indexOf('facebook.com/') > -1 ? (conn.iconStyle = 'fa fa-facebook', conn.btnStyle = 'btn-facebook', conn.quickContact = !0, $scope.getPhotosFromFB(conn.value.split('facebook.com/')[1])) : conn.value.indexOf('twitter.com/') > -1 ? (conn.iconStyle = 'fa fa-twitter', conn.btnStyle = 'btn-twitter', conn.quickContact = !0, $scope.getPhotosFromTwitter(conn.value)) : conn.value.indexOf('plus.google.com/') > -1 ? (conn.iconStyle = 'fa fa-google-plus', conn.btnStyle = 'btn-google-plus', conn.quickContact = !0) : conn.value.indexOf('linkedin.com/') > -1 ? (conn.iconStyle = 'fa fa-linkedin', conn.btnStyle = 'btn-linkedin') : conn.value.indexOf('github.com/') > -1 ? (conn.iconStyle = 'fa fa-github', conn.btnStyle = 'btn-github') : (conn.iconStyle = 'glyphicon glyphicon-link', conn.btnStyle = 'btn-default');
           }
           if (conn.confirmations + conn.refutations > 0) {
             var percentage = 100 * conn.confirmations / (conn.confirmations + conn.refutations);
@@ -378,7 +384,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
           }
           $scope.hasQuickContacts = $scope.hasQuickContacts || conn.quickContact;
         }
-        $scope.connectionClicked = function (event, id) {
+        $scope.getPhotosFromGravatar(), $scope.connectionClicked = function (event, id) {
           id.collapse = !id.collapse, id.connectingmsgs = id.connectingmsgs || Identifiers.connectingmsgs(angular.extend({
             idType: $scope.idType,
             idValue: $scope.idValue,
@@ -398,8 +404,8 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
         idType: $scope.idType,
         idValue: $scope.idValue,
         method: 'overview'
-      }, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function () {
-        $scope.email = $scope.overview.email, '' === $scope.email && ($scope.email = $scope.idValue), $scope.gravatar = CryptoJS.MD5($scope.email).toString();
+      }, $rootScope.filters.maxDistance > -1 ? ApplicationConfiguration.defaultViewpoint : 0), function () {
+        $scope.email = $scope.email || $scope.overview.email, $scope.name = $scope.name || $scope.overview.name;
       });
     }, $scope.getSentMsgs = function (offset) {
       isNaN(offset) || ($rootScope.filters.sentOffset = offset);
@@ -409,7 +415,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
           msgType: $rootScope.filters.msgType,
           offset: $rootScope.filters.sentOffset,
           limit: $rootScope.filters.limit
-        }, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function () {
+        }, $rootScope.filters.maxDistance > -1 ? ApplicationConfiguration.defaultViewpoint : 0), function () {
           if (processMessages(sent), 0 === $rootScope.filters.sentOffset)
             $scope.sent = sent;
           else
@@ -426,7 +432,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
           msgType: $rootScope.filters.msgType,
           offset: $rootScope.filters.receivedOffset,
           limit: $rootScope.filters.limit
-        }, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : 0), function () {
+        }, $rootScope.filters.maxDistance > -1 ? ApplicationConfiguration.defaultViewpoint : 0), function () {
           if (processMessages(received), 0 === $rootScope.filters.receivedOffset)
             $scope.received = received;
           else
@@ -435,14 +441,17 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
           $scope.received.$resolved = received.$resolved, $rootScope.filters.receivedOffset = $rootScope.filters.receivedOffset + received.length, received.length < $rootScope.filters.limit && ($scope.received.finished = !0);
         });
       0 === offset && ($scope.received = {}), $scope.received.$resolved = received.$resolved;
-    }, $scope.getCoverPhotoFromTwitter = function () {
+    }, $scope.getPhotosFromTwitter = function () {
       return $scope.isUniqueType ? null : void 0;
-    }, $scope.getCoverPhotoFromFB = function (username) {
-      $scope.isUniqueType && $http.get('http://graph.facebook.com/' + username + '?fields=cover').success(function (data) {
-        console.log(data), $scope.coverPhoto = $scope.coverPhoto || { 'background-image': 'url(' + data.cover.source + ')' };
-      });
+    }, $scope.getPhotosFromFB = function (username) {
+      $scope.isUniqueType && ($http.get('http://graph.facebook.com/' + username + '?fields=cover').success(function (data) {
+        $scope.coverPhoto = $scope.coverPhoto || { 'background-image': 'url(' + data.cover.source + ')' };
+      }), $scope.profilePhotoUrl = 'http://graph.facebook.com/' + username + '/picture?height=210&width=210');
+    }, $scope.getPhotosFromGravatar = function () {
+      var email = $scope.email || $scope.idValue;
+      $scope.gravatar = CryptoJS.MD5(email).toString(), $scope.isUniqueType && ($scope.profilePhotoUrl = $scope.profilePhotoUrl || 'http://www.gravatar.com/avatar/' + $scope.gravatar + '?d=retro&s=210');
     }, $scope.findOne = function () {
-      $scope.idType = decodeURIComponent($stateParams.idType), $scope.idValue = decodeURIComponent($stateParams.idValue), $scope.isUniqueType = $scope.uniqueIdentifierTypes.indexOf($scope.idType) > -1, $scope.isUniqueType || ($scope.tabs[2].active = !0), $rootScope.pageTitle = ' - ' + $scope.idValue, $scope.getConnections(), $scope.getOverview(), $scope.getSentMsgs(), $scope.getReceivedMsgs();
+      $scope.idType = decodeURIComponent($stateParams.idType), $scope.idValue = decodeURIComponent($stateParams.idValue), $scope.isUniqueType = ApplicationConfiguration.uniqueIdentifierTypes.indexOf($scope.idType) > -1, $scope.isUniqueType || ($scope.tabs[2].active = !0), $rootScope.pageTitle = ' - ' + $scope.idValue, $scope.getConnections(), $scope.getOverview(), $scope.getSentMsgs(), $scope.getReceivedMsgs();
       var allPaths = Identifiers.trustpaths(angular.extend({
           idType: $scope.idType,
           idValue: $scope.idValue
@@ -539,11 +548,12 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
 ]), angular.module('messages').controller('MessagesController', [
   '$scope',
   '$rootScope',
+  '$window',
   '$stateParams',
   '$location',
   'Authentication',
   'Messages',
-  function ($scope, $rootScope, $stateParams, $location, Authentication, Messages) {
+  function ($scope, $rootScope, $window, $stateParams, $location, Authentication, Messages) {
     $scope.authentication = Authentication, $scope.idType = decodeURIComponent($stateParams.idType), $scope.idValue = decodeURIComponent($stateParams.idValue), $scope.messages = [], $scope.newMessage = {
       type: 'rating',
       rating: 1,
@@ -559,34 +569,11 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
     }, $scope.iconClass = function (rating) {
       var iconStyle = 'glyphicon-question-sign';
       return rating > 0 ? iconStyle = 'glyphicon-thumbs-up' : 0 > rating && (iconStyle = 'glyphicon-thumbs-down'), iconStyle;
-    }, $rootScope.filters = $rootScope.filters || {
-      maxDistance: 0,
-      msgType: 'rating',
-      receivedOffset: 0,
-      sentOffset: 0,
-      offset: 0,
-      limit: 20
-    }, angular.extend($rootScope.filters, { offset: 0 }), $rootScope.defaultViewpoint = $rootScope.defaultViewpoint || {
-      viewpointName: 'Identi.fi',
-      viewpointType: 'keyID',
-      viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
-    }, $rootScope.uniqueIdentifierTypes = [
-      'url',
-      'account',
-      'email',
-      'bitcoin',
-      'bitcoin_address',
-      'keyID',
-      'gpg_fingerprint',
-      'gpg_keyid',
-      'phone',
-      'tel',
-      'google_oauth2'
-    ], $rootScope.viewpoint = $scope.authentication.user ? {
+    }, $rootScope.filters = $rootScope.filters || ApplicationConfiguration.defaultFilters, angular.extend($rootScope.filters, { offset: 0 }), $rootScope.viewpoint = $scope.authentication.user ? {
       viewpointName: $scope.authentication.user.displayName,
       viewpointType: 'email',
       viewpointValue: $scope.authentication.user.email
-    } : $rootScope.viewpoint || $rootScope.defaultViewpoint;
+    } : $rootScope.viewpoint || ApplicationConfiguration.defaultViewpoint, $scope.collapseFilters = $window.innerWidth < 992;
     var processMessages = function (messages) {
       for (var key in messages)
         if (!isNaN(key)) {
@@ -594,9 +581,9 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
           '' === msg.authorEmail && (gravatarEmail = msg.data.signedData.author[0][0] + msg.data.signedData.author[0][1]), msg.gravatar = CryptoJS.MD5(gravatarEmail).toString(), msg.linkToAuthor = msg.data.signedData.author[0];
           var i;
           for (i = 0; i < msg.data.signedData.author.length; i++)
-            $scope.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1) && (msg.linkToAuthor = msg.data.signedData.author[i]);
+            ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1) && (msg.linkToAuthor = msg.data.signedData.author[i]);
           for (msg.linkToRecipient = msg.data.signedData.recipient[0], i = 0; i < msg.data.signedData.recipient.length; i++)
-            $scope.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0] > -1) && (msg.linkToRecipient = msg.data.signedData.recipient[i]);
+            ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0] > -1) && (msg.linkToRecipient = msg.data.signedData.recipient[i]);
           var alpha, signedData = msg.data.signedData;
           switch (msg.panelStyle = 'panel-default', msg.iconStyle = '', msg.hasSuccess = '', msg.bgColor = '', msg.iconCount = new Array(1), signedData.type) {
           case 'confirm_connection':
@@ -633,7 +620,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
       var params = angular.extend({
           idType: $scope.idType,
           idValue: $scope.idValue
-        }, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? $rootScope.defaultViewpoint : {}), messages = Messages.query(params, function () {
+        }, $rootScope.filters, $rootScope.filters.maxDistance > -1 ? ApplicationConfiguration.defaultViewpoint : {}), messages = Messages.query(params, function () {
           if (processMessages(messages), 0 === $rootScope.filters.offset)
             $scope.messages = messages;
           else

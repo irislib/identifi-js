@@ -40,6 +40,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
         for (i = 0; i < msg.data.signedData.author.length; i++) {
           if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1)) {
             msg.linkToAuthor = msg.data.signedData.author[i];
+            break;
           }
         }
 
@@ -47,6 +48,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
         for (i = 0; i < msg.data.signedData.recipient.length; i++) {
           if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0] > -1)) {
             msg.linkToRecipient = msg.data.signedData.recipient[i];
+            break;
           }
         }
 
@@ -264,7 +266,11 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
               conn.iconStyle = 'fa fa-at';
               break;
             case 'nickname':
+              $scope.nickname = $scope.nickname || conn.value;
+              conn.iconStyle = 'glyphicon glyphicon-font';
+              break;
             case 'name':
+              $scope.name = $scope.name || conn.value;
               conn.iconStyle = 'glyphicon glyphicon-font';
               break;
             case 'tel', 'phone':
@@ -323,6 +329,14 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
               if (isNaN(key)) continue;
               var msg = id.connectingmsgs[key];
               msg.gravatar = CryptoJS.MD5(msg.authorEmail||msg.data.signedData.author[0][1]).toString();
+              msg.linkToAuthor = msg.data.signedData.author[0];
+              var i;
+              for (i = 0; i < msg.data.signedData.author.length; i++) {
+                if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1)) {
+                  msg.linkToAuthor = msg.data.signedData.author[i];
+                  break;
+                }
+              }
             }
           });
         };
@@ -336,6 +350,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
         method: 'overview'
 			}, $rootScope.filters.maxDistance > -1 ? ApplicationConfiguration.defaultViewpoint : 0), function() {
         $scope.email = $scope.email || $scope.overview.email;
+        $scope.name = $scope.name || $scope.overview.name;
       });
     };
 
