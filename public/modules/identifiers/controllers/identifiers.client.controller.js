@@ -20,8 +20,13 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       $rootScope.viewpoint = $rootScope.viewpoint || ApplicationConfiguration.defaultViewpoint;
     }
     $scope.newIdentifier = { type: '', value: $stateParams.value };
+    $scope.queryTerm = '';
     $scope.goToID = function(type, value) {
       $location.path('/id/' + encodeURIComponent(type) + '/' + encodeURIComponent(value));
+    };
+    $scope.dropdownSearchSelect = function(suggestion) {
+      $scope.goToID(suggestion.linkTo[0], suggestion.linkTo[1]);
+      $scope.queryTerm = '';
     };
     $scope.collapseLevel = {};
 
@@ -102,6 +107,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
     };
 
     var scrollTo = function(el) {
+      if (!el) return;
       var pos = el.getBoundingClientRect();
       if (pos.top) {
         if (pos.top - 60 < window.pageYOffset)
@@ -110,14 +116,15 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
           window.scrollTo(0, pos.bottom - (window.innerHeight || document.documentElement.clientHeight) + 15);
       }
     };
-
-		// Search
-		$scope.search = function() {
+    
+		$scope.search = function(query) {
       $rootScope.pageTitle = '';
-			Identifiers.query(angular.extend({idValue: $scope.queryTerm || ''}, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function(res) {
+			Identifiers.query(angular.extend({idValue: $scope.queryTerm || query || ''}, { limit: query ? 3 : 20 }, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function(res) {
         $scope.identifiers = res;
-        $scope.identifiers.activeKey = 0;
-        $scope.identifiers[0].active = true;
+        if ($scope.identifiers.length > 0) {
+          $scope.identifiers.activeKey = 0;
+          $scope.identifiers[0].active = true;
+        }
         for (var i = 0; i < $scope.identifiers.length; i++) {
           var id = $scope.identifiers[i];
           for (var j in id) {
@@ -156,12 +163,12 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
             else id.name = id[0][1];
           }
         }
-        
       });
 		};
 
     $scope.resultClicked = function(result) {
-      $location.path('/id/' + encodeURIComponent(result.linkTo[0]) + '/' + encodeURIComponent(result.linkTo[1]));
+      if (result && result.linkTo)
+        $location.path('/id/' + encodeURIComponent(result.linkTo[0]) + '/' + encodeURIComponent(result.linkTo[1]));
     };
 
     var messagesAdded = false;

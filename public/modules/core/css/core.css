@@ -1336,7 +1336,7 @@ a:hover {
   margin-bottom: 20px;
 }
 
-.ui-match {
+.highlight {
   font-weight: bold;
 }
 
@@ -1364,6 +1364,22 @@ a:hover {
   margin: 0 10px 10px 0;
 }
 
+.navbar-form {
+  width: 340px;
+  margin-left: 10px;
+  padding: 0;
+}
+.navbar-form ul {
+  padding: 0;
+}
+.navbar-form .nav-search-field {
+  padding: 6px 12px;
+}
+.navbar-form .nav-search-field, .navbar-form .input-group {
+  font-size: inherit !important;
+  width: 100% !important;
+}
+
 @media (min-width: 992px) {
   .nav-tabs {
     display: none;
@@ -1375,14 +1391,6 @@ a:hover {
 
   .id-left-column {
     margin-top: 100px;
-  }
-
-  #nav-search-field {
-    width: 320px;
-  }
-
-  .navbar-form {
-    width: 360px;
   }
 
   .filters, #write-feedback {
@@ -1429,8 +1437,12 @@ a:hover {
     width: 60px;
   }
 
-  #nav-search {
+  .nav-search {
     clear: both;
+  }
+
+  .navbar-form {
+    width: auto;
   }
 
   #connections .tabletable, #connections .table thead, #connections .table tbody, #connections .table th, #connections .table td, #connections .table tr {

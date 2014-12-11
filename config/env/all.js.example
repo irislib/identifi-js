@@ -18,11 +18,13 @@ module.exports = {
 				'public/lib/font-awesome/css/font-awesome.css',
 				'public/lib/bootstrap-social/bootstrap-social.css',
 				'public/lib/seiyria-bootstrap-slider/css/bootstrap-slider.css',
+				'public/lib/allmighty-autocomplete/style/autocomplete.css',
 				'public/lib/animate.css/animate.css'
 			],
 			js: [
 				'public/lib/jquery/dist/jquery.js',
 				'public/lib/angular/angular.js',
+        'public/lib/allmighty-autocomplete/script/autocomplete.js',
 				'public/lib/angular-resource/angular-resource.js', 
 				'public/lib/angular-cookies/angular-cookies.js', 
 				'public/lib/angular-animate/angular-animate.js', 

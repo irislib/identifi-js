@@ -59,7 +59,7 @@ exports.read = function(req, res) {
  * Search for Identifiers
  */
 exports.search = function(req, res) {
-  identifi.cachedCmd('search', req.params.idValue || '', req.params.idType || '', '20', '0', req.query.viewpointType || '', req.query.viewpointValue || '', function(err, identifiRes, identifiResHeaders) {
+  identifi.cachedCmd('search', req.params.idValue || '', req.params.idType || '', req.query.limit || '20', req.query.offset || '0', req.query.viewpointType || '', req.query.viewpointValue || '', function(err, identifiRes, identifiResHeaders) {
     if (err) {
       return console.error(err);
     }
