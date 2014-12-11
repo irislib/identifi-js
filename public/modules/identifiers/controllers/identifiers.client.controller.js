@@ -116,10 +116,14 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
           window.scrollTo(0, pos.bottom - (window.innerHeight || document.documentElement.clientHeight) + 15);
       }
     };
+
+    $scope.dropdownSearch = function(query) {
+      $scope.search(query, 3);
+    }
     
-		$scope.search = function(query) {
+		$scope.search = function(query, limit) {
       $rootScope.pageTitle = '';
-			Identifiers.query(angular.extend({idValue: $scope.queryTerm || query || ''}, { limit: query ? 3 : 20 }, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function(res) {
+			Identifiers.query(angular.extend({idValue: query || $scope.queryTerm || ''}, { limit: limit ? limit : 20 }, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function(res) {
         $scope.identifiers = res;
         if ($scope.identifiers.length > 0) {
           $scope.identifiers.activeKey = 0;
