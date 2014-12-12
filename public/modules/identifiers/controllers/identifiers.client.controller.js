@@ -352,6 +352,9 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
             }
           });
         };
+        $scope.getOverview();
+        $scope.getReceivedMsgs(0);
+        $scope.getSentMsgs(0);
       });
     };
 
@@ -459,9 +462,6 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       $rootScope.pageTitle = ' - ' + $scope.idValue;
 
       $scope.getConnections();
-      $scope.getOverview();
-      $scope.getSentMsgs();
-      $scope.getReceivedMsgs();
 
 			var allPaths = Identifiers.trustpaths(angular.extend({ 
 				idType: $scope.idType,
@@ -504,9 +504,6 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
       angular.extend($rootScope.filters, filters);
       angular.extend($rootScope.filters, { offset: 0, receivedOffset: 0, sentOffset: 0 });
       $scope.getConnections();
-      $scope.getOverview();
-      $scope.getReceivedMsgs(0);
-      $scope.getSentMsgs(0);
     };
 	}
 ]);

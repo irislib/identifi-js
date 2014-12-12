@@ -13,7 +13,8 @@ var ApplicationConfiguration = function () {
         'angularSpinner',
         'infinite-scroll',
         'persona',
-        'angular-parallax'
+        'angular-parallax',
+        'autocomplete'
       ], registerModule = function (moduleName, dependencies) {
         angular.module(moduleName, dependencies || []), angular.module(applicationModuleName).requires.push(moduleName);
       };
@@ -24,7 +25,7 @@ var ApplicationConfiguration = function () {
       defaultViewpoint: {
         viewpointName: 'Identi.fi',
         viewpointType: 'keyID',
-        viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
+        viewpointValue: '1DqrzTcimQp3Ye88oHgxdU7DBTsM2TRYFj'
       },
       uniqueIdentifierTypes: [
         'url',
@@ -227,7 +228,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
       { active: !0 },
       { active: !1 },
       { active: !1 }
-    ], $scope.sent = [], $scope.received = [], $scope.trustpaths = [], $rootScope.filters = $rootScope.filters || ApplicationConfiguration.defaultFilters, angular.extend($rootScope.filters, {
+    ], $scope.info = {}, $scope.sent = [], $scope.received = [], $scope.trustpaths = [], $rootScope.filters = $rootScope.filters || ApplicationConfiguration.defaultFilters, angular.extend($rootScope.filters, {
       receivedOffset: 0,
       sentOffset: 0
     }), $rootScope.viewpoint = $scope.authentication.user ? {
@@ -237,8 +238,10 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
     } : $rootScope.viewpoint || ApplicationConfiguration.defaultViewpoint, $scope.newIdentifier = {
       type: '',
       value: $stateParams.value
-    }, $scope.goToID = function (type, value) {
+    }, $scope.queryTerm = '', $scope.goToID = function (type, value) {
       $location.path('/id/' + encodeURIComponent(type) + '/' + encodeURIComponent(value));
+    }, $scope.dropdownSearchSelect = function (suggestion) {
+      $scope.goToID(suggestion.linkTo[0], suggestion.linkTo[1]), $scope.queryTerm = '';
     }, $scope.collapseLevel = {}, $scope.collapseFilters = $window.innerWidth < 992;
     var processMessages = function (messages) {
         for (var key in messages)
@@ -247,9 +250,15 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
             '' === msg.authorEmail && (gravatarEmail = msg.data.signedData.author[0][0] + msg.data.signedData.author[0][1]), msg.gravatar = CryptoJS.MD5(gravatarEmail).toString(), msg.linkToAuthor = msg.data.signedData.author[0];
             var i;
             for (i = 0; i < msg.data.signedData.author.length; i++)
-              ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1) && (msg.linkToAuthor = msg.data.signedData.author[i]);
+              if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0]) > -1) {
+                msg.linkToAuthor = msg.data.signedData.author[i];
+                break;
+              }
             for (msg.linkToRecipient = msg.data.signedData.recipient[0], i = 0; i < msg.data.signedData.recipient.length; i++)
-              ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0] > -1) && (msg.linkToRecipient = msg.data.signedData.recipient[i]);
+              if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0]) > -1) {
+                msg.linkToRecipient = msg.data.signedData.recipient[i];
+                break;
+              }
             var alpha, signedData = msg.data.signedData;
             switch (msg.panelStyle = 'panel-default', msg.iconStyle = '', msg.hasSuccess = '', msg.bgColor = '', msg.iconCount = new Array(1), signedData.type) {
             case 'confirm_connection':
@@ -267,12 +276,16 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
             }
           }
       }, scrollTo = function (el) {
-        var pos = el.getBoundingClientRect();
-        pos.top && (pos.top - 60 < window.pageYOffset ? window.scrollTo(0, pos.top - 60) : pos.bottom > window.pageYOffset + (window.innerHeight || document.documentElement.clientHeight) && window.scrollTo(0, pos.bottom - (window.innerHeight || document.documentElement.clientHeight) + 15));
+        if (el) {
+          var pos = el.getBoundingClientRect();
+          pos.top && (pos.top - 60 < window.pageYOffset ? window.scrollTo(0, pos.top - 60) : pos.bottom > window.pageYOffset + (window.innerHeight || document.documentElement.clientHeight) && window.scrollTo(0, pos.bottom - (window.innerHeight || document.documentElement.clientHeight) + 15));
+        }
       };
-    $scope.search = function () {
-      $rootScope.pageTitle = '', Identifiers.query(angular.extend({ idValue: $scope.queryTerm || '' }, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function (res) {
-        $scope.identifiers = res, $scope.identifiers.activeKey = 0, $scope.identifiers[0].active = !0;
+    $scope.dropdownSearch = function (query) {
+      $scope.search(query, 3);
+    }, $scope.search = function (query, limit) {
+      $rootScope.pageTitle = '', Identifiers.query(angular.extend({ idValue: query || $scope.queryTerm || '' }, { limit: limit ? limit : 20 }, $rootScope.filters.maxDistance > -1 ? $rootScope.viewpoint : {}), function (res) {
+        $scope.identifiers = res, $scope.identifiers.length > 0 && ($scope.identifiers.activeKey = 0, $scope.identifiers[0].active = !0);
         for (var i = 0; i < $scope.identifiers.length; i++) {
           var id = $scope.identifiers[i];
           for (var j in id)
@@ -296,7 +309,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
         }
       });
     }, $scope.resultClicked = function (result) {
-      $location.path('/id/' + encodeURIComponent(result.linkTo[0]) + '/' + encodeURIComponent(result.linkTo[1]));
+      result && result.linkTo && $location.path('/id/' + encodeURIComponent(result.linkTo[0]) + '/' + encodeURIComponent(result.linkTo[1]));
     };
     var messagesAdded = !1;
     $scope.$on('MessageAdded', function (event, args) {
@@ -349,7 +362,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
           var conn = $scope.connections[key];
           switch (conn.type) {
           case 'email':
-            conn.iconStyle = 'glyphicon glyphicon-envelope', conn.btnStyle = 'btn-success', conn.link = 'mailto:' + conn.value, conn.quickContact = !0, $scope.email = $scope.email || conn.value;
+            conn.iconStyle = 'glyphicon glyphicon-envelope', conn.btnStyle = 'btn-success', conn.link = 'mailto:' + conn.value, conn.quickContact = !0, $scope.info.email = $scope.info.email || conn.value;
             break;
           case 'bitcoin_address':
           case 'bitcoin':
@@ -363,10 +376,10 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
             conn.iconStyle = 'fa fa-at';
             break;
           case 'nickname':
-            $scope.nickname = $scope.nickname || conn.value, conn.iconStyle = 'glyphicon glyphicon-font';
+            $scope.info.nickname = $scope.info.nickname || conn.value, conn.iconStyle = 'glyphicon glyphicon-font';
             break;
           case 'name':
-            $scope.name = $scope.name || conn.value, conn.iconStyle = 'glyphicon glyphicon-font';
+            $scope.info.name = $scope.info.name || conn.value, conn.iconStyle = 'glyphicon glyphicon-font';
             break;
           case 'phone':
             conn.iconStyle = 'glyphicon glyphicon-earphone', conn.btnStyle = 'btn-success', conn.link = 'tel:' + conn.value, conn.quickContact = !0;
@@ -394,10 +407,16 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
             for (var key in id.connectingmsgs)
               if (!isNaN(key)) {
                 var msg = id.connectingmsgs[key];
-                msg.gravatar = CryptoJS.MD5(msg.authorEmail || msg.data.signedData.author[0][1]).toString();
+                msg.gravatar = CryptoJS.MD5(msg.authorEmail || msg.data.signedData.author[0][1]).toString(), msg.linkToAuthor = msg.data.signedData.author[0];
+                var i;
+                for (i = 0; i < msg.data.signedData.author.length; i++)
+                  if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1)) {
+                    msg.linkToAuthor = msg.data.signedData.author[i];
+                    break;
+                  }
               }
           });
-        };
+        }, $scope.getOverview(), $scope.getReceivedMsgs(0), $scope.getSentMsgs(0);
       });
     }, $scope.getOverview = function () {
       $scope.overview = Identifiers.get(angular.extend({}, $rootScope.filters, {
@@ -405,7 +424,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
         idValue: $scope.idValue,
         method: 'overview'
       }, $rootScope.filters.maxDistance > -1 ? ApplicationConfiguration.defaultViewpoint : 0), function () {
-        $scope.email = $scope.email || $scope.overview.email, $scope.name = $scope.name || $scope.overview.name;
+        $scope.info.email = $scope.info.email || $scope.overview.email;
       });
     }, $scope.getSentMsgs = function (offset) {
       isNaN(offset) || ($rootScope.filters.sentOffset = offset);
@@ -448,10 +467,10 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
         $scope.coverPhoto = $scope.coverPhoto || { 'background-image': 'url(' + data.cover.source + ')' };
       }), $scope.profilePhotoUrl = 'http://graph.facebook.com/' + username + '/picture?height=210&width=210');
     }, $scope.getPhotosFromGravatar = function () {
-      var email = $scope.email || $scope.idValue;
+      var email = $scope.info.email || $scope.idValue;
       $scope.gravatar = CryptoJS.MD5(email).toString(), $scope.isUniqueType && ($scope.profilePhotoUrl = $scope.profilePhotoUrl || 'http://www.gravatar.com/avatar/' + $scope.gravatar + '?d=retro&s=210');
     }, $scope.findOne = function () {
-      $scope.idType = decodeURIComponent($stateParams.idType), $scope.idValue = decodeURIComponent($stateParams.idValue), $scope.isUniqueType = ApplicationConfiguration.uniqueIdentifierTypes.indexOf($scope.idType) > -1, $scope.isUniqueType || ($scope.tabs[2].active = !0), $rootScope.pageTitle = ' - ' + $scope.idValue, $scope.getConnections(), $scope.getOverview(), $scope.getSentMsgs(), $scope.getReceivedMsgs();
+      $scope.idType = decodeURIComponent($stateParams.idType), $scope.idValue = decodeURIComponent($stateParams.idValue), $scope.isUniqueType = ApplicationConfiguration.uniqueIdentifierTypes.indexOf($scope.idType) > -1, $scope.isUniqueType || ($scope.tabs[2].active = !0), $rootScope.pageTitle = ' - ' + $scope.idValue, $scope.getConnections();
       var allPaths = Identifiers.trustpaths(angular.extend({
           idType: $scope.idType,
           idValue: $scope.idValue
@@ -466,7 +485,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
               for (var key in set)
                 row.push(set[key]);
               $scope.trustpaths.push(row);
-            }), $scope.trustpaths[0][0].name = { name: $rootScope.viewpoint.viewpointName }, $scope.trustpaths[$scope.trustpaths.length - 1][0].name = { name: $scope.overview.name };
+            }), $scope.trustpaths[0][0].name = { name: $rootScope.viewpoint.viewpointName }, $scope.trustpaths[$scope.trustpaths.length - 1][0].name = { name: $scope.info.name };
             for (var i = 1; i < $scope.trustpaths.length - 1; i++) {
               var n = 0;
               for (var key in $scope.trustpaths[i]) {
@@ -485,7 +504,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
         offset: 0,
         receivedOffset: 0,
         sentOffset: 0
-      }), $scope.getConnections(), $scope.getOverview(), $scope.getReceivedMsgs(0), $scope.getSentMsgs(0);
+      }), $scope.getConnections();
     };
   }
 ]), angular.module('identifiers').factory('Identifiers', [
@@ -581,9 +600,15 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
           '' === msg.authorEmail && (gravatarEmail = msg.data.signedData.author[0][0] + msg.data.signedData.author[0][1]), msg.gravatar = CryptoJS.MD5(gravatarEmail).toString(), msg.linkToAuthor = msg.data.signedData.author[0];
           var i;
           for (i = 0; i < msg.data.signedData.author.length; i++)
-            ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0] > -1) && (msg.linkToAuthor = msg.data.signedData.author[i]);
+            if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.author[i][0]) > -1) {
+              msg.linkToAuthor = msg.data.signedData.author[i];
+              break;
+            }
           for (msg.linkToRecipient = msg.data.signedData.recipient[0], i = 0; i < msg.data.signedData.recipient.length; i++)
-            ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0] > -1) && (msg.linkToRecipient = msg.data.signedData.recipient[i]);
+            if (ApplicationConfiguration.uniqueIdentifierTypes.indexOf(msg.data.signedData.recipient[i][0]) > -1) {
+              msg.linkToRecipient = msg.data.signedData.recipient[i];
+              break;
+            }
           var alpha, signedData = msg.data.signedData;
           switch (msg.panelStyle = 'panel-default', msg.iconStyle = '', msg.hasSuccess = '', msg.bgColor = '', msg.iconCount = new Array(1), signedData.type) {
           case 'confirm_connection':
