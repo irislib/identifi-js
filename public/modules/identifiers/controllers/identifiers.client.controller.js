@@ -119,7 +119,7 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
 
     $scope.dropdownSearch = function(query) {
       $scope.search(query, 3);
-    }
+    };
     
 		$scope.search = function(query, limit) {
       $rootScope.pageTitle = '';

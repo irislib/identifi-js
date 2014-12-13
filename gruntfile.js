@@ -158,9 +158,8 @@ module.exports = function(grunt) {
     copy: {
       all: {
         expand: true,
-        cwd: 'config/env',
-        src: ['*.example'],
-        dest: 'config/env/',
+        src: ['config/env/*.example', 'public/*.example'],
+        dest: '',
         rename: function(dest, src) {
           return dest + src.replace('.example', '');
         },
