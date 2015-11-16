@@ -1219,7 +1219,7 @@ h1 {
 }
 
 #write-msg-slider .slider-track {
-  background-image: linear-gradient(to right, #ffeaea, #edffe6);
+  background-image: linear-gradient(to right, #FFEAEA, #EDFFE6);
 }
 #write-msg-slider .slider-selection {
   background: none;
@@ -1458,3 +1458,5 @@ a:hover {
     border-top: 1px solid #DDD;
   }
 }
+
+/*# sourceMappingURL=core.css.map */

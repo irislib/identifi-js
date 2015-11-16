@@ -297,7 +297,6 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
                 conn.iconStyle = 'fa fa-facebook';
                 conn.btnStyle = 'btn-facebook';
                 conn.quickContact = true;
-                $scope.getPhotosFromFB(conn.value.split('facebook.com/')[1]);
               } else if (conn.value.indexOf('twitter.com/') > -1) {
                 conn.iconStyle = 'fa fa-twitter';
                 conn.btnStyle = 'btn-twitter';
@@ -435,14 +434,6 @@ angular.module('identifiers').controller('IdentifiersController', ['$scope', '$r
         return { 'background-image': 'url(' + Authentication.user.providerData.profile_banner_url + ')' };
       } */
       return null;
-    };
-
-    $scope.getPhotosFromFB = function(username) {
-      if (!$scope.isUniqueType) return;
-      $http.get('http://graph.facebook.com/' + username  + '?fields=cover').success(function(data, status, headers, config) {
-        $scope.coverPhoto = $scope.coverPhoto || { 'background-image': 'url(' + data.cover.source + ')' };
-      });
-      $scope.profilePhotoUrl = 'http://graph.facebook.com/' + username + '/picture?height=210&width=210';
     };
 
     $scope.getPhotosFromGravatar = function() {
