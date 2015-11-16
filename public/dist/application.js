@@ -25,7 +25,7 @@ var ApplicationConfiguration = function () {
       defaultViewpoint: {
         viewpointName: 'Identi.fi',
         viewpointType: 'keyID',
-        viewpointValue: '18bHa3QaHxuHAbg9wWtkx2KBiQPZQdTvUT'
+        viewpointValue: '1DqrzTcimQp3Ye88oHgxdU7DBTsM2TRYFj'
       },
       uniqueIdentifierTypes: [
         'url',
