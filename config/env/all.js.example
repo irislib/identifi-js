@@ -2,7 +2,7 @@
 
 module.exports = {
 	app: {
-		title: 'Identi.fi',
+		title: 'identi.fi',
 		description: 'Global address book. Link all your profiles and details, get verified and use the same trusted identity on any site or situation.',
 		keywords: 'identity, trust, reputation, WoT, web of trust'
 	},
