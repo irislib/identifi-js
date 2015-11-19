@@ -355,7 +355,23 @@ section.section {
 	padding-bottom:0;
 }
 
-.nav-search .input, .nav-search-button {
+.nav-search input, .nav-search button {
+	border-radius: 50px;
+}
+
+.nav-search input {
+	background-color: #f7f7f7;
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
+
+.nav-search input:focus {
+	background-color: #fff;
+}
+
+#search-results .gravatar {
 	border-radius: 50px;
 }
 
