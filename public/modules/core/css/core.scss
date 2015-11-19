@@ -1086,6 +1086,40 @@ a.socialIcon:hover, .socialHoverClass {
 /* ========================================
 Media queries
 ========================================= */
+@media (max-width: 767px) {
+  .navbar-nav {
+    margin-top: 0;
+  }
+  
+  .nav-search {
+	  margin: 0 0 10px 0 !important;
+	  border: none;
+  }
+
+  .navbar-nav li a {
+    padding: 15px;
+  }
+
+	.navbar .navbar-collapse ul.nav {
+		width: 100%;
+		margin:0;
+		padding:0;
+	}
+	.navbar .navbar-collapse ul.nav li {
+	}
+	section.featured {
+		padding-top: 80px;
+	}
+	
+	.team-member,.col-lg-4 {
+		margin-bottom: 30px;
+	}
+	
+	.stats .col-md-3 {
+		margin-bottom: 30px;
+	}
+}
+
 .navbar-brand {
 	padding: 14px;
 }
