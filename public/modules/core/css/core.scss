@@ -1127,7 +1127,7 @@ Media queries
 @media (max-width: 991px) {
 	#search-results {
 		margin-left: -15px;
-		width: 100vw;
+		width: 100vw !important;
 	}
 }
 
