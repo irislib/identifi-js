@@ -1087,6 +1087,10 @@ a.socialIcon:hover, .socialHoverClass {
 Media queries
 ========================================= */
 @media (max-width: 767px) {
+  body {
+	  padding-top: 50px;
+  }
+	
   .navbar-nav {
     margin-top: 0;
   }
@@ -1117,6 +1121,13 @@ Media queries
 	
 	.stats .col-md-3 {
 		margin-bottom: 30px;
+	}
+}
+
+@media (max-width: 991px) {
+	#search-results {
+		margin-left: -15px;
+		width: 100vw;
 	}
 }
 
