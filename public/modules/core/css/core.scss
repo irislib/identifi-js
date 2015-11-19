@@ -339,7 +339,10 @@ section.section {
 .navbar {
 //	line-height: 100px;
 //	height: 100px;
-	background-color: rgba(0,0,0,0.3);
+	background: #fff;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	filter: none;
 	display: block;
 	vertical-align: middle;
 //	text-align: center;
@@ -350,6 +353,10 @@ section.section {
 .navbar .navbar-collapse {
 	margin-bottom: 0;
 	padding-bottom:0;
+}
+
+.nav-search .input, .nav-search-button {
+	border-radius: 50px;
 }
 
 .nav li {
