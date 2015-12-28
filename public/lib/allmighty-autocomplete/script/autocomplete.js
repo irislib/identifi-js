@@ -11,7 +11,8 @@ app.directive('autocomplete', function() {
       searchParam: '=ngModel',
       suggestions: '=data',
       onType: '=onType',
-      onSelect: '=onSelect'
+      onSelect: '=onSelect',
+      autocompleteRequired: '='
     },
     controller: ['$scope', function($scope){
       // the index of the suggestions that's currently selected
@@ -213,7 +214,7 @@ app.directive('autocomplete', function() {
             index = scope.getIndex();
             // scope.preSelectOff();
             if(index !== -1) {
-              scope.select(JSON.parse(angular.element(angular.element(this).find('li')[index]).attr('val')));
+              scope.select(angular.element(angular.element(this).find('li')[index]).text());
               if(keycode == key.enter) {
                 e.preventDefault();
               }
@@ -246,8 +247,9 @@ app.directive('autocomplete', function() {
             ng-model="searchParam"\
             placeholder="{{ attrs.placeholder }}"\
             class="{{ attrs.inputclass }}"\
-            id="{{ attrs.inputid }}"/>\
-          <ul ng-show="completing && suggestions.length>0">\
+            id="{{ attrs.inputid }}"\
+            ng-required="{{ autocompleteRequired }}" />\
+          <ul ng-show="completing && (suggestions | filter:searchFilter).length > 0">\
             <li\
               suggestion\
               ng-repeat="suggestion in suggestions | filter:searchFilter | orderBy:\'toString()\' track by $index"\
@@ -255,10 +257,7 @@ app.directive('autocomplete', function() {
               val="{{ suggestion }}"\
               ng-class="{ active: ($index === selectedIndex) }"\
               ng-click="select(suggestion)"\
-              >\
-              <img alt="" height="45" width="45" ng-src="https://www.gravatar.com/avatar/{{suggestion.gravatar}}?d=retro&amp;s=45">\
-              <span ng-bind-html="suggestion.name | highlight:searchParam"></span>\
-            </li>\
+              ng-bind-html="suggestion | highlight:searchParam"></li>\
           </ul>\
         </div>'
   };

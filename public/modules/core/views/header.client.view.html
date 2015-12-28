@@ -1,15 +1,15 @@
 <nav class="navbar navbar-default navbar-fixed-top" data-ng-controller="HeaderController">
 	<div class="container" role="navigation">
     <div class="navbar-header">
-      <h1><a href="/#!/" data-ng-click="logoClicked()" class="navbar-brand">
+      <h1><a href="/" data-ng-click="logoClicked()" class="navbar-brand">
       identi.fi</a></h1>
     </div>
 
     <ul class="nav navbar-nav navbar-right">
-      <li class="" ui-route="/messages" ng-class="{active: $uiRoute}"><a data-ng-href="#!/messages"><span class="glyphicon glyphicon-globe"></span></a></li>
-      <li class="" ui-route="/about" ng-class="{active: $uiRoute}"><a data-ng-href="#!/about"><span class="glyphicon glyphicon-info-sign"></span></a></li>
+      <li class="" ui-route="/messages" ng-class="{active: $uiRoute}"><a data-ng-href="/messages"><span class="glyphicon glyphicon-globe"></span></a></li>
+      <li class="" ui-route="/about" ng-class="{active: $uiRoute}"><a data-ng-href="/about"><span class="glyphicon glyphicon-info-sign"></span></a></li>
 			<li data-ng-show="authentication.user" ui-route="/id/{{authentication.user.idType}}/{{authentication.user.idValue|encodeURIComponent}}" data-ng-class="{active: $uiRoute}">
-				<a data-ng-href="#!/id/{{authentication.user.idType}}/{{authentication.user.idValue|escape}}">
+				<a data-ng-href="/id/{{authentication.user.idType}}/{{authentication.user.idValue|escape}}">
 					<span class="glyphicon glyphicon-user"></span> <span class="hidden-xs" data-ng-bind="authentication.user.displayName"></span>
 				</a>
 			</li>
@@ -40,7 +40,7 @@
         </ul>
       </li>
       <li data-ng-hide="authentication.user" ui-route="/signin" ng-class="{active: $uiRoute}">
-        <a href="#!/signin" class="visible-xs login-button" ><span class="glyphicon glyphicon-log-in"></span> Log in</b></a>
+        <a href="/signin" class="visible-xs login-button" ><span class="glyphicon glyphicon-log-in"></span> Log in</b></a>
       </li>
     </ul>
 
@@ -51,7 +51,9 @@
       </div>
     </form>
 
-    <autocomplete data-ng-controller="IdentifiersController" data-ng-if="!isActive('/')" data-ng-model="queryTerm" on-select="dropdownSearchSelect" on-type="dropdownSearch" data="identifiers" attr-input-class="form-control nav-search-field" attr-class="navbar-form navbar-left nav-search hidden-xs" attr-placeholder="Search">
+    <div ng-controller="IdentifiersController">
+    <autocomplete data-ng-if="!isActive('/')" data-ng-model="queryTerm" on-select="dropdownSearchSelect" on-type="dropdownSearch" data="identifiers" attr-input-class="form-control nav-search-field" attr-class="navbar-form navbar-left nav-search hidden-xs" attr-placeholder="Search">
+    </div>
 
 	</div>
 </nav>

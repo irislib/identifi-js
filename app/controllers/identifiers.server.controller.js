@@ -21,6 +21,7 @@ var identifi = new bitcoin.Client({
 identifi.memcached = new Memcached();
 identifi.cachedCmd = function() {
   var cmdSignature = Array.prototype.slice.call(arguments, 0, -1).join();
+  cmdSignature = escape(cmdSignature);
   var params = arguments;
   var _this = this;
   this.memcached.get(cmdSignature, function(err, data) {

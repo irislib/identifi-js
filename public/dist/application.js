@@ -9,7 +9,6 @@ var ApplicationConfiguration = function () {
         'ui.router',
         'ui.bootstrap',
         'ui.bootstrap-slider',
-        'ui.utils',
         'angularSpinner',
         'infinite-scroll',
         'persona',
@@ -53,7 +52,7 @@ var ApplicationConfiguration = function () {
 angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfiguration.applicationModuleVendorDependencies), angular.module(ApplicationConfiguration.applicationModuleName).config([
   '$locationProvider',
   function ($locationProvider) {
-    $locationProvider.hashPrefix('!'), $locationProvider.html5Mode(!0);
+    $locationProvider.html5Mode(!0);
   }
 ]), angular.element(document).ready(function () {
   '#_=_' === window.location.hash && (window.location.hash = '#!'), angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
@@ -92,7 +91,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
       }, $scope.logoClicked = function () {
         $scope.query.term = '', $scope.searchKeydown();
       }, $scope.authentication = Authentication, Authentication.user)
-      switch ('persona' === Authentication.user.provider ? Authentication.user.idType = 'email' : Authentication.user.idType = 'url', Authentication.user.provider) {
+      switch (Authentication.user.idType = 'persona' === Authentication.user.provider ? 'email' : 'url', Authentication.user.provider) {
       case 'persona':
         Authentication.user.idValue = Authentication.user.email;
         break;
@@ -231,11 +230,11 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
     ], $scope.info = {}, $scope.sent = [], $scope.received = [], $scope.trustpaths = [], $rootScope.filters = $rootScope.filters || ApplicationConfiguration.defaultFilters, angular.extend($rootScope.filters, {
       receivedOffset: 0,
       sentOffset: 0
-    }), $scope.authentication.user ? $rootScope.viewpoint = {
+    }), $rootScope.viewpoint = $scope.authentication.user ? {
       viewpointName: $scope.authentication.user.displayName,
       viewpointType: 'email',
       viewpointValue: $scope.authentication.user.email
-    } : $rootScope.viewpoint = $rootScope.viewpoint || ApplicationConfiguration.defaultViewpoint, $scope.newIdentifier = {
+    } : $rootScope.viewpoint || ApplicationConfiguration.defaultViewpoint, $scope.newIdentifier = {
       type: '',
       value: $stateParams.value
     }, $scope.queryTerm = '', $scope.goToID = function (type, value) {
@@ -305,7 +304,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
             case 'url':
               id[j][1].indexOf('twitter.com/') > -1 && (id.twitter = id[j][1].split('twitter.com/')[1]), id[j][1].indexOf('facebook.com/') > -1 && (id.facebook = id[j][1].split('facebook.com/')[1]), id[j][1].indexOf('plus.google.com/') > -1 && (id.googlePlus = id[j][1].split('plus.google.com/')[1]);
             }
-          id.linkTo || (id.linkTo = id[0]), id.gravatar || (id.gravatar = CryptoJS.MD5(id[0][1]).toString()), id.name || (id.nickname ? id.name = id.nickname : id.name = id[0][1]);
+          id.linkTo || (id.linkTo = id[0]), id.gravatar || (id.gravatar = CryptoJS.MD5(id[0][1]).toString()), id.name || (id.name = id.nickname ? id.nickname : id[0][1]);
         }
       });
     }, $scope.resultClicked = function (result) {
@@ -393,7 +392,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
               var alpha = conn.confirmations / mostConfirmations * 0.7 + 0.3;
               conn.rowStyle = 'background-color: rgba(223,240,216,' + alpha + ')';
             } else
-              percentage >= 60 ? conn.rowClass = 'warning' : conn.rowClass = 'danger';
+              conn.rowClass = percentage >= 60 ? 'warning' : 'danger';
           }
           $scope.hasQuickContacts = $scope.hasQuickContacts || conn.quickContact;
         }
@@ -460,7 +459,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
           $scope.received.$resolved = received.$resolved, $rootScope.filters.receivedOffset = $rootScope.filters.receivedOffset + received.length, received.length < $rootScope.filters.limit && ($scope.received.finished = !0);
         });
       0 === offset && ($scope.received = {}), $scope.received.$resolved = received.$resolved;
-    }, $scope.getPhotosFromTwitter = function (profileUrl) {
+    }, $scope.getPhotosFromTwitter = function () {
       return $scope.isUniqueType ? null : void 0;
     }, $scope.getPhotosFromGravatar = function () {
       var email = $scope.info.email || $scope.idValue;
@@ -584,11 +583,11 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
     }, $scope.iconClass = function (rating) {
       var iconStyle = 'glyphicon-question-sign';
       return rating > 0 ? iconStyle = 'glyphicon-thumbs-up' : 0 > rating && (iconStyle = 'glyphicon-thumbs-down'), iconStyle;
-    }, $rootScope.filters = $rootScope.filters || ApplicationConfiguration.defaultFilters, angular.extend($rootScope.filters, { offset: 0 }), $scope.authentication.user ? $rootScope.viewpoint = {
+    }, $rootScope.filters = $rootScope.filters || ApplicationConfiguration.defaultFilters, angular.extend($rootScope.filters, { offset: 0 }), $rootScope.viewpoint = $scope.authentication.user ? {
       viewpointName: $scope.authentication.user.displayName,
       viewpointType: 'email',
       viewpointValue: $scope.authentication.user.email
-    } : $rootScope.viewpoint = $rootScope.viewpoint || ApplicationConfiguration.defaultViewpoint, $scope.collapseFilters = $window.innerWidth < 992;
+    } : $rootScope.viewpoint || ApplicationConfiguration.defaultViewpoint, $scope.collapseFilters = $window.innerWidth < 992;
     var processMessages = function (messages) {
       for (var key in messages)
         if (!isNaN(key)) {
@@ -628,7 +627,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
           recipientType: $scope.idType,
           recipientValue: $scope.idValue
         });
-      angular.extend(message, params), message.$save(function (response) {
+      angular.extend(message, params), message.$save(function () {
         $scope.newMessage.comment = '', $scope.newMessage.rating = 1, $scope.newConnection.type = '', $scope.newConnection.value = '', $scope.$root.$broadcast('MessageAdded', {
           message: message,
           id: id
@@ -770,14 +769,14 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
   'Users',
   'Authentication',
   function ($scope, $http, $location, Users, Authentication) {
-    $scope.user = Authentication.user, $scope.user || $location.path('/'), $scope.hasConnectedAdditionalSocialAccounts = function (provider) {
+    $scope.user = Authentication.user, $scope.user || $location.path('/'), $scope.hasConnectedAdditionalSocialAccounts = function () {
       for (var i in $scope.user.additionalProvidersData)
         return !0;
       return !1;
     }, $scope.isConnectedSocialAccount = function (provider) {
       return $scope.user.provider === provider || $scope.user.additionalProvidersData && $scope.user.additionalProvidersData[provider];
     }, $scope.removeUserSocialAccount = function (provider) {
-      $scope.success = $scope.error = null, $http['delete']('/users/accounts', { params: { provider: provider } }).success(function (response) {
+      $scope.success = $scope.error = null, $http.delete('/users/accounts', { params: { provider: provider } }).success(function (response) {
         $scope.success = !0, $scope.user = Authentication.user = response;
       }).error(function (response) {
         $scope.error = response.message;
@@ -794,7 +793,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
       } else
         $scope.submitted = !0;
     }, $scope.changeUserPassword = function () {
-      $scope.success = $scope.error = null, $http.post('/users/password', $scope.passwordDetails).success(function (response) {
+      $scope.success = $scope.error = null, $http.post('/users/password', $scope.passwordDetails).success(function () {
         $scope.success = !0, $scope.passwordDetails = null;
       }).error(function (response) {
         $scope.error = response.message;

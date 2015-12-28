@@ -13,7 +13,7 @@
           </div>
           <div class="panel-body">
             <ul class="list list-unstyled">
-              <li data-ng-repeat="id in message.data.signedData.author"><span data-ng-bind="id[0]"></span>: <a data-ng-bind="id[1]" class="id-link" data-ng-href="#!/id/{{id[0]}}/{{id[1]|escape}}" data-original-title="" title=""></a></li>
+              <li data-ng-repeat="id in message.data.signedData.author"><span data-ng-bind="id[0]"></span>: <a data-ng-bind="id[1]" class="id-link" data-ng-href="/id/{{id[0]}}/{{id[1]|escape}}" data-original-title="" title=""></a></li>
             </ul>
           </div>
         </div>
@@ -29,7 +29,7 @@
           </div>
           <div class="panel-body">
             <ul class="list list-unstyled">
-              <li data-ng-repeat="id in message.data.signedData.recipient"><span data-ng-bind="id[0]"></span>: <a data-ng-bind="id[1]" class="id-link" data-ng-href="#!/id/{{id[0]|escape}}/{{id[1]|escape}}" data-original-title="" title=""></a></li>
+              <li data-ng-repeat="id in message.data.signedData.recipient"><span data-ng-bind="id[0]"></span>: <a data-ng-bind="id[1]" class="id-link" data-ng-href="/id/{{id[0]|escape}}/{{id[1]|escape}}" data-original-title="" title=""></a></li>
             </ul>
           </div>
         </div>
@@ -46,7 +46,7 @@
         <p data-ng-if="message.data.signedData.comment"><strong>Comment:</strong> <span data-ng-bind="message.data.signedData.comment"></span></p>
       </div>
     </div>
-    <p>Message origin verified by: <a data-ng-bind="message.signerName||message.signatureDetails.signerKeyID" data-ng-href="#!/id/keyID/{{message.signatureDetails.signerKeyID}}"></a></p>
+    <p>Message origin verified by: <a data-ng-bind="message.signerName||message.signatureDetails.signerKeyID" data-ng-href="/id/keyID/{{message.signatureDetails.signerKeyID}}"></a></p>
     <p><button class="btn btn-default" data-ng-click="collapseRawData = !collapseRawData">Show raw data</button></p>
     <pre collapse="!collapseRawData" data-ng-bind="message.strData"></pre>
   </div>

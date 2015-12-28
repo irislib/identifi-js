@@ -15,11 +15,11 @@
     "./script/autocomplete.js",
     "./style/autocomplete.css"
   ],
-  "_release": "3854e81f53",
+  "_release": "e72c900d0f",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "3854e81f533d8ee5b1b467d2264f29f5c599e464"
+    "commit": "e72c900d0f891479f9acfe13da7a51484467d5e4"
   },
   "_source": "git://github.com/JustGoscha/allmighty-autocomplete.git",
   "_target": "*",
